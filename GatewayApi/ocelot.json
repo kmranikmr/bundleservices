@@ -1,0 +1,36 @@
+{
+  "ReRoutes": [
+
+    {
+      "DownstreamPathTemplate": "/api/query/userdata/{queryname}/{everything}/false",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 6005
+        }
+      ],
+      "UpstreamPathTemplate": "/project/{queryname}/{everything}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/query/userdata/{queryname}/{everything}/true",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 6005
+        }
+      ],
+      "UpstreamPathTemplate": "/workflow/{queryname}/{everything}",
+      "UpstreamHttpMethod": [ "Get" ]
+    }
+
+  ],
+
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:80"
+  }
+
+}

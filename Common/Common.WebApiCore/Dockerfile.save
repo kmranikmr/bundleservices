@@ -1,0 +1,29 @@
+FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 1433
+
+FROM microsoft/dotnet:2.1-sdk AS build
+WORKDIR /src
+COPY Common/Common.WebApiCore/Common.WebApiCore.csproj Common/Common.WebApiCore/
+COPY Common/Common.DTO/Common.DTO.csproj Common/Common.DTO/
+COPY Common/Common.IdentityManagementCore/Common.IdentityManagementCore.csproj Common/Common.IdentityManagementCore/
+COPY Common/Common.Services.Infrastructure/Common.Services.Infrastructure.csproj Common/Common.Services.Infrastructure/
+COPY Common/Common.Entities/Common.Entities.csproj Common/Common.Entities/
+COPY Common/Common.Utils/Common.Utils.csproj Common/Common.Utils/
+COPY Common/Common.DIContainerCore/Common.DIContainerCore.csproj Common/Common.DIContainerCore/
+COPY Common/Common.DataAccess.EFCore/Common.DataAccess.EFCore.csproj Common/Common.DataAccess.EFCore/
+COPY Common/Common.Services/Common.Services.csproj Common/Common.Services/
+RUN dotnet restore Common/Common.WebApiCore/Common.WebApiCore.csproj
+
+COPY . .
+WORKDIR /src/Common/Common.WebApiCore
+RUN dotnet build Common.WebApiCore.csproj -c Release -o /app
+
+FROM build AS publish
+RUN dotnet publish Common.WebApiCore.csproj -c Release -o /app
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "Common.WebApiCore.dll"]

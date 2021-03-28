@@ -1,0 +1,123 @@
+﻿import digdag
+import os
+import psycopg2
+import pandas as pd
+from pandas import DataFrame
+from numpy import repeat
+from psycopg2.extras import RealDictCursor
+from sqlalchemy import MetaData
+from sqlalchemy import create_engine
+from sqlalchemy import event
+import pickle
+from sklearn.linear_model import LinearRegression
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler, MinMaxScaler, PolynomialFeatures
+
+
+
+def remove_temp_db(delete_query):
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="172.17.0.1", port="5432")
+    print("Database opened successfully")
+    cur = con.cursor()
+    cur.execute(delete_query)
+
+def do_transformation(df, model_df):
+    process_df = process_custom_code(df, model_df)
+    if isinstance(process_df, pd.DataFrame):
+       print("regular")
+       insert_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')# process_block_{userid}_{digdagprojectid}_{digdagworkflowid}
+    else:
+       print("model")
+       insert_model_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')
+       
+
+def input_postgres(input_table, model_df):
+    input_query = "select * from "+input_table
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="172.17.0.1", port="5432")
+    print("Database opened successfully")
+    with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
+        cursor.execute(input_query)
+        while True:
+            col_names = []
+            records = cursor.fetchmany(size=1000)
+            col_set = False
+            if not col_set:
+                for elt in cursor.description:
+                    col_names.append(elt[0])
+            if not records:
+                break
+            col_set = True
+            df = DataFrame(records)
+            df.columns = col_names
+            do_transformation(df, model_df)
+            #insert_data_postgres(df, 'output11', 'public')
+        cursor.close()  # don't forget to cleanup
+    con.close()
+
+
+
+def insert_data_postgres(df, table_name, schema):
+    dbschema = schema
+    print(" postgre start ")
+    engine = create_engine('postgresql+psycopg2://postgres:dapdata123@idapt.duckdns.org:6789/postgres', connect_args={'options': '-csearch_path={}'.format(dbschema)})
+#   engine = create_engine('postgresql+psycopg2://dev:nwdidb19@127.0.0.1:5433/nwdi_ts', connect_args={'options': '-csearch_path={}'.format(dbschema)})
+    paramvalue = digdag.env.params["workflow_attempt_id"]
+    df['session_id'] = paramvalue
+    df.to_sql(table_name, engine, if_exists= 'append',  method='multi', index=False)
+    engine.dispose()
+    return True
+
+def insert_model_data_postgres(model, table_name, schema):
+    dbschema = schema
+    sql_stmt = """create table if not exists {}(model_pickle bytea)""".format( table_name)
+    #params = config()
+    # connect to the PostgresQL database
+    print("connect")
+    conn = psycopg2.connect(dbname="digdagdb",user="ubuntu",password="password",host="172.17.0.1")
+    # create a new cursor object
+    print("connected")
+    cur = conn.cursor()
+    cur.execute(sql_stmt)
+    # execute the INSERT statement
+    cur.execute("INSERT INTO " + table_name +" (model_pickle) " +
+                    "VALUES(%s)",
+                    (psycopg2.Binary(pickle.dumps(model)),))
+    # commit the changes to the database
+    conn.commit()
+   # close the communication with the PostgresQL database
+    cur.close()
+
+def input_postgres_complete(input_table):
+    input_query = "select * from "+input_table
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="172.17.0.1", port="5432")
+    print("Database opened successfully")
+    with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
+        cursor.execute(input_query)
+        while True:
+            col_names = []
+            records = cursor.fetchmany(size=1000)
+            col_set = False
+            if not col_set:
+                for elt in cursor.description:
+                    col_names.append(elt[0])
+            if not records:
+                break
+            col_set = True
+            df = DataFrame(records)
+            df.columns = col_names
+            return df
+            #insert_data_postgres(df, 'output11', 'public')
+        cursor.close()  # don't forget to cleanup
+    con.close()
+
+[COMMANDBODY]
+def [METHODNAME]():
+    model_df = {}
+    [POSTGRES_ARTIFACT_READ]
+    input_df = input_postgres('[INPUTNODENAME]_[INPUTNODEID]',model_df)
+    [DELETE_TEMP]
+    print("done all")
+
+if __name__ == "__main__":
+    [METHODNAME]()

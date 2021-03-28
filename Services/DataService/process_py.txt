@@ -1,0 +1,78 @@
+﻿import os
+from datetime import time, datetime
+import digdag
+import pandas as pd
+import psycopg2
+import numpy as np
+from objectpath.utils.timeutils import now
+from pandas import DataFrame
+from psycopg2.extras import RealDictCursor
+from sqlalchemy import MetaData
+from sqlalchemy import create_engine
+from sqlalchemy import event
+import sklearn
+from sklearn import preprocessing
+from sklearn import feature_extraction
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.feature_extraction.text import TfidfTransformer
+
+
+def remove_temp_db(delete_query):
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="172.17.0.1", port="5432")
+    print("Database opened successfully for removal")
+    cur = con.cursor()
+    cur.execute(delete_query)
+
+def do_transformation(df):
+    print("do_tranf")
+    process_df = process_custom_code(df)
+    insert_data_postgres(process_df, '[NODENAME]_[NODEID]', 'public')# process_block_{userid}_{digdagprojectid}_{digdagworkflowid}_{digdagattemptid}_{nodeid}
+    
+def input_postgres(input_table):
+    print("input postgres")
+    input_query = "select * from "+input_table
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="172.17.0.1", port="5432")
+    print("Database opened successfully")
+    with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
+        cursor.execute(input_query)
+
+        while True:
+            col_names = []
+            records = cursor.fetchmany(size=10000)
+            col_set = False
+            if not col_set:
+                for elt in cursor.description:
+                    col_names.append(elt[0])
+            if not records:
+                break
+            col_set = True
+            df = DataFrame(records)
+            print("dataframes read")
+            df.columns = col_names
+            do_transformation(df)
+        cursor.close()  # don't forget to cleanup
+    con.close()
+
+
+def insert_data_postgres(df, table_name, schema):
+    dbschema = schema
+    engine = create_engine('postgresql+psycopg2://ubuntu:password@172.17.0.1:5432/digdagdb',
+                connect_args={'options': '-csearch_path={}'.format(dbschema)})
+
+    df.to_sql(table_name, engine, if_exists='append', index=False)
+    engine.dispose()
+    return True
+
+
+
+[COMMANDBODY]
+
+
+def [METHODNAME]():
+    print("input")
+
+    input_postgres('[INPUTNODENAME]_[INPUTNODEID]')
+    print(" done with process block")
+    [DELETE_TEMP]
+if __name__ == "__main__":
+    [METHODNAME]()

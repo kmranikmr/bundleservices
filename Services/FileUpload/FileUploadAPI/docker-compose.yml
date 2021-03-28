@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  fileuploadservice:
+    image: ${DOCKER_REGISTRY-}fileuploadservice
+    build:
+      context: .
+      dockerfile: Dockerfile

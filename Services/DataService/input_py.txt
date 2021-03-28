@@ -1,0 +1,87 @@
+﻿import digdag
+import os
+from datetime import time, datetime
+import psycopg2
+from objectpath.utils.timeutils import now
+from pandas import DataFrame
+from psycopg2.extras import RealDictCursor
+from sqlalchemy import MetaData
+from sqlalchemy import create_engine
+from sqlalchemy import event
+
+
+def remove_temps(tables):
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="idapt.duckdns.org", port="5432")
+    print("Database opened successfully for removal")
+    cur = con.cursor()
+    liststr = tables.split(',')
+    for tabl in liststr:
+        drop_sql = """drop table if exists public.%s;"""%tabl
+        cur.execute(drop_sql)
+        print("droped " + drop_sql)
+    con.commit()
+    cur.close()
+    con.close()
+    print("droped " + tables)
+
+def do_transformation(df):
+    df = process_custom_code(df)
+    insert_data_postgres(df, '[NODENAME]_[NODEID]', 'public')
+
+def insert_data_postgres(df, table_name, schema):
+    dbschema = schema
+    engine = create_engine('postgresql+psycopg2://ubuntu:password@172.17.0.1:5432/digdagdb',
+                connect_args={'options': '-csearch_path={}'.format(dbschema)})
+
+    print("create engine done")
+    df.to_sql(table_name, engine, if_exists='append', index=False)
+    print("to sql done")
+    engine.dispose()
+    return True
+#input from saved query
+def input_postgres(input_query):
+    con = psycopg2.connect(database="postgres", user="postgres", password="dapdata123", host="idapt.duckdns.org", port="6789")
+#   con = psycopg2.connect(database="nwdi_ts", user="dev", password="nwdidb19", host="127.0.0.1", port="5433")
+    print("Database opened successfully")
+    with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
+        cursor.execute(input_query)
+
+        while True:
+            col_names = []
+            records = cursor.fetchmany(size=100)
+            col_set = False
+            if not col_set:
+                for elt in cursor.description:
+                    col_names.append(elt[0])
+            if not records:
+                break
+            col_set = True
+            df = DataFrame(records)
+            df.columns = col_names
+            do_transformation(df)
+        cursor.close()  # don't forget to cleanup
+    con.close()
+
+
+[COMMANDBODY]
+
+def [METHODNAME]():
+    [REMOVEALL_TEMP]
+    if 'sessionIds' in  digdag.env.params:
+       sessiondIdvalue = digdag.env.params["sessionIds"]
+    else:
+       sessiondIdvalue = ""
+    
+    print("sessiondIdvalue " + sessiondIdvalue)
+    input_query = ""
+    if not sessiondIdvalue:
+       input_query = """[INPUTDATA]"""
+    else:
+       input_query = """Select * from ([INPUTDATA])a where a.real_session_id in ({})""".format(sessiondIdvalue)
+    print("input_query" + input_query)
+    #we will add the saved query in the nnniput query...
+    input_postgres(input_query)
+
+
+if __name__ == "__main__":
+    [METHODNAME]()

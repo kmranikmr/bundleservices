@@ -1,0 +1,49 @@
+version: '3.4'
+
+services:
+  dataservice:
+    image: dataservice
+    build:
+      context: .
+      dockerfile: Services/DataService/Dockerfile
+    volumes:
+      - ~/datafile:/app/StaticFiles
+      - ~/logs:/home/ubuntu/logs
+    ports:
+      - "6002:6002"
+
+  fileuploadservice:
+    image: fileuploadservice
+    build:
+      context: .
+      dockerfile: Services/FileUpload/FileUploadAPI/FileUploadService/Dockerfile
+    volumes:
+      - ~/datafile:/app/StaticFiles
+      - ~/logs:/home/ubuntu/logs
+    ports:
+      - "6001:6001"
+
+
+  datashareservice:
+    image: datashareservice
+    build:
+      context: .
+      dockerfile: DataShare/Dockerfile
+
+
+  gatewayapi:
+    image: gatewayapi
+    build:
+      context: .
+      dockerfile: GatewayApi/Dockerfile
+
+
+  common.webapicore:
+    image: commonwebapicore
+    build:
+      context: .
+      dockerfile: Common/Common.WebApiCore/Dockerfile
+    ports:
+      - "5000:5000"
+      - "1433:1433"
+

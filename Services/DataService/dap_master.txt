@@ -1,0 +1,154 @@
+﻿DROP SCHEMA IF EXISTS master cascade;
+
+CREATE SCHEMA master AUTHORIZATION postgres;
+
+SET search_path TO master;
+
+CREATE TABLE "user"(
+	user_id serial PRIMARY KEY,
+	username VARCHAR (50) UNIQUE NOT NULL,
+	password VARCHAR (50) NOT NULL,
+	email VARCHAR (355) UNIQUE NOT NULL,
+	created_on TIMESTAMP NOT NULL,
+	last_login TIMESTAMP,
+	is_active bool default true,
+	is_deleted bool default false
+);
+
+CREATE TABLE project(
+	project_id serial primary key,
+	project_name varchar(50) unique not null,
+	created_by int not null references "user",
+	created_on timestamp not null default current_timestamp,
+	last_accessed_on timestamp,
+	is_active bool default true,
+	is_deleted bool default false
+);
+
+CREATE TABLE project_user(
+	project_id int references project,
+	user_id int references "user",
+	created_on timestamp not null default current_timestamp,
+	PRIMARY KEY (project_id, user_id)
+);
+
+CREATE TABLE project_upload(
+	project_id int references project,
+	user_id int references "user",
+	file_path varchar(255),
+	upload_date timestamp not null default current_timestamp,
+	is_active bool default true,
+	is_deleted bool default false
+);
+
+CREATE TABLE writer_type(
+	writer_type_id serial primary key,
+	writer_type_name varchar(50) unique not null,
+	created_on timestamp not null default current_timestamp,
+	is_active bool default true,
+	is_deleted bool default false	
+);
+
+insert into writer_type(writer_type_name) values('CSV');
+insert into writer_type(writer_type_name) values('Postgres');
+insert into writer_type(writer_type_name) values('Mongodb');
+insert into writer_type(writer_type_name) values('Elastic');
+insert into writer_type(writer_type_name) values('MySql');
+insert into writer_type(writer_type_name) values('Oracle');
+
+
+CREATE TABLE reader_type(
+	reader_type_id serial primary key,
+	reader_type_name varchar(50) unique not null,
+	created_on timestamp not null default current_timestamp,
+	is_active bool default true,
+	is_deleted bool default false	
+);
+
+insert into reader_type(reader_type_name) values('CSV');
+insert into reader_type(reader_type_name) values('Json');
+
+create table writer(
+	writer_id serial primary key,
+	writer_type_id int references writer_type,
+	user_id int references "user",	
+	destination_path varchar(1000),
+	created_on timestamp not null default current_timestamp,
+	is_active bool default true,
+	is_deleted bool default false	
+);
+
+create table reader(
+	reader_id serial primary key,
+	reader_type_id int references reader_type,
+	user_id int references "user",	
+	source_path varchar(1000),
+	created_on timestamp not null default current_timestamp,
+	is_active bool default true,
+	is_deleted bool default false	
+);
+
+create table project_writer(
+	project_id int not null references project,
+	writer_id int not null references writer,
+	PRIMARY KEY (project_id, writer_id)
+);
+
+create table project_reader(
+	project_id int not null references project,
+	reader_id int not null references reader,
+	PRIMARY KEY (project_id, reader_id)
+);
+
+create table project_schema(
+	schema_id serial primary key,
+	project_id int not null references project,
+	type_config text not null,
+	user_id int references "user",	
+	created_on timestamp not null default current_timestamp,
+	is_active bool default true,
+	is_deleted bool default false		
+);
+
+create table schema_model(
+	model_id serial primary key,
+	schema_id int references project_schema,	
+	model_name varchar(50),
+	user_id int references "user",	
+	created_on timestamp not null default current_timestamp,
+	is_active bool default true,
+	is_deleted bool default false			
+);
+
+create table model_metadata(
+	metadata_id serial primary key,
+	model_id int references schema_model,
+	column_name varchar(50),
+	data_type varchar(50),
+	created_on timestamp not null default current_timestamp,
+	is_active bool default true,
+	is_deleted bool default false	
+);
+
+create table job_status(
+	job_status_id serial primary key,
+	status_name varchar(50),
+	created_on timestamp not null default current_timestamp,
+	is_active bool default true,
+	is_deleted bool default false	
+);
+
+insert into job_status(status_name) values('Created');
+insert into job_status(status_name) values('Running');
+insert into job_status(status_name) values('Completed');
+
+create table job(
+	job_id serial primary key,
+	user_id int not null references "users",
+	job_status_id int not null references job_status,
+	job_description varchar(1000),
+	job_instruction text not null,
+	created_on timestamp not null default current_timestamp,
+	is_active bool default true,
+	is_deleted bool default false	
+);

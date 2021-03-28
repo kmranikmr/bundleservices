@@ -1,0 +1,140 @@
+{
+  "taskList": [
+    {
+      "taskName": "postgres_reader_py",
+      "taskDescription": "input data",
+      "taskId": "486d181b-a32b-4c53-8033-18040990bed5",
+      "nodeType": "input",
+      "inputTask": null,
+      "headerList": [
+        {
+          "headerType": "header1",
+          "keyValues": {
+            "key1": "val1",
+            "key2": "val2"
+          },
+          "exportedVariables": [ "x:2" ]
+        }
+      ],
+      "repeatLoop": 0,
+      "oper": 0,
+      "commandBody": "def process_custom_code(df):\r\n#    add code here and uncomment\r\n    return df\r\n\r\n\r\n",
+      "template": "",
+      "showExportedData": [ { "value": "tablename" } ],
+      "InputData": {
+        "ProjectQueryTask": {
+          "queryList": [
+
+            "select * from schema1.model1"
+
+          ],
+          "projectId": 2192,
+          "projectName": "cordmetadata",
+          "searchHistoryId": 2357
+        },
+        "WorkflowQueryTask": { "queryList": [] }
+      },
+      "header": {
+        "keyValues": null,
+        "exportedVariables": [ "tablename" ],
+        "headerType": "Exports"
+      }
+    },
+    {
+      "taskName": "process_py3",
+      "taskDescription": "process data3",
+      "taskId": "d4b64ce2-a7f0-479b-ab7b-ceee6c199a3a",
+      "nodeType": "process",
+      "inputTask": null,
+      "headerList": null,
+      "repeatLoop": 0,
+      "oper": 0,
+      "commandBody": "def process_custom_code(df):\r\n#    add code here and uncomment\r\n    return df\r\n\r\n\r\n",
+      "template": "templategoeshere",
+      "showVariableData": [],
+      "showExportedData": []
+    },
+    {
+      "taskName": "output_py",
+      "taskDescription": "output data",
+      "taskId": "1aa1b4ee-66a6-48b2-9869-20663801bfdb",
+      "nodeType": "output",
+      "inputTask": null,
+      "headerList": null,
+      "repeatLoop": 0,
+      "oper": 0,
+      "commandBody": "def process_custom_code(df):\r\n#    add code here and uncomment\r\n    return df\r\n\r\n\r\n",
+      "template": "templategoeshere",
+      "showVariableData": [],
+      "showExportedData": []
+    },
+    {
+      "taskName": "process_py2",
+      "taskDescription": "process data2",
+      "taskId": "a279fccd-ecae-495e-907a-c28abae2702f",
+      "nodeType": "process",
+      "inputTask": null,
+      "headerList": null,
+      "repeatLoop": 0,
+      "oper": 0,
+      "commandBody": "def process_custom_code(df):\r\n#    add code here and uncomment\r\n    return df\r\n\r\n\r\n",
+      "template": "templategoeshere",
+      "showVariableData": [],
+      "showExportedData": []
+    },
+    {
+      "taskName": "process_py",
+      "taskDescription": "process data1",
+      "taskId": "72ad9796-aa3f-41a4-9bf4-26f9a2a8b16f",
+      "nodeType": "process",
+      "inputTask": null,
+      "headerList": null,
+      "repeatLoop": 0,
+      "oper": 0,
+      "commandBody": "def process_custom_code(df):\r\n#    add code here and uncomment\r\n    return df\r\n\r\n\r\n",
+      "template": "templategoeshere",
+      "showVariableData": [],
+      "showExportedData": []
+    },
+    {
+      "taskName": "process_py4",
+      "taskDescription": "process data4",
+      "taskId": "32556e77-88a8-4317-bea0-473ec03f7262",
+      "nodeType": "process",
+      "inputTask": null,
+      "headerList": null,
+      "repeatLoop": 0,
+      "oper": 0,
+      "commandBody": "def process_custom_code(df):\r\n#    add code here and uncomment\r\n    return df\r\n\r\n\r\n",
+      "template": "templategoeshere",
+      "showVariableData": [],
+      "showExportedData": []
+    }
+  ],
+  "edgeList": [
+    {
+      "sourceTaskId": "72ad9796-aa3f-41a4-9bf4-26f9a2a8b16f_top",
+      "targetTaskId": "486d181b-a32b-4c53-8033-18040990bed5_bottom"
+    },
+    {
+      "sourceTaskId": "d4b64ce2-a7f0-479b-ab7b-ceee6c199a3a_top",
+      "targetTaskId": "72ad9796-aa3f-41a4-9bf4-26f9a2a8b16f_bottom"
+    },
+    {
+      "sourceTaskId": "1aa1b4ee-66a6-48b2-9869-20663801bfdb_top",
+      "targetTaskId": "d4b64ce2-a7f0-479b-ab7b-ceee6c199a3a_bottom"
+    },
+    {
+      "sourceTaskId": "a279fccd-ecae-495e-907a-c28abae2702f_top",
+      "targetTaskId": "486d181b-a32b-4c53-8033-18040990bed5_bottom"
+    },
+    {
+      "sourceTaskId": "32556e77-88a8-4317-bea0-473ec03f7262_top",
+      "targetTaskId": "a279fccd-ecae-495e-907a-c28abae2702f_bottom"
+    },
+    {
+      "sourceTaskId": "1aa1b4ee-66a6-48b2-9869-20663801bfdb_top",
+      "targetTaskId": "32556e77-88a8-4317-bea0-473ec03f7262_bottom"
+    }
+  ]
+}

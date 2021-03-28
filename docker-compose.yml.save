@@ -1,0 +1,76 @@
+version: '3.4'
+
+services:
+  dataservice:
+    image: dataservice
+    build:
+      context: .
+      dockerfile: Services/DataService/Dockerfile
+
+  fileuploadservice:
+    image: fileuploadservice
+    build:
+      context: .
+      dockerfile: Services/FileUpload/FileUploadAPI/FileUploadService/Dockerfile
+    was not authenticated. Failure message: IDX10223: Lifetime validation failed. The token is expired. Val                                                                                                                                                                idTo: '[PII is hidden]', Current time: '[PII is hidden]'.
+common.webapicore_1  | info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+common.webapicore_1  |       Route matched with {action = "Login", controller = "Auth"}. Executing action Common.WebApiCore.Controllers.Aut                                                                                                                                                                hController.Login (Common.WebApiCore)
+common.webapicore_1  | info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+common.webapicore_1  |       Executing action method Common.WebApiCore.Controllers.AuthController.Login (Common.WebApiCore) with arguments                                                                                                                                                                 (Common.DTO.LoginDTO) - Validation state: Valid
+common.webapicore_1  | info: Microsoft.EntityFrameworkCore.Infrastructure[10403]
+common.webapicore_1  |       Entity Framework Core 2.2.2-servicing-10034 initialized 'DataContext' using provider 'Microsoft.EntityFramewor                                                                                                                                                                kCore.SqlServer' with options: None
+common.webapicore_1  | info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+common.webapicore_1  |       Executed DbCommand (1ms) [Parameters=[@__email_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+common.webapicore_1  |       SELECT TOP(1) [u].[Id], [u].[City], [u].[Lat], [u].[Lng], [u].[Street], [u].[ZipCode], [u].[Age], [u].[Email],                                                                                                                                                                 [u].[FirstName], [u].[LastName], [u].[Password], [u].[UserName]
+common.webapicore_1  |       FROM [starter_core].[Users] AS [u]
+common.webapicore_1  |       WHERE [u].[Email] = @__email_0
+common.webapicore_1  |       ORDER BY [u].[Id]
+common.webapicore_1  | info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+common.webapicore_1  |       Executed DbCommand (1ms) [Parameters=[@__email_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+common.webapicore_1  |       SELECT [u.UserRoles].[UserId], [u.UserRoles].[RoleId], [u.Role].[Id], [u.Role].[Name]
+common.webapicore_1  |       FROM [starter_core].[UserRoles] AS [u.UserRoles]
+common.webapicore_1  |       INNER JOIN [starter_core].[Roles] AS [u.Role] ON [u.UserRoles].[RoleId] = [u.Role].[Id]
+common.webapicore_1  |       INNER JOIN (
+common.webapicore_1  |           SELECT TOP(1) [u0].[Id]
+common.webapicore_1  |           FROM [starter_core].[Users] AS [u0]
+common.webapicore_1  |           WHERE [u0].[Email] = @__email_0
+common.webapicore_1  |           ORDER BY [u0].[Id]
+common.webapicore_1  |       ) AS [t] ON [u.UserRoles].[UserId] = [t].[Id]
+common.webapicore_1  |       ORDER BY [t].[Id]
+common.webapicore_1  | info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+common.webapicore_1  |       Executed DbCommand (1ms) [Parameters=[@__email_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+common.webapicore_1  |       SELECT [u.Claims].[Id], [u.Claims].[ClaimType], [u.Claims].[ClaimValue], [u.Claims].[UserId]
+common.webapicore_1  |       FROM [starter_core].[UserClaims] AS [u.Claims]
+common.webapicore_1  |       INNER JOIN (
+common.webapicore_1  |           SELECT TOP(1) [u1].[Id]
+common.webapicore_1  |           FROM [starter_core].[Users] AS [u1]
+common.webapicore_1  |           WHERE [u1].[Email] = @__email_0
+common.webapicore_1  |           ORDER BY [u1].[Id]
+common.webapicore_1  |       ) AS [t0] ON [u.Claims].[UserId] = [t0].[Id]
+common.webapicore_1  |       ORDER BY [t0].[Id]
+common.webapicore_1  | info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+common.webapicore_1  |       Executed action method Common.WebApiCore.Controllers.AuthCo
+
+  datashareservice:
+    image: datashareservice
+    build:
+      context: .
+      dockerfile: DataShare/Dockerfile
+
+
+  gatewayapi:
+    image: gatewayapi
+    build:
+      context: .
+      dockerfile: GatewayApi/Dockerfile
+
+
+  common.webapicore:
+    image: commonwebapicore
+    build:
+      context: .
+      dockerfile: Common/Common.WebApiCore/Dockerfile
+    ports:
+      - "5000:5000"
+      - "1433:1433"
+

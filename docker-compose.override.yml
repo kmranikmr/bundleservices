@@ -1,0 +1,43 @@
+version: '3.4'
+
+services:
+  dataservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+
+  fileuploadservice:
+    #environment:
+      #- ASPNETCORE_ENVIRONMENT=Development
+      #- ConnectionStrings__localDb=deephouseaccountdb.cv1llisahmax.us-east-1.rds.amazonaws.com;Database=dap_identity;User Id=deephouse;Password=Idap3336;
+    ports:
+      - "80"
+
+
+  datashareservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+
+
+  gatewayapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=44300
+    ports:
+      - "53129:80"
+      - "44300:443"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+  common.webapicore:
+    #environment:
+      #- ASPNETCORE_ENVIRONMENT=Development
+      #- ConnectionStrings__localDb=deephouseaccountdb.cv1llisahmax.us-east-1.rds.amazonaws.com;Database=dap_identity;User Id=deephouse;Password=Idap3336;
+    ports:
+      - "80"
+
