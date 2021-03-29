@@ -30,8 +30,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadService", "Servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Services\FileUpload\FileUploadAPI\Common\Common.csproj", "{A7056199-EF73-479B-A7D3-B720951B94F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoadServiceApi", "Services\LoadService\LoadServiceAPI\LoadServiceApi\LoadServiceApi\LoadServiceApi.csproj", "{09A81BED-9483-48DE-BE63-7672D2957736}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{89A657CE-A2CB-4849-81EB-440F8D70ACA9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataService", "Services\DataService\DataService.csproj", "{A5FD3E4D-7B71-4BA0-AE55-CEF5191D88EB}"
