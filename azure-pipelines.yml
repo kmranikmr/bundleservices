@@ -10,8 +10,6 @@ trigger:
 
 pool: 
   name: pooler
-  demands: 
-  - Tag -equals poolercap
 
 variables:
   - group: dev
