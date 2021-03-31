@@ -33,6 +33,3 @@ steps:
     Dockerfile: docker-compose.yml
     tags: |
       latest
-
-
--
