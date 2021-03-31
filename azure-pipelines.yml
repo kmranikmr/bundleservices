@@ -8,8 +8,11 @@ trigger:
     include:
     - master
 
-pool:
-  name:pooler
+pool: 
+  name: pooler
+  demands: 
+  - Tag -equals poolercap
+
 variables:
   - group: dev
   - name: DOCKER_REPOSITORY
