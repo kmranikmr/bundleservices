@@ -11,11 +11,6 @@ trigger:
 pool: 
   name: pooler
 
-
-- task: Docker@2
-  displayName: Build docker image
-  inputs:
-    command: buildAndPush
-    Dockerfile: docker-compose.yml
-    tags: |
-      latest
+steps:
+- script: 
+    docker-compose.yml
