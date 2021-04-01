@@ -13,4 +13,4 @@ pool:
 
 steps:
 - script: 
-    docker-compose.yml
+    /home/ubuntu/bundleservices/docker-compose build
