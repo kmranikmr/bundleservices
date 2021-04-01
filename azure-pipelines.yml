@@ -12,5 +12,6 @@ pool:
   name: pooler
 
 steps:
+- checkout: self
 - bash: 
     ls
