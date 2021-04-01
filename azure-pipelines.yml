@@ -12,5 +12,5 @@ pool:
   name: pooler
 
 steps:
-- script: 
+- bash: 
     /home/ubuntu/bundleservices/docker-compose build
