@@ -15,4 +15,5 @@ steps:
 - checkout: self
 - bash:
     ls 
-    docker-compose build
+- bash:
+    docker-compose build 
