@@ -13,5 +13,6 @@ pool:
 
 steps:
 - checkout: self
-- bash: 
+- bash:
+    ls 
     docker-compose build
