@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   dataservice:
-    image: ${DOCKER_REGISTRY}/dataservice:latest
+    image:  555972294483.dkr.ecr.us-east-1.amazonaws.com/dataservice:latest
     build:
       context: .
       dockerfile: Services/DataService/Dockerfile
@@ -13,7 +13,7 @@ services:
       - "6002:6002"
 
   fileuploadservice:
-    image: ${DOCKER_REGISTRY}/fileuploadservice:latest
+    image:  555972294483.dkr.ecr.us-east-1.amazonaws.com/fileuploadservice:latest
     build:
       context: .
       dockerfile: Services/FileUpload/FileUploadAPI/FileUploadService/Dockerfile
@@ -25,21 +25,21 @@ services:
 
 
   datashareservice:
-    image: ${DOCKER_REGISTRY}/datashareservice:latest
+    image:  555972294483.dkr.ecr.us-east-1.amazonaws.com/datashareservice:latest
     build:
       context: .
       dockerfile: DataShare/Dockerfile
 
 
   gatewayapi:
-    image: ${DOCKER_REGISTRY}/gatewayapi:latest
+    image:  555972294483.dkr.ecr.us-east-1.amazonaws.com/gatewayapi:latest
     build:
       context: .
       dockerfile: GatewayApi/Dockerfile
 
 
   common.webapicore:
-    image: ${DOCKER_REGISTRY}/commonwebapicore:latest
+    image:  555972294483.dkr.ecr.us-east-1.amazonaws.com/commonwebapicore:latest
     build:
       context: .
       dockerfile: Common/Common.WebApiCore/Dockerfile
