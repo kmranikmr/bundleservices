@@ -29,7 +29,7 @@ steps:
     awsCredentials: 'aws-deephouse'
     regionName: 'us-east-1'
     scriptType: 'filePath'
-    filePath: '/home/run/dockerclean.sh'
+    filePath: '/home/ubuntu/dockerclean.sh'
 
 
     
