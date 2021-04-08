@@ -24,6 +24,12 @@ steps:
     AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY_ID)
 - bash:
     docker-compose push
+- task: AWSShellScript@1
+  inputs:
+    awsCredentials: 'aws-deephouse'
+    regionName: 'us-east-1'
+    scriptType: 'filePath'
+    filePath: '/home/run/dockerclean.sh'
 
 
     
