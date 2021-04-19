@@ -104,13 +104,16 @@ namespace DataAccess.Models
             bool isCsv = false;
             foreach (var path in filePath)
             {
+                Console.WriteLine(path);
                 using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 using (BufferedStream bs = new BufferedStream(fs))
                 using (TextReader tr = new StreamReader(bs))
                 {
                     int count = 0;
+                    
                     if (path.Contains(".csv"))
                     {
+                     
                         var delimiter = DetectDelimiter(tr as StreamReader);
                        
                         using (var parser = new CsvParser(tr, System.Globalization.CultureInfo.CurrentCulture))
@@ -134,7 +137,7 @@ namespace DataAccess.Models
                                 count++;
                             }
                         }
-
+                        Console.WriteLine(count);
                         /* using (var parser = new CsvParser(tr, System.Globalization.CultureInfo.CurrentCulture))
                         {
                             parser.Configuration.Delimiter = delimiter;
