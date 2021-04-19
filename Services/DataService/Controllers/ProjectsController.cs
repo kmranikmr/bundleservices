@@ -596,6 +596,9 @@ namespace DataService.Controllers
             {
                 Console.WriteLine("have some file");
                 files = (List<string>)projectFiles.Select(x => Path.Combine(x.FilePath, x.FileName)).ToList();
+                
+                foreach ( var f in files )
+                   Console.WriteLine(f);
                 var res =  Utils.GetFilesPreview(files.ToArray());
                 Console.WriteLine("have preview data");
                 return Ok(res);
