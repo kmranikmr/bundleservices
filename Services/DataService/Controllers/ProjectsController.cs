@@ -588,13 +588,16 @@ namespace DataService.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            Console.WriteLine("preview file");
             var projectFiles = await _repository.GetProjectFiles(projectId, projectFileIds);
             List<string> files = null;
+            Console.WriteLine("PreviewDone");
             if (projectFiles != null && projectFiles.Any())
             {
+                Console.WriteLine("have some file");
                 files = (List<string>)projectFiles.Select(x => Path.Combine(x.FilePath, x.FileName)).ToList();
                 var res =  Utils.GetFilesPreview(files.ToArray());
+                Console.WriteLine("have preview data");
                 return Ok(res);
             }
           
