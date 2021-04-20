@@ -105,7 +105,7 @@ namespace DataAccess.Models
             foreach (var path in filePath)
             {
                 Console.WriteLine(path);
-                using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read))
                 using (BufferedStream bs = new BufferedStream(fs))
                 using (TextReader tr = new StreamReader(bs))
                 {
