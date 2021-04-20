@@ -154,7 +154,7 @@ namespace FileUploadService.Controllers
                         file_id_start = projects.OrderByDescending(x => x.ProjectFileId).FirstOrDefault().ProjectFileId;
                     }
                 }
-                var folderName = Path.Combine("StaticFiles", "UserData_" + id + "\\" + request.SourceId + "\\" + request.ProjectId);
+                var folderName = Path.Combine("StaticFiles", "UserData_" + id, + request.SourceId.ToString() , + request.ProjectId.ToString());
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 if (!Directory.Exists(pathToSave))
                 {
