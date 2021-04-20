@@ -594,8 +594,8 @@ namespace DataService.Controllers
             Console.WriteLine("PreviewDone");
             if (projectFiles != null && projectFiles.Any())
             {
-                Console.WriteLine("have some file");
-                files = (List<string>)projectFiles.Select(x => Path.Combine(x.FilePath, x.FileName)).ToList();
+                Console.WriteLine("have some file ");
+                files = (List<string>)projectFiles.Select(x => {Console.WriteLine(x.FilePath + " " + x.FileName);return Path.Combine(x.FilePath, x.FileName);}).ToList();
                 
                 foreach ( var f in files )
                    Console.WriteLine(f);
