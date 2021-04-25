@@ -185,7 +185,7 @@ namespace DataAccess.Models
             {
                 if (getTable)
                 {
-                    if (toks[i] != " ")
+                    if (toks[i] != " " && !string.IsNullOrEmpty(toks[i]))
                     {
                         Console.WriteLine(toks[i]);
                         string[] modelinfo = toks[i].Split('.');
@@ -250,7 +250,7 @@ namespace DataAccess.Models
             if (ProjectId != 0)
             {
 
-                int startIndex = sql.ToLower().IndexOf("schema");
+                int startIndex = sqlQuery.ToLower().IndexOf("schema");
                 List<int> sb = new List<int>();
                 string query_with_join = "";
                 string join_other_tablename = "";
@@ -259,16 +259,16 @@ namespace DataAccess.Models
                 int index = 0;
                 do
                 {
-                    index = sql.ToLower().IndexOf("schema", index);
+                    index = sqlQuery.ToLower().IndexOf("schema", index);
 
                     if (index != -1)
                     {
                         sb.Add(index);
-                        int endIndex = sql.ToLower().IndexOf(".", index);
-                        string replacement = sql.ToLower().Substring(index, endIndex - index);
+                        int endIndex = sqlQuery.ToLower().IndexOf(".", index);
+                        string replacement = sqlQuery.ToLower().Substring(index, endIndex - index);
                         if (!replacement.Contains("_"))
                         {
-                            string replace = Regex.Replace(sql.ToLower(), replacement, replacement + "_" + ProjectId + "_" + userId);
+                            string replace = Regex.Replace(sqlQuery.ToLower(), replacement, replacement + "_" + ProjectId + "_" + userId);
                             sqlQuery = replace;
 
                         }
@@ -294,17 +294,17 @@ namespace DataAccess.Models
                 int index = 0;
                 do
                 {
-                    index = sql.ToLower().IndexOf("schema", index);
+                    index = sqlQuery.ToLower().IndexOf("schema", index);
 
                     if (index != -1)
                     {
                         sb.Add(index);
-                        int endIndex = sql.ToLower().IndexOf(".", index);
-                        string replacement = sql.ToLower().Substring(index, endIndex - index);
+                        int endIndex = sqlQuery.ToLower().IndexOf(".", index);
+                        string replacement = sqlQuery.ToLower().Substring(index, endIndex - index);
                         if (!replacement.Contains("_"))
                         {
-                            string replace = Regex.Replace(sql.ToLower(), replacement, replacement + "_" + ProjectId + "_" + userId);
-                            QueryString = replace;
+                            string replace = Regex.Replace(sqlQuery.ToLower(), replacement, replacement + "_" + ProjectId + "_" + userId);
+                            sqlQuery = replace;
                         }
                         index++;
                     }
