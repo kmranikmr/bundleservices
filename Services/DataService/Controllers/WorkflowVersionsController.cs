@@ -233,6 +233,7 @@ namespace DataService.Controllers
             {
                 return BadRequest(ModelState);
             }
+             try{
             int userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             //convert workflow 
             Console.WriteLine($"Publishing|GetWorkflowProject|{projectWorkflowId}");
@@ -246,6 +247,8 @@ namespace DataService.Controllers
             //{
             //    await _repository.UpdateWorkflowOutputTable(outputTableModel.WorkflowOutputModelId, projectWorkflowId, workflowVersionId
             //}
+            Console.WriteLine("workflowserver"+_workflowConnectionString);
+
             List<ProjectQueryDetails> ModelList;
             var workflow = NodeRepository.PrepareWorkflowJson(workflowVersion.VersionNumber, workflowProject.Result.ExternalProjectName, workflowVersion.WorkflowPropertyJson, userId, projectWorkflowId, workflowVersionId, _repository, out ModelList);
             Console.WriteLine($"Publishing|PrepareWorkflowJson Done");
@@ -260,7 +263,7 @@ namespace DataService.Controllers
                         var schemaModel = await _repository.GetModel(userId, modeldetail.ProjectId, modeldetail.SchemaName, modeldetail.ModelName);
                         if ( schemaModel != null)
                         {
-                            Console.WriteLine($"Publishing|ModelI found {schemaModel.ModelId}");
+                            Console.WriteLine($"Publishing|ModelI found-1- {schemaModel.ModelId}");
                             ModelIdsUsed.Add(schemaModel.ModelId);
                         }
                     }
@@ -269,27 +272,30 @@ namespace DataService.Controllers
                         var schemaModel = await _repository.GetModel(userId, modeldetail.ProjectName, modeldetail.SchemaName, modeldetail.ModelName);
                         if (schemaModel != null)
                         {
-                            Console.WriteLine($"Publishing|ModelI found {schemaModel.ModelId}");
+                            Console.WriteLine($"Publishing|ModelI found-2- {schemaModel.ModelId}");
                             ModelIdsUsed.Add(schemaModel.ModelId);
                         }
                     }
                     
                 }
+                Console.WriteLine("ModelsIdsUsed " + ModelIdsUsed.Count );
                 if ( ModelIdsUsed.Count > 0)
                 {
                     var ret = await _repository.AddWorkflowMonitor(userId, projectWorkflowId, workflowVersionId, ModelIdsUsed);
                     Console.WriteLine($"Publishing|workflow monitor models added Done {ret}"  );
                 }
             }
+
+            Console.WriteLine("Server Send Steps");
             //simulate excution service work time
             //  bool result = await _repository.UpdateWorkflowVersion( workflowVersionId, projectWorkflowId, projectWorkflowId, workflowVersionId);
-            string workflowUrl = "http://localhhost:8080/workflow";
+            string workflowUrl = "http://localhost:8080/workflow";
             if (_workflowConnectionString != null)
             {
                 workflowUrl = _workflowConnectionString;
             }
             Console.WriteLine("workflowserver"+_workflowConnectionString);
-            var client = new RestClient(_workflowConnectionString+":8080/workflow"); //($"https://h6661pykt9.execute-api.us-east-1.amazonaws.com/dev/workflow");
+            var client = new RestClient(workflowUrl+":8080/workflow"); //($"https://h6661pykt9.execute-api.us-east-1.amazonaws.com/dev/workflow");
             var requestRest = new RestRequest(Method.POST);
             requestRest.AddHeader("Accept", "application/json");
             //requestRest.AddJsonBody(workflow);
@@ -314,6 +320,11 @@ namespace DataService.Controllers
             //bg.RunWorkerAsync();
 
             return Ok(true);
+           }catch(Exception ex)
+	   {
+                Console.WriteLine("Exception " + ex);
+             return Ok(false); 
+           }
 
         }
 
