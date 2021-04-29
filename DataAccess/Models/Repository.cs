@@ -250,6 +250,7 @@ namespace DataAccess.Models
         }
         public async Task<SchemaModel> GetModel(int userId, int projectId, string schemaName, string ModelName)
         {
+            try{
             // IQueryable<ProjectSchema> query = _context.ProjectSchemas;
             // query = query.Include(ps => ps.SchemaModels);
             var query = await GetSchemasAsync(userId, projectId, true);
@@ -262,6 +263,11 @@ namespace DataAccess.Models
                 return Model;
             }
             return null; ;
+          }catch(Exception ex)
+	  {
+              Console.WriteLine("GetModel Error " + ex);
+              return null;
+	  }
         }
         public async Task<SchemaModel> GetModel(int userId, string projectName, string schemaName, string ModelName)
         {
