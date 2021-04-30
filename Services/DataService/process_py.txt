@@ -15,7 +15,14 @@ from sklearn import preprocessing
 from sklearn import feature_extraction
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.feature_extraction.text import TfidfTransformer
+from keras.models import Sequential
+from keras.layers import Dense, Flatten, Dropout
+from keras.layers import Bidirectional, LSTM
+from keras.utils import to_categorical
 
+from sklearn.svm import LinearSVC, SVC
+import random
+from sklearn.preprocessing import StandardScaler
 
 def remove_temp_db(delete_query):
     con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="172.17.0.1", port="5432")
