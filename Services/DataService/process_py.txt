@@ -23,6 +23,7 @@ from keras.utils import to_categorical
 from sklearn.svm import LinearSVC, SVC
 import random
 from sklearn.preprocessing import StandardScaler
+import pickle 
 
 def remove_temp_db(delete_query):
     con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="172.17.0.1", port="5432")
