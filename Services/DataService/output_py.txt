@@ -37,8 +37,14 @@ def do_transformation(df, model_df):
        insert_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')# process_block_{userid}_{digdagprojectid}_{digdagworkflowid}
     else:
        print("model")
-       insert_model_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')
-       
+       #insert_model_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')
+       if 'Sequential' in typename:
+          print("sequential")
+          insert_model_data_postgres(process_df.to_json(), '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')
+       else:
+          print("other model")
+          insert_model_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')
+
 
 def input_postgres(input_table, model_df):
     input_query = "select * from "+input_table
