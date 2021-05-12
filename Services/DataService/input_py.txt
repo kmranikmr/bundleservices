@@ -33,9 +33,9 @@ def insert_data_postgres(df, table_name, schema):
     engine = create_engine('postgresql+psycopg2://ubuntu:password@172.17.0.1:5432/digdagdb',
                 connect_args={'options': '-csearch_path={}'.format(dbschema)})
 
-    print("create engine done")
+   
     df.to_sql(table_name, engine, if_exists='append', index=False)
-    print("to sql done")
+    print("*", end = '')
     engine.dispose()
     return True
 #input from saved query
