@@ -637,6 +637,11 @@ namespace DataAccess.Models
                                         articateReplace += $"model_df['{key}'] = input_postgres_complete('{taskNameArtifactChanged}_{changedTaskID}')";
                                         articateReplace += "\r\n     ";
                                     }
+                                    task.template = task.template.Replace("[INPUTNODEID]", inputItem.Replace(sep, "_"));
+                                    if (UUidToNodeName.TryGetValue(inputItem, out string taskNameChanged))
+                                    {
+                                        task.template = task.template.Replace("[INPUTNODENAME]", taskNameChanged);
+                                    }
                                     
                                 }
                                 else
