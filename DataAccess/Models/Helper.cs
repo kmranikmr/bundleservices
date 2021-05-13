@@ -279,7 +279,36 @@ namespace DataAccess.Models
             }
             return sqlQuery;
         }
-
+        public static string[] GetTableNames(string query)
+        {
+            List<string> tableNames = new List<string>();
+            string[] toks = query.ToLower().Split(' ');
+            bool getTable = false;
+            for (int i = 0; i < toks.Length; i++)
+            {
+                if (getTable)
+                {
+                    if (toks[i] != " ")
+                    {
+                        Console.WriteLine(toks[i]);
+                        tableNames.Add(toks[i]);
+                        getTable = false;
+                    }
+                    else
+                        continue;
+                }
+                if (toks[i] == "from" || toks[i] == "join")
+                {
+                    if ( i <=  toks.Length - 1)
+                    {
+                        getTable = true;
+                    }
+                }
+               
+            }
+            
+            return tableNames.ToArray();
+        }
         public static string[] GetWorkflowModelNames(IRepository repository, int workflowProjectid, int workflowVersionId, int userId, string[] displayNames)
         {
             var result = repository.GetWorkflowOutputTableNames(workflowProjectid, workflowVersionId, userId, displayNames);
