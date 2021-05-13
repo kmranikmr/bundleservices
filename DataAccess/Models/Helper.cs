@@ -290,6 +290,7 @@ namespace DataAccess.Models
                 {
                     if (toks[i] != " ")
                     {
+                        Console.WriteLine("workflow table");
                         Console.WriteLine(toks[i]);
                         tableNames.Add(toks[i]);
                         getTable = false;
@@ -311,6 +312,7 @@ namespace DataAccess.Models
         }
         public static string[] GetWorkflowModelNames(IRepository repository, int workflowProjectid, int workflowVersionId, int userId, string[] displayNames)
         {
+           
             var result = repository.GetWorkflowOutputTableNames(workflowProjectid, workflowVersionId, userId, displayNames);
             List<string> tables = new List<string>();
             foreach (var model in result.Result)
@@ -321,10 +323,11 @@ namespace DataAccess.Models
         }
         public static string GetQueryWorkflowStatementV2(IRepository repo, string sql, int ProjectId, int versionID, int userId)
         {
-            List<string> tables = new List<string>();
+            Console.WriteLine($"sql {sql} projectid {ProjectId} {versionID} {userId} ");
+            
             string[] tableNames = GetTableNames(sql);
-            GetWorkflowModelNames(repo, ProjectId, versionID, userId, tableNames);
-            for (int i = 0; i < tables.Count; i++)
+            var tables = GetWorkflowModelNames(repo, ProjectId, versionID, userId, tableNames);
+            for (int i = 0; i < tables.Length; i++)
             {
                 if (tableNames.Length > i)
                 {
