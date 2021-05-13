@@ -22,7 +22,7 @@ from keras.layers import Bidirectional, LSTM
 from keras.utils import to_categorical
 import sklearn
 from io import BytesIO
-import dill,base64,tempfile
+import base64,tempfile
 from joblib import load
 from sklearn.svm import LinearSVC, SVC
 
