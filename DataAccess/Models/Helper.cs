@@ -280,6 +280,31 @@ namespace DataAccess.Models
             return sqlQuery;
         }
 
+        public static string[] GetWorkflowModelNames(IRepository repository, int workflowProjectid, int workflowVersionId, int userId, string[] displayNames)
+        {
+            var result = repository.GetWorkflowOutputTableNames(workflowProjectid, workflowVersionId, userId, displayNames);
+            List<string> tables = new List<string>();
+            foreach (var model in result.Result)
+            {
+                tables.Add(model.TableName);
+            }
+            return tables.ToArray();
+        }
+        public static string GetQueryWorkflowStatementV2(IRepository repo, string sql, int ProjectId, int versionID, int userId)
+        {
+            List<string> tables = new List<string>();
+            string[] tableNames = GetTableNames(sql);
+            GetWorkflowModelNames(repo, ProjectId, versionID, userId, tableNames);
+            for (int i = 0; i < tables.Count; i++)
+            {
+                if (tableNames.Length > i)
+                {
+                    sql = sql.ToLower().Replace(tableNames[i], tables[i]);
+                    return sql;
+                }
+            }
+            return sql;
+        }
         public static string GetQueryWorkflowStatement(string sql, int ProjectId, int versionID, int userId)
         {
             string sqlQuery = sql;
@@ -454,7 +479,10 @@ namespace DataAccess.Models
                             projectId = task.inputData.workflowQueryTask.workflowProjectid;
                             versionId = task.inputData.workflowQueryTask.workflowVersionId;
                             query = task.inputData.workflowQueryTask.queryList[0];
-                            query = GetQueryWorkflowStatement(query, projectId, versionId, userId);
+                            //query = GetQueryWorkflowStatement(query, projectId, versionId, userId);
+                            Console.WriteLine("query after workflow change");
+                            query = GetQueryWorkflowStatementV2(repository, query, projectId, versionId, userId);//repalcing - GetQueryWorkflowStatement(query, projectId, versionId, userId);
+                            Console.WriteLine(query);
                             if (isTest && LimitedRun == true)
                             {
                                 query = query + " limit 100";
