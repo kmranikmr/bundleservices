@@ -41,6 +41,7 @@ def do_transformation(df, model_df):
     else:
        print("model")
        #insert_model_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')
+       typename = type(process_df).__name__
        if 'Sequential' in typename:
           print("sequential")
           insert_model_data_postgres(process_df.to_json(), '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')
