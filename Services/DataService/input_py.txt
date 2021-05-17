@@ -13,7 +13,7 @@ import dill,base64,tempfile
 from joblib import load
 import pickle
 from keras.models import model_from_json
-
+import pandas as pd
 
 def remove_temps(tables):
     con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="idapt.duckdns.org", port="5432")
