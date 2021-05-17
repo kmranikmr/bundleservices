@@ -36,7 +36,7 @@ def insert_model_data_postgres(model, table_name, schema):
     #params = config()
     # connect to the PostgresQL database
     print("connect")
-    conn = psycopg2.connect(dbname="postgres",user="postgres",password="dapdata123",host="idapt.duckdns.org",por$
+    conn = psycopg2.connect(dbname="postgres",user="postgres",password="dapdata123",host="idapt.duckdns.org",port="6789")
     # create a new cursor object
     print("connected")
     cur = conn.cursor()
