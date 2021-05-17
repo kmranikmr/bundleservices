@@ -8,6 +8,11 @@ from psycopg2.extras import RealDictCursor
 from sqlalchemy import MetaData
 from sqlalchemy import create_engine
 from sqlalchemy import event
+from io import BytesIO
+import dill,base64,tempfile
+from joblib import load
+import pickle
+from keras.models import model_from_json
 
 
 def remove_temps(tables):
@@ -24,9 +29,34 @@ def remove_temps(tables):
     con.close()
     print("droped " + tables)
 
+
+def insert_model_data_postgres(model, table_name, schema):
+    dbschema = schema
+    sql_stmt = """create table if not exists {}(model_pickle bytea)""".format( table_name)
+    #params = config()
+    # connect to the PostgresQL database
+    print("connect")
+    conn = psycopg2.connect(dbname="postgres",user="postgres",password="dapdata123",host="idapt.duckdns.org",por$
+    # create a new cursor object
+    print("connected")
+    cur = conn.cursor()
+    cur.execute(sql_stmt)
+    # execute the INSERT statement
+    cur.execute("INSERT INTO " + table_name +" (model_pickle) " +
+                    "VALUES(%s)",
+                    (psycopg2.Binary(pickle.dumps(model)),))
+    # commit the changes to the database
+    conn.commit()
+   # close the communication with the PostgresQL database
+    cur.close()
+
 def do_transformation(df):
     df = process_custom_code(df)
-    insert_data_postgres(df, '[NODENAME]_[NODEID]', 'public')
+    if isinstance(df, pd.DataFrame):
+       insert_data_postgres(df, '[NODENAME]_[NODEID]', 'public')
+    else:
+       insert_model_data_postgres(df, '[NODENAME]_[NODEID]', 'public')
+
 
 def insert_data_postgres(df, table_name, schema):
     dbschema = schema
