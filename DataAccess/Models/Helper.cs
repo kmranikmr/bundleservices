@@ -528,6 +528,7 @@ namespace DataAccess.Models
                         {
                             Console.WriteLine("temptables" + tempTables);
                             task.template = task.template.Replace("[REMOVEALL_TEMP]", "remove_temps(" + "\"" + tempTables + "\"" + ")");
+                            cleared = true;
                         }else
                         {
                             task.template = task.template.Replace("[REMOVEALL_TEMP]", "");
