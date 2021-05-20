@@ -31,12 +31,13 @@ def remove_temps(tables):
 
 
 def insert_model_data_postgres(model, table_name, schema):
+    print(table_name)
     dbschema = schema
     sql_stmt = """create table if not exists {}(model_pickle bytea)""".format( table_name)
     #params = config()
     # connect to the PostgresQL database
     print("connect")
-    conn = psycopg2.connect(dbname="postgres",user="postgres",password="dapdata123",host="idapt.duckdns.org",port="6789")
+    conn = psycopg2.connect(dbname="digdagdb",user="ubuntu",password="password",host="172.17.0.1",port="5432")
     # create a new cursor object
     print("connected")
     cur = conn.cursor()
