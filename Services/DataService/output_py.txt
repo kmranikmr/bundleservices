@@ -38,7 +38,8 @@ def do_transformation(df, model_df):
     if isinstance(process_df, pd.DataFrame):
        print("regular")
        print(process_df.head())
-       insert_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')# process_block_{userid}_{digdagprojectid}_{digdagworkflowid}
+       if not process_df.empty:
+          insert_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')# process_block_{userid}_{digdagprojectid}_{digdagworkflowid}
     else:
        print("model")
        #insert_model_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')
