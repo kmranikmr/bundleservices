@@ -60,7 +60,7 @@ def input_postgres(input_table, model_df):
         cursor.execute(input_query)
         while True:
             col_names = []
-            records = cursor.fetchmany(size=100000)
+            records = cursor.fetchmany(size=500000)
             col_set = False
             if not col_set:
                 for elt in cursor.description:
