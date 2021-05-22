@@ -37,6 +37,7 @@ def do_transformation(df, model_df):
     process_df = process_custom_code(df, model_df)
     if isinstance(process_df, pd.DataFrame):
        print("regular")
+       print(process_df.head())
        insert_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')# process_block_{userid}_{digdagprojectid}_{digdagworkflowid}
     else:
        print("model")
@@ -58,7 +59,7 @@ def input_postgres(input_table, model_df):
         cursor.execute(input_query)
         while True:
             col_names = []
-            records = cursor.fetchmany(size=500000)
+            records = cursor.fetchmany(size=100000)
             col_set = False
             if not col_set:
                 for elt in cursor.description:
