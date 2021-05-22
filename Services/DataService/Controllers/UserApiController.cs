@@ -53,8 +53,9 @@ namespace DataService.Controllers
                     cryptoProvider.GetBytes(secretKeyByteArray);
                     APIKey = Convert.ToBase64String(secretKeyByteArray);
                 }
-                
+                Console.WriteLine($"apikey {APIKey}");
                 var userKey = await _repository.AddUserKey(userId, Api.GenerateHashedKey(APIKey));
+                Console.WriteLine($"userKey {userKey}");
                 if (userKey != null)
                 {
                     return new UserKeyDTO(APIKey);
