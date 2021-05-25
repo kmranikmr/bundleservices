@@ -42,7 +42,7 @@ namespace DataService.Controllers
         {
             try
             {
-
+                Console.WriteLine("adduserkey");
                 int userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 //call add user key
                 //return the key
