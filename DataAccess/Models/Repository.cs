@@ -1659,6 +1659,7 @@ namespace DataAccess.Models
           }catch(Exception ex)
           {
               Console.WriteLine(ex);
+              return null;
           } 
         }
         public async Task<UserSharedUrl[]> GetSharedUrl(int userId, bool isWorkflow = false)
