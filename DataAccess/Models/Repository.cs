@@ -1618,10 +1618,13 @@ namespace DataAccess.Models
         }
         public async Task<UserApiKey> AddUserKey(int userId, string apiKey)
         {
+           try{
+            Console.WriteLine($"adduserkey repository {apiKey}");
             UserApiKey userdata = _context.UserApiKeys.Where(x => x.UserId == userId && x.IsDeleted == false).FirstOrDefault();
 
             if (userdata == null)
             {
+                Console.WriteLine("userdata is null");
                 UserApiKey userApiKey = new UserApiKey();
                
                 userApiKey.ApiKey = apiKey;//hash and add
@@ -1635,10 +1638,11 @@ namespace DataAccess.Models
             }
             else
             {
+               Console.WriteLine("userapikey exists");
                 userdata.IsDeleted = true;
                 _context.Entry(userdata).Property(x => x.IsDeleted).IsModified = true;
                 await _context.SaveChangesAsync();
-
+               Console.WriteLine("saved isdeleted to true");
                 UserApiKey userApiKey = new UserApiKey();
 
                 userApiKey.ApiKey = apiKey;//hash and add
@@ -1648,10 +1652,14 @@ namespace DataAccess.Models
                 _context.UserApiKeys.Add(userApiKey);
                 _context.Entry(userApiKey).State = EntityState.Added;
                 _context.SaveChanges();
+               Console.WriteLine("savedCHanges");
                 return userApiKey;
 
             }
-            
+          }catch(Exception ex)
+          {
+              Console.WriteLine(ex);
+          } 
         }
         public async Task<UserSharedUrl[]> GetSharedUrl(int userId, bool isWorkflow = false)
         {
