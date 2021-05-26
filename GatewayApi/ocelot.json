@@ -6,7 +6,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com",
           "Port": 6005
         }
       ],
@@ -19,7 +19,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com",
           "Port": 6005
         }
       ],
