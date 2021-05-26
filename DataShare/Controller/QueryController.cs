@@ -64,13 +64,13 @@ namespace DataShareService.Controller
                 {
                     if (everything == "_all")
                     {
-                        url = $"http:///idapt.duckdns.org:7891/{postgresdatabase}/public/{queryname}";//change this
+                        url = $"http://idapt.duckdns.org:7891/{postgresdatabase}/public/{queryname}";//change this
                     }
                     else
                     {
                         if (everything.Contains("page"))
                         {
-                            url = $"http:///idapt.duckdns.org:7891/{postgresdatabase}/public/{queryname}?{everything}";
+                            url = $"http://idapt.duckdns.org:7891/{postgresdatabase}/public/{queryname}?{everything}";
                             //query?_page=3&_page_size=3
                            // url = url.Replace("query?", "?");
                         }
