@@ -111,7 +111,7 @@ namespace DataService.Controllers
                          
                             string Name = history.Result.SearchHistoryName;
                            
-                            Console.WriteLine($"Name {Name}"):
+                            Console.WriteLine($"Name {Name}");
                             var updated = _repository.AddSharedUrl(userId, id, $"/project/{Name}", false);
 
                             Console.WriteLine($"resolvedquery {history.Result.ResolvedSearchQuery}");
