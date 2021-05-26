@@ -45,6 +45,7 @@ namespace DataShareService.Controller
             try
             {
                 //string queryname = "kkk";
+                Console.WriteLine("query controller");
                 var url = $"http://localhost:6002/api/UserApi/CheckSharedData/{queryname}";//change this
                 var restClient = new RestClient(url);
                 var requestTable = new RestRequest(Method.GET);
@@ -63,13 +64,13 @@ namespace DataShareService.Controller
                 {
                     if (everything == "_all")
                     {
-                        url = $"http://127.0.0.1:7891/{postgresdatabase}/public/{queryname}";//change this
+                        url = $"http:///idapt.duckdns.org:7891/{postgresdatabase}/public/{queryname}";//change this
                     }
                     else
                     {
                         if (everything.Contains("page"))
                         {
-                            url = $"http://127.0.0.1:7891/{postgresdatabase}/public/{queryname}?{everything}";
+                            url = $"http:///idapt.duckdns.org:7891/{postgresdatabase}/public/{queryname}?{everything}";
                             //query?_page=3&_page_size=3
                            // url = url.Replace("query?", "?");
                         }
@@ -86,6 +87,7 @@ namespace DataShareService.Controller
             }
             catch (Exception ex)
             {
+               Console.WriteLine(ex);
                 return null;
             }
         }
