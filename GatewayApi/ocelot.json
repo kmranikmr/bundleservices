@@ -30,7 +30,7 @@
   ],
 
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:6010"
+    "BaseUrl": "http://ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com:6010"
   }
 
 }
