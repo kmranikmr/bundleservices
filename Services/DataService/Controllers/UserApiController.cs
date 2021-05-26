@@ -108,10 +108,13 @@ namespace DataService.Controllers
                         var history = _repository.GetSearchHistory(id, userId);
                         if (history != null)
                         {
+                         
                             string Name = history.Result.SearchHistoryName;
-
+                           
+                            Console.WriteLine($"Name {Name}"):
                             var updated = _repository.AddSharedUrl(userId, id, $"/project/{Name}", false);
 
+                            Console.WriteLine($"resolvedquery {history.Result.ResolvedSearchQuery}");
                             var ret = Utils.CallCreateView(history.Result.ResolvedSearchQuery, Name, authorization);
 
                             if ( ret.Result == false)
