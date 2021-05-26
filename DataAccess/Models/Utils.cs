@@ -13,7 +13,7 @@ namespace DataAccess.Models
 
         public static async Task<bool> CallCreateView(string query, string viewName, string authorization)
         {
-            var url = $"http://localhost:6004/api/Search/CreateView";//change this
+            var url = $"http://ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com:6004/api/Search/CreateView";//change this
             var restClient = new RestClient(url);
             var requestTable = new RestRequest(Method.POST);
             requestTable.AddHeader("Accept", "application/json");
@@ -22,13 +22,16 @@ namespace DataAccess.Models
             IRestResponse responseTable = await restClient.ExecuteAsync(requestTable);
             if ( responseTable.Content == "false")
             {
+                Console.WriteLine($"responseTble {responseTable.Content }")
                 return false;
             }
+             Console.WriteLine($"responseTble {responseTable.Content }")
+
             return true;
         }
         public static async Task<string> GetMappedQuery(string query, int projectId, string authorization)
         {
-            var url = $"http://localhost:6004/api/Search/MappedQuery/false";//change this
+            var url = $"http://ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com:6004/api/Search/MappedQuery/false";//change this
             var restClient = new RestClient(url);
             var requestTable = new RestRequest(Method.POST);
             requestTable.AddHeader("Accept", "application/json");
