@@ -22,10 +22,10 @@ namespace DataAccess.Models
             IRestResponse responseTable = await restClient.ExecuteAsync(requestTable);
             if ( responseTable.Content == "false")
             {
-                Console.WriteLine($"responseTble {responseTable.Content }")
+                Console.WriteLine($"responseTble {responseTable.Content }");
                 return false;
             }
-             Console.WriteLine($"responseTble {responseTable.Content }")
+             Console.WriteLine($"responseTble {responseTable.Content }");
 
             return true;
         }
