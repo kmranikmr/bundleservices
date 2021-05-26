@@ -30,7 +30,7 @@
   ],
 
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:80"
+    "BaseUrl": "http://localhost:6010"
   }
 
 }
