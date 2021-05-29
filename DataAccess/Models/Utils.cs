@@ -31,6 +31,7 @@ namespace DataAccess.Models
         }
         public static async Task<string> GetMappedQuery(string query, int projectId, string authorization)
         {
+            Console.WriteLine("GetMappedQuery");
             var url = $"http://ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com:6004/api/Search/MappedQuery/false";//change this
             var restClient = new RestClient(url);
             var requestTable = new RestRequest(Method.POST);
@@ -43,7 +44,9 @@ namespace DataAccess.Models
             IRestResponse responseTable = await restClient.ExecuteAsync(requestTable);
             if (responseTable != null)
             {
+                Console.WriteLine($"mapped query : {responseTable.Content}");
                 return responseTable.Content;
+               
             }
             return "";
         }
