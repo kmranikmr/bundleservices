@@ -783,8 +783,8 @@ namespace DataService.Controllers
                         searchHistoryDTO.UserId = userId;
                         searchHistoryDTO.ProjectId = projectId;
                         searchHistory.ResolvedSearchQuery = Utils.GetMappedQuery(searchHistory.SearchQuery, projectId, authorization).Result;
-
-                        // searchHistory.
+                        Console.WriteLine($"searchHistory.ResolvedSearchQuery {searchHistory.ResolvedSearchQuery}");
+                         // searchHistory.
                         //add cal to queryservic eget actual mappeed query
                         //TBD: add soem user fiendly name geneftaor for search histroy
                         _repository.Add(searchHistory);
