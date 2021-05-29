@@ -113,7 +113,7 @@ namespace DataService.Controllers
                            
                             Console.WriteLine($"Name {Name}");
                             var updated = _repository.AddSharedUrl(userId, id, $"/project/{Name}", false);
-
+                            
                             Console.WriteLine($"resolvedquery {history.Result.ResolvedSearchQuery}");
                             var ret = Utils.CallCreateView(history.Result.ResolvedSearchQuery, Name, authorization);
 
