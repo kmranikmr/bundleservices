@@ -256,7 +256,7 @@ namespace FileUploadService.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> S3Data (S3info s3Info)
         {
-            int indexPath = s3Info.key.LastIndexOf('\\');
+            int indexPath = s3Info.key.LastIndexOf('/');
             string path = "";
             string filename = "";
             if( indexPath >= 0 )
@@ -264,14 +264,16 @@ namespace FileUploadService.Controllers
                 path = s3Info.key.Substring(0, indexPath);
                 filename = s3Info.key.Substring(indexPath + 1);
             }
+            Console.WriteLine($"path {path} filename {filename}");
             var folderName = Path.Combine("AutoIngestion", path);
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
             if (!Directory.Exists(pathToSave))
             {
                 Directory.CreateDirectory(pathToSave);
             }
+           
             string fullPath = Path.Combine(pathToSave, filename);
-
+            Console.WriteLine ($"foldername {folderName} pathToSave {pathToSave} fullPath {fullPath} ");
             await S3Helper.GetFiles(fullPath, s3Info.bucketname, s3Info.key);
             return Ok();
         }
