@@ -35,14 +35,20 @@ namespace FileUploadService.Utils
         public static async Task<bool> DownloadData(string path, string bucketname, string key)
         {
             Console.WriteLine($"path{path} bucketname{bucketname} key{key}");
+            try{
             var credentials = new BasicAWSCredentials(accessid, secretkey);
             var client = new AmazonS3Client(credentials, bucketRegion);
             
             var fileTransferUtility = new TransferUtility(client);
             Console.WriteLine("trasferring");
             await fileTransferUtility.DownloadAsync(path, bucketname, key);
- 
+            
             return true;
+            }catch(Exception ex)
+            {
+                 Console.WriteLine(ex.Message);
+                 return false;
+            }
         }
         public static async Task GetFiles(string toPath, string bucketName, string keyName)
         {
