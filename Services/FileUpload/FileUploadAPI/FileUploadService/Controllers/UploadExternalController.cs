@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-
+using FileUploadService.Utils;
 namespace FileUploadService.Controllers
 {
     [Route("api/[controller]")]
