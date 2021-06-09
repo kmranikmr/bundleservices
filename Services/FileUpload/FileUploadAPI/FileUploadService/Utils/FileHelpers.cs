@@ -13,6 +13,56 @@ using Microsoft.Net.Http.Headers;
 
 namespace FileUploadService.Utils
 {
+    public class S3info{
+        public string bucketname { get; set; }
+        public string key { get; set; }
+    }
+    public static class S3Helper
+    {
+        //private const string bucketName = "autoingestion";
+        //private const string keyName = " my secret key";
+        private const string accessid = "AKIAYC4UH65JRCBE5L6Y";
+        private const string secretkey = "3jzjHKitBiTKld1Gufe7hOeAc9Izq+3vl3Em8+J2";
+        // Specify your bucket region (an example region is shown).
+        private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USEast1;
+
+        public static async Task<bool> DownloadData(string path, string bucketname, string key)
+        {
+            var credentials = new BasicAWSCredentials(accessid, secretkey);
+            var client = new AmazonS3Client(credentials, bucketRegion);
+
+            var fileTransferUtility = new TransferUtility(client);
+            await fileTransferUtility.DownloadAsync(path, bucketname, key);
+            return true;
+        }
+        public static async Task GetFiles(string toPath, string bucketName, string keyName)
+        {
+            var client = new AmazonS3Client(accessid, secretkey);
+            GetObjectRequest request = new GetObjectRequest
+            {
+                BucketName = bucketName,
+                Key = keyName
+            };
+
+            await DownloadData(toPath, bucketName, keyName);
+            //using (GetObjectResponse response  = await client.GetObjectAsync(request))
+            //{
+            //    using (Stream responseStream = response.ResponseStream)
+            //    {
+            //        using (StreamReader reader = new StreamReader(responseStream))
+            //        {
+            //           // string title = response.Metadata["x-amz-meta-title"]; // Assume you have "title" as medata added to the object.
+            //            string contentType = response.Headers["Content-Type"];
+            //            //Console.WriteLine("Object metadata, Title: {0}", title);
+            //            Console.WriteLine("Content type: {0}", contentType);
+
+            //            var responseBody = reader.ReadToEnd(); // Now you process the response body.
+            //        }
+            //    }
+            //}
+        }
+    }   
+
     public static class FileHelpers
     {
         // If you require a check on specific characters in the IsValidFileExtensionAndSignature
