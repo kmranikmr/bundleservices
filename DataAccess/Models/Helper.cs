@@ -187,7 +187,7 @@ namespace DataAccess.Models
                 {
                     if (toks[i] != " " && !string.IsNullOrEmpty(toks[i]))
                     {
-                        Console.WriteLine(toks[i]);
+                        Console.WriteLine("piece" + toks[i]);
                         string[] modelinfo = toks[i].Split('.');
                         if (modelinfo.Length == 2)
                         {
@@ -224,13 +224,13 @@ namespace DataAccess.Models
                     else
                         continue;
                 }
-                if (toks[i] == "from" || toks[i] == "join")
+                if (toks[i].Trim() == "from" || toks[i].Trim()  == "join")
                 {
                     if (i <= toks.Length - 1)
                     {
                         getTable = true;
                     }
-                    if ( toks[i] == "from")
+                    if ( toks[i].Trim() == "from")
                     {
                         if (automationON == true)
                         {
@@ -485,10 +485,13 @@ namespace DataAccess.Models
                         if (task.inputData.projectQueryTask != null)
                         {
                             projectId = task.inputData.projectQueryTask.projectId;
+                            Console.WriteLine("automationCheck");
                             if(task.headerList != null && task.headerList.keyValuesMap != null )
                             {
+                                Console.WriteLine("automation On key check");
                                 if (task.headerList.keyValuesMap.ContainsKey("automation"))
                                 {
+                                    Console.WriteLine(" automationON true");
                                     automationON = true;
                                 }
 
@@ -541,8 +544,6 @@ namespace DataAccess.Models
                     }
                     // replace inputdata
                     task.template = task.template.Replace("[INPUTDATA]", query);
-
-
                 }
 
                 if (task.nodeType.Contains("process"))
