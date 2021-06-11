@@ -183,7 +183,7 @@ namespace DataAccess.Models
             List<ProjectQueryDetails> ModelDetails = new List<ProjectQueryDetails>();
             for (int i = 0; i < toks.Length; i++)
             {
-                Console.WriteLine("token parse-" + (toks[i]+"-");
+                Console.WriteLine("token parse-" + toks[i]+"-");
                 if (getTable)
                 {
                     if (toks[i] != " " && !string.IsNullOrEmpty(toks[i]))
