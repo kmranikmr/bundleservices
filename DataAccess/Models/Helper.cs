@@ -183,6 +183,7 @@ namespace DataAccess.Models
             List<ProjectQueryDetails> ModelDetails = new List<ProjectQueryDetails>();
             for (int i = 0; i < toks.Length; i++)
             {
+                Console.WriteLine("token parse-" + (toks[i]+"-");
                 if (getTable)
                 {
                     if (toks[i] != " " && !string.IsNullOrEmpty(toks[i]))
@@ -232,8 +233,10 @@ namespace DataAccess.Models
                     }
                     if ( toks[i].Trim() == "from")
                     {
+                        Console.WriteLine("from found adding real session id");
                         if (automationON == true)
                         {
+                             Console.WriteLine("from found adding inside real session id");
                             toks[i - 1] = toks[i - 1] + ", sessionid as real_session_id ";
                         }
                     }
@@ -242,6 +245,7 @@ namespace DataAccess.Models
             }
 
             formattedQuery = string.Join(" ", toks);
+            Console.WriteLine("fomatted query " + formattedQuery );
             return ModelDetails;
         }
         public static string GetQueryStatement(string sql, int ProjectId, int userId)
