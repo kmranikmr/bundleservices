@@ -237,7 +237,7 @@ namespace DataAccess.Models
                         if (automationON == true)
                         {
                              Console.WriteLine("from found adding inside real session id");
-                            toks[i - 1] = toks[i - 1] + ", sessionid as real_session_id ";
+                            //toks[i - 1] = toks[i - 1] + ", sessionid as real_session_id ";
                         }
                     }
                 }
@@ -245,6 +245,12 @@ namespace DataAccess.Models
             }
 
             formattedQuery = string.Join(" ", toks);
+            if (automationON == true)
+            {
+                formattedQuery = $"select *, sessionid as real_session_id from ({formattedQuery})queryGroup";
+            }
+
+            //formattedQuery = string.Join(" ", toks);
             Console.WriteLine("fomatted query " + formattedQuery );
             return ModelDetails;
         }
