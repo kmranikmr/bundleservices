@@ -81,7 +81,7 @@ namespace FileUploadService.Utils
             Console.WriteLine("RunConversion");
             ProcessStartInfo start = new ProcessStartInfo();
             start.FileName = "/usr/bin/python3";//cmd is full path to python.exe
-            start.Arguments = $"{path} {filename}";//args is path to .py file and any cmd line args
+            start.Arguments = $"/home/ubuntu/ecgconvertor.py {path} {filename}";//args is path to .py file and any cmd line args
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
             using (Process process = Process.Start(start))
