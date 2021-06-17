@@ -265,7 +265,7 @@ namespace FileUploadService.Controllers
                 filename = s3Info.key.Substring(indexPath + 1);
             }
             Console.WriteLine($"path {path} filename {filename}");
-            var folderName = Path.Combine("AutoIngestion", path);
+            var folderName = Path.Combine("AutoIngestion", path,"tbp");
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
             if (!Directory.Exists(pathToSave))
             {
@@ -275,6 +275,7 @@ namespace FileUploadService.Controllers
             string fullPath = Path.Combine(pathToSave, filename);
             Console.WriteLine ($"foldername {folderName} pathToSave {pathToSave} fullPath {fullPath} ");
             await S3Helper.GetFiles(fullPath, s3Info.bucketname, s3Info.key);
+            S3Helper.RunConversion(folderName, filename);
             return Ok();
         }
 
