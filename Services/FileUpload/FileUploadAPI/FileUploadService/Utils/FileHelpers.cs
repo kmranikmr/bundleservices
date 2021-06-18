@@ -52,25 +52,6 @@ namespace FileUploadService.Utils
             }
         }
 
-        /*public static async Task<bool> DownloadData(string path, string bucketname, string key)
-        {
-            Console.WriteLine($"path{path} bucketname{bucketname} key{key}");
-            try{
-            var credentials = new BasicAWSCredentials(accessid, secretkey);
-            var client = new AmazonS3Client(credentials, bucketRegion);
-            
-            var fileTransferUtility = new TransferUtility(client);
-            Console.WriteLine("trasferring");
-            await fileTransferUtility.DownloadAsync(path, bucketname, key);
-            
-            return true;
-            }catch(Exception ex)
-            {
-                 Console.WriteLine(ex.Message);
-                 return false;
-            }
-        }
-        */
         //public static async Task GetFiles(string toPath, string bucketName, string keyName)
          public static async Task GetFiles(string toPath, string bucketName, string keyName, string s3path)
          {
@@ -81,7 +62,7 @@ namespace FileUploadService.Utils
                 Key = keyName
             };
 
-           // await DownloadData(toPath, bucketName, keyName);
+          
              await DownloadData(toPath, bucketName, keyName, s3path);
             //using (GetObjectResponse response  = await client.GetObjectAsync(request))
             //{
@@ -106,7 +87,7 @@ namespace FileUploadService.Utils
             ProcessStartInfo start = new ProcessStartInfo();
             Console.WriteLine("Conversion 2");
             start.FileName = "/usr/bin/python3";//cmd is full path to python.exe
-            start.Arguments = string.Format("\"{0}\" \"{1}\" \"{2}\"", /home/ubuntu/ecgconvertor.py, path, filename);//$"/home/ubuntu/ecgconvertor.py {path} {filename}";//args is path to .py file and any cmd line args
+            start.Arguments = string.Format("\"{0}\" \"{1}\" \"{2}\"", "/home/ubuntu/ecgconvertor.py", path, filename);//$"/home/ubuntu/ecgconvertor.py {path} {filename}";//args is path to .py file and any cmd line args
             start.UseShellExecute = false; 
             start.RedirectStandardOutput = true;
             using (Process process = Process.Start(start))
