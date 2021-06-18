@@ -275,7 +275,7 @@ namespace FileUploadService.Controllers
                        
             string fullPath = Path.Combine(pathToSave, filename);
             Console.WriteLine ($"foldername {folderName} pathToSave {pathToSave} fullPath {fullPath} ");
-             await S3Helper.GetFiles(pathToSave, s3Info.bucketname, s3Info.key, s3folderName);
+             await S3Helper.GetFiles(pathToSave, s3Info.bucketname, s3Info.key, path);
             S3Helper.RunConversion(folderName, filename);
             return Ok();
         }
