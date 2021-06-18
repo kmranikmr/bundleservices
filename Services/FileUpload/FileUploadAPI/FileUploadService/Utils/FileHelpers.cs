@@ -84,6 +84,7 @@ namespace FileUploadService.Utils
         public static bool RunConversion(string path, string filename)
         {
             Console.WriteLine("RunConversion");
+            try{
             ProcessStartInfo start = new ProcessStartInfo();
             Console.WriteLine("Conversion 2");
             start.FileName = "/usr/bin/python3";//cmd is full path to python.exe
@@ -101,6 +102,11 @@ namespace FileUploadService.Utils
                 }
                
             }
+          }catch(Exception ex)
+	  {
+             Console.WriteLine(ex.Message);
+             return false;  
+          }
            
         }
     }   
