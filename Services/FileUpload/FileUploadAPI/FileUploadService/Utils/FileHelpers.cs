@@ -31,8 +31,28 @@ namespace FileUploadService.Utils
         private const string secretkey = "3jzjHKitBiTKld1Gufe7hOeAc9Izq+3vl3Em8+J2";
         // Specify your bucket region (an example region is shown).
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USEast1;
+    
+        public static async Task<bool> DownloadData(string path, string bucketname, string key, string s3path)
+        {
+            try
+            {
+                Console.WriteLine($"path{path} bucketname{bucketname} key{key} s3path {s3path}");
 
-        public static async Task<bool> DownloadData(string path, string bucketname, string key)
+                var credentials = new BasicAWSCredentials(accessid, secretkey);
+                var client = new AmazonS3Client(credentials, bucketRegion);
+
+                var fileTransferUtility = new TransferUtility(client);
+                await fileTransferUtility.DownloadDirectoryAsync(bucketname,s3path,path);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        /*public static async Task<bool> DownloadData(string path, string bucketname, string key)
         {
             Console.WriteLine($"path{path} bucketname{bucketname} key{key}");
             try{
@@ -50,6 +70,7 @@ namespace FileUploadService.Utils
                  return false;
             }
         }
+        */
         public static async Task GetFiles(string toPath, string bucketName, string keyName)
         {
             var client = new AmazonS3Client(accessid, secretkey);
@@ -59,7 +80,8 @@ namespace FileUploadService.Utils
                 Key = keyName
             };
 
-            await DownloadData(toPath, bucketName, keyName);
+           // await DownloadData(toPath, bucketName, keyName);
+             await DownloadData(toPath, bucketName, keyName, s3path);
             //using (GetObjectResponse response  = await client.GetObjectAsync(request))
             //{
             //    using (Stream responseStream = response.ResponseStream)
@@ -76,13 +98,15 @@ namespace FileUploadService.Utils
             //    }
             //}
         }
+
         public static bool RunConversion(string path, string filename)
         {
             Console.WriteLine("RunConversion");
             ProcessStartInfo start = new ProcessStartInfo();
+            Console.WriteLine("Conversion 2");
             start.FileName = "/usr/bin/python3";//cmd is full path to python.exe
-            start.Arguments = $"/home/ubuntu/ecgconvertor.py {path} {filename}";//args is path to .py file and any cmd line args
-            start.UseShellExecute = false;
+            start.Arguments = string.Format("\"{0}\" \"{1}\" \"{2}\"", /home/ubuntu/ecgconvertor.py, path, filename);//$"/home/ubuntu/ecgconvertor.py {path} {filename}";//args is path to .py file and any cmd line args
+            start.UseShellExecute = false; 
             start.RedirectStandardOutput = true;
             using (Process process = Process.Start(start))
             {
