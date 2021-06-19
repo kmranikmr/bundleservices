@@ -83,11 +83,11 @@ namespace FileUploadService.Utils
 
         public static bool RunConversion(string path, string filename)
         {
-            Console.WriteLine("RunConversion");
+            Console.WriteLine($"RunConversion {path} {filename}");
             try{
             ProcessStartInfo start = new ProcessStartInfo();
             Console.WriteLine("Conversion 2");
-            start.FileName = "/usr/bin/python3";//cmd is full path to python.exe
+            start.FileName = "python3";//cmd is full path to python.exe
             start.Arguments = string.Format("\"{0}\" \"{1}\" \"{2}\"", "/home/ubuntu/ecgconvertor.py", path, filename);//$"/home/ubuntu/ecgconvertor.py {path} {filename}";//args is path to .py file and any cmd line args
             start.UseShellExecute = false; 
             start.RedirectStandardOutput = true;
@@ -104,7 +104,7 @@ namespace FileUploadService.Utils
             }
           }catch(Exception ex)
 	  {
-             Console.WriteLine(ex.Message);
+             Console.WriteLine(ex.Message + " " + ex.StackTrace);
              return false;  
           }
            
