@@ -16,4 +16,14 @@ RUN dotnet publish FileUploadService.csproj -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
+#RUN apt-get update -y && apt-get install python3.7 -y
+#RUN python3.7 -m pip install pip
+#RUN pip install wfdb
+#RUN pip install pandas
+#RUN pip install numpy
+FROM digdag/digdag-python:3.7
+RUN pip install wfdb
+RUN pip install heartpy
+RUN pip install pandas
+
 ENTRYPOINT ["dotnet", "FileUploadService.dll"]
