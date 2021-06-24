@@ -64,7 +64,7 @@ namespace FileUploadService.Utils
         }
 
         //public static async Task GetFiles(string toPath, string bucketName, string keyName)
-         public static async Task GetFiles(string toPath, string bucketName, string keyName, string s3path)
+         public static async Task<string[]> GetFiles(string toPath, string bucketName, string keyName, string s3path)
          {
             var client = new AmazonS3Client(accessid, secretkey);
             GetObjectRequest request = new GetObjectRequest
