@@ -300,7 +300,9 @@ namespace FileUploadService.Controllers
                 List<string> fileList = new List<string>();
                 foreach (var file in files)
                 {
-                    fileList.Add(file);
+                    //fileList.Add(file);
+                    string fileName = Path.GetFileName(file);
+                    fileList.Add(fileName);
                 }
                 info.Files = fileList.ToArray();
                 Console.WriteLine(" all files "+ string.Join(",",info.Files));
