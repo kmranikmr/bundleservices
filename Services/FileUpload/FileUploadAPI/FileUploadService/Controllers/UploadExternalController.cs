@@ -311,7 +311,7 @@ namespace FileUploadService.Controllers
             requestTable.AddParameter("application/json", json, ParameterType.RequestBody);
             Console.WriteLine("Post|ExecuteAsync Start");
             IRestResponse response = await restClient.ExecuteAsync(requestTable);
-             Console.WriteLine("Post|ExecuteAsync Done" + response?.content);
+             Console.WriteLine("Post|ExecuteAsync Done" + response?.Content);
             //S3Helper.RunConversion(folderName, filename);
             return Ok();
         }
