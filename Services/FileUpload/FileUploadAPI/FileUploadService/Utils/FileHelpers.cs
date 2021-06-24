@@ -59,7 +59,7 @@ namespace FileUploadService.Utils
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return false;
+                return null;
             }
         }
 
