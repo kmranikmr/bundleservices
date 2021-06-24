@@ -287,7 +287,7 @@ namespace FileUploadService.Controllers
             Console.WriteLine ($"foldername {folderName} pathToSave {pathToSave} fullPath {fullPath} ");
             var files = await S3Helper.GetFiles(pathToSave, s3Info.bucketname, s3Info.key, path);
             
-             var url = "http://EC2BasedServiceALB-760561316.us-east-1.elb.amazonaws.com:6011/convert";
+            var url = "http://EC2BasedServiceALB-760561316.us-east-1.elb.amazonaws.com:6011/convert";
             var restClient = new RestClient(url);
             var requestTable = new RestRequest(Method.POST);
             requestTable.AddHeader("Accept", "application/json");
@@ -307,10 +307,11 @@ namespace FileUploadService.Controllers
             }
             
             var json = JsonConvert.SerializeObject(info);
+            Console.WriteLine(json);
             requestTable.AddParameter("application/json", json, ParameterType.RequestBody);
             Console.WriteLine("Post|ExecuteAsync Start");
             IRestResponse response = await restClient.ExecuteAsync(requestTable);
-
+             Console.WriteLine("Post|ExecuteAsync Done" + response?.content);
             //S3Helper.RunConversion(folderName, filename);
             return Ok();
         }
