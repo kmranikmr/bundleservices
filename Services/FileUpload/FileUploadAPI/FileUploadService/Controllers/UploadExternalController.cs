@@ -17,8 +17,18 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using FileUploadService.Utils;
+using Newtonsoft.Json;
+using RestSharp;
+
 namespace FileUploadService.Controllers
 {
+
+    public class ConvertorInfo
+    {
+        public string Path { get; set; }
+        public string[] Files { get; set; }
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class UploadExternalController : ControllerBase
@@ -265,7 +275,7 @@ namespace FileUploadService.Controllers
                 filename = s3Info.key.Substring(indexPath + 1);
             }
             Console.WriteLine($"path {path} filename {filename}");
-             var s3folderName = Path.Combine("AutoIngestion", path);
+            //var s3folderName = Path.Combine("AutoIngestion", path);
             var folderName = Path.Combine("AutoIngestion", path,"tbp");
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
             if (!Directory.Exists(pathToSave))
@@ -275,8 +285,33 @@ namespace FileUploadService.Controllers
                        
             string fullPath = Path.Combine(pathToSave, filename);
             Console.WriteLine ($"foldername {folderName} pathToSave {pathToSave} fullPath {fullPath} ");
-             await S3Helper.GetFiles(pathToSave, s3Info.bucketname, s3Info.key, path);
-            S3Helper.RunConversion(folderName, filename);
+            var files = await S3Helper.GetFiles(pathToSave, s3Info.bucketname, s3Info.key, path);
+            
+             var url = "http://EC2BasedServiceALB-760561316.us-east-1.elb.amazonaws.com:6011/convert";
+            var restClient = new RestClient(url);
+            var requestTable = new RestRequest(Method.POST);
+            requestTable.AddHeader("Accept", "application/json");
+            ConvertorInfo info = new ConvertorInfo();
+            if (files != null && files.Length > 0)
+            {
+           
+                info.Path = Path.GetFullPath(files[0]);
+                Console.WriteLine(info.Path);
+                List<string> fileList = new List<string>();
+                foreach (var file in files)
+                {
+                    fileList.Add(file);
+                }
+                info.Files = fileList.ToArray();
+                Console.WriteLine(" all files "+ string.Join(",",info.Files));
+            }
+            
+            var json = JsonConvert.SerializeObject(info);
+            requestTable.AddParameter("application/json", json, ParameterType.RequestBody);
+            Console.WriteLine("Post|ExecuteAsync Start");
+            IRestResponse response = await restClient.ExecuteAsync(requestTable);
+
+            //S3Helper.RunConversion(folderName, filename);
             return Ok();
         }
 
