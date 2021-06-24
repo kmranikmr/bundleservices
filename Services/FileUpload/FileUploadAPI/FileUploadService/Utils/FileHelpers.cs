@@ -32,7 +32,7 @@ namespace FileUploadService.Utils
         // Specify your bucket region (an example region is shown).
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USEast1;
     
-        public static async Task<bool> DownloadData(string path, string bucketname, string key, string s3path)
+        public static async Task<string[]> DownloadData(string path, string bucketname, string key, string s3path)
         {
             try
             {
@@ -40,10 +40,21 @@ namespace FileUploadService.Utils
 
                 var credentials = new BasicAWSCredentials(accessid, secretkey);
                 var client = new AmazonS3Client(credentials, bucketRegion);
-
+                string[] orgFiles =  Directory.GetFiles(path);
+                Console.WriteLine(string.Join(",", orgFiles));
                 var fileTransferUtility = new TransferUtility(client);
                 await fileTransferUtility.DownloadDirectoryAsync(bucketname,s3path,path);
-                return true;
+                string[] afterFiles = Directory.GetFiles(path);
+                Console.WriteLine(" after "+ string.Join(",", afterFiles));
+                afterFiles = afterFiles.Except(orgFiles).ToArray();
+                Console.WriteLine("after except " + string.Join(",", afterFiles));
+                return afterFiles;
+                //var credentials = new BasicAWSCredentials(accessid, secretkey);
+                //var client = new AmazonS3Client(credentials, bucketRegion);
+
+                //var fileTransferUtility = new TransferUtility(client);
+                //await fileTransferUtility.DownloadDirectoryAsync(bucketname,s3path,path);
+                //return true;
             }
             catch(Exception ex)
             {
@@ -62,8 +73,9 @@ namespace FileUploadService.Utils
                 Key = keyName
             };
 
-          
-             await DownloadData(toPath, bucketName, keyName, s3path);
+              string[] files = null;
+             files = await DownloadData(toPath, bucketName, keyName, s3path);
+             return files;
             //using (GetObjectResponse response  = await client.GetObjectAsync(request))
             //{
             //    using (Stream responseStream = response.ResponseStream)
