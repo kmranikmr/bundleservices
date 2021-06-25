@@ -295,13 +295,14 @@ namespace FileUploadService.Controllers
             if (files != null && files.Length > 0)
             {
            
-                info.Path = Path.GetFullPath(files[0]);
+                info.Path = Path.GetDirectoryName(files[0]);
                 Console.WriteLine(info.Path);
                 List<string> fileList = new List<string>();
                 foreach (var file in files)
                 {
                     //fileList.Add(file);
                     string fileName = Path.GetFileName(file);
+                    Console.WriteLine($"fileName {fileName}");
                     fileList.Add(fileName);
                 }
                 info.Files = fileList.ToArray();
