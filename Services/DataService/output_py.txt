@@ -27,6 +27,19 @@ from joblib import load
 from sklearn.svm import LinearSVC, SVC
 
 
+def run_id():
+    if not digdag.env.params["sessionIds"] is None:
+       sessiondIdvalue = digdag.env.params["sessionIds"]
+    else:
+       sessiondIdvalue = ""
+    if not sessiondIdvalue:
+       return ""
+    else:
+       str = sessiondIdvalue.replace(',','_')
+       return str
+    return ""
+
+
 def remove_temp_db(delete_query):
     con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="172.17.0.1", port="5432")
     print("Database opened successfully")
@@ -138,7 +151,8 @@ def input_postgres_complete(input_table):
 def [METHODNAME]():
     model_df = {}
     [POSTGRES_ARTIFACT_READ]
-    input_df = input_postgres('[INPUTNODENAME]_[INPUTNODEID]',model_df)
+    outstr = "[INPUTNODENAME]{}_[INPUTNODEID]".format(run_id())
+    input_df = input_postgres(outstr,model_df)
     [DELETE_TEMP]
     print("done all")
 

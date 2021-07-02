@@ -29,6 +29,21 @@ import dill,base64,tempfile
 from joblib import load
 import heartpy as hp
 
+
+
+def run_id():
+    if not digdag.env.params["sessionIds"] is None:
+       sessiondIdvalue = digdag.env.params["sessionIds"]
+    else:
+       sessiondIdvalue = ""
+    if not sessiondIdvalue:
+       return ""
+    else:
+       str = sessiondIdvalue.replace(',','_')
+       return str
+    return ""
+
+
 def remove_temp_db(delete_query):
     con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="172.17.0.1", port="5432")
     print("Database opened successfully for removal")
@@ -38,19 +53,20 @@ def remove_temp_db(delete_query):
 def do_transformation(df):
     print("do_tranf")
     process_df = process_custom_code(df)
+    outstr = "[NODENAME]{}_[NODEID]".format(run_id())
     #insert_data_postgres(process_df, '[NODENAME]_[NODEID]', 'public')# process_block_{userid}_{digdagprojectid}_{digdagworkflowid}_{digdagattemptid}_{nodeid}
     if isinstance(process_df, pd.DataFrame):
        print("regular")
-       insert_data_postgres(process_df, '[NODENAME]_[NODEID]', 'public')# process_block_{userid}_{digdagprojectid}_{digdagworkflowid}_{digdagattemptid}_{nodeid}
+       insert_data_postgres(process_df, outstr, 'public')# process_block_{userid}_{digdagprojectid}_{digdagworkflowid}_{digdagattemptid}_{nodeid}
     else:
        print("model")
        typename = type(process_df).__name__
        if 'Sequential' in typename:
           print("sequential")
-          insert_model_data_postgres(process_df.to_json(), '[NODENAME]_[NODEID]', 'public')
+          insert_model_data_postgres(process_df.to_json(), outstr, 'public')
        else:
           print("other model")
-          insert_model_data_postgres(process_df, '[NODENAME]_[NODEID]', 'public')
+          insert_model_data_postgres(process_df, outstr, 'public')
     
 def input_postgres(input_table):
     print("input postgres")
@@ -114,8 +130,8 @@ def insert_data_postgres(df, table_name, schema):
 
 def [METHODNAME]():
     print("input")
-
-    input_postgres('[INPUTNODENAME]_[INPUTNODEID]')
+    outstr = "[INPUTNODENAME]{}_[INPUTNODEID]".format(run_id())
+    input_postgres(outstr)
     print(" done with process block")
     [DELETE_TEMP]
 if __name__ == "__main__":

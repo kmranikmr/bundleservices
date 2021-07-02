@@ -9,6 +9,7 @@ services:
     volumes:
       - ~/datafile:/app/StaticFiles
       - ~/logs:/home/ubuntu/logs
+
     ports:
       - "6002:6002"
 
