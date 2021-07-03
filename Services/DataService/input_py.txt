@@ -34,7 +34,8 @@ def remove_temps(tables):
     cur = con.cursor()
     liststr = tables.split(',')
     for tabl in liststr:
-        drop_sql = """drop table if exists public.%s;"""%tabl
+        outstr = tabl + "{}".format(run_id())
+        drop_sql = """drop table if exists public.%s;"""%outstr
         cur.execute(drop_sql)
         print("droped " + drop_sql)
     con.commit()

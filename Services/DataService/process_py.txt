@@ -53,7 +53,7 @@ def remove_temp_db(delete_query):
 def do_transformation(df):
     print("do_tranf")
     process_df = process_custom_code(df)
-    outstr = "[NODENAME]{}_[NODEID]".format(run_id())
+    outstr = "[NODENAME]_[NODEID]{}".format(run_id())
     #insert_data_postgres(process_df, '[NODENAME]_[NODEID]', 'public')# process_block_{userid}_{digdagprojectid}_{digdagworkflowid}_{digdagattemptid}_{nodeid}
     if isinstance(process_df, pd.DataFrame):
        print("regular")
@@ -130,7 +130,7 @@ def insert_data_postgres(df, table_name, schema):
 
 def [METHODNAME]():
     print("input")
-    outstr = "[INPUTNODENAME]{}_[INPUTNODEID]".format(run_id())
+    outstr = "[INPUTNODENAME]_[INPUTNODEID]{}".format(run_id())
     input_postgres(outstr)
     print(" done with process block")
     [DELETE_TEMP]

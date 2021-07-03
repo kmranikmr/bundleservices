@@ -151,7 +151,7 @@ def input_postgres_complete(input_table):
 def [METHODNAME]():
     model_df = {}
     [POSTGRES_ARTIFACT_READ]
-    outstr = "[INPUTNODENAME]{}_[INPUTNODEID]".format(run_id())
+    outstr = "[INPUTNODENAME]_[INPUTNODEID]{}".format(run_id())
     input_df = input_postgres(outstr,model_df)
     [DELETE_TEMP]
     print("done all")
