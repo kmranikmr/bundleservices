@@ -32,7 +32,7 @@ namespace FileUploadService.Utils
         // Specify your bucket region (an example region is shown).
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USEast1;
     
-        public static async Task<string[]> DownloadData(string path, string bucketname, string key, string s3path)
+        public static string[] DownloadData(string path, string bucketname, string key, string s3path)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace FileUploadService.Utils
                 string[] orgFiles =  Directory.GetFiles(path);
                 Console.WriteLine(string.Join(",", orgFiles));
                 var fileTransferUtility = new TransferUtility(client);
-                await fileTransferUtility.DownloadDirectoryAsync(bucketname,s3path,path);
+                fileTransferUtility.DownloadDirectory(bucketname,s3path,path);
                 string[] afterFiles = Directory.GetFiles(path);
                 Console.WriteLine(" after "+ string.Join(",", afterFiles));
                 afterFiles = afterFiles.Except(orgFiles).ToArray();
@@ -64,7 +64,7 @@ namespace FileUploadService.Utils
         }
 
         //public static async Task GetFiles(string toPath, string bucketName, string keyName)
-         public static async Task<string[]> GetFiles(string toPath, string bucketName, string keyName, string s3path)
+         public static string[] GetFiles(string toPath, string bucketName, string keyName, string s3path)
          {
             var client = new AmazonS3Client(accessid, secretkey);
             GetObjectRequest request = new GetObjectRequest
@@ -74,7 +74,7 @@ namespace FileUploadService.Utils
             };
 
               string[] files = null;
-             files = await DownloadData(toPath, bucketName, keyName, s3path);
+             files = DownloadData(toPath, bucketName, keyName, s3path);
              return files;
             //using (GetObjectResponse response  = await client.GetObjectAsync(request))
             //{

@@ -285,7 +285,7 @@ namespace FileUploadService.Controllers
                        
             string fullPath = Path.Combine(pathToSave, filename);
             Console.WriteLine ($"foldername {folderName} pathToSave {pathToSave} fullPath {fullPath} ");
-            var files = await S3Helper.GetFiles(pathToSave, s3Info.bucketname, s3Info.key, path);
+            var files =  S3Helper.GetFiles(pathToSave, s3Info.bucketname, s3Info.key, path);
             
             var url = "http://EC2BasedServiceALB-760561316.us-east-1.elb.amazonaws.com:6011/convert";
             var restClient = new RestClient(url);
