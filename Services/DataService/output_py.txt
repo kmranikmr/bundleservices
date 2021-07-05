@@ -28,16 +28,18 @@ from sklearn.svm import LinearSVC, SVC
 
 
 def run_id():
-    if not digdag.env.params["sessionIds"] is None:
-       sessiondIdvalue = digdag.env.params["sessionIds"]
+    if 'sessionIds' in  digdag.env.params:
+        sessiondIdvalue = digdag.env.params["sessionIds"]
     else:
-       sessiondIdvalue = ""
+        sessiondIdvalue = ""
+
     if not sessiondIdvalue:
        return ""
     else:
        str = sessiondIdvalue.replace(',','_')
        return str
     return ""
+
 
 
 def remove_temp_db(delete_query):

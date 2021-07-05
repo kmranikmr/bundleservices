@@ -17,10 +17,11 @@ import pandas as pd
 
 
 def run_id():
-    if not digdag.env.params["sessionIds"] is None:
-       sessiondIdvalue = digdag.env.params["sessionIds"]
+    if 'sessionIds' in  digdag.env.params:
+        sessiondIdvalue = digdag.env.params["sessionIds"]
     else:
-       sessiondIdvalue = ""
+        sessiondIdvalue = ""
+
     if not sessiondIdvalue:
        return ""
     else:
