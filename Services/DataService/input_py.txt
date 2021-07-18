@@ -37,6 +37,7 @@ def remove_temps(tables):
     for tabl in liststr:
         outstr = tabl + "{}".format(run_id())
         drop_sql = """drop table if exists public.%s;"""%outstr
+        print(drop_sql)
         cur.execute(drop_sql)
         print("droped " + drop_sql)
     con.commit()
@@ -69,6 +70,8 @@ def insert_model_data_postgres(model, table_name, schema):
 def do_transformation(df):
     df = process_custom_code(df)
     outstr = "[NODENAME]{}_[NODEID]".format(run_id())
+    print("process custom code done")
+    print(outstr)
     if isinstance(df, pd.DataFrame):
        insert_data_postgres(df,outstr , 'public')
     else:
