@@ -9,6 +9,7 @@ using Common.DataAccess.EFCore.Configuration.Auth;
 using Common.Entities;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Common.DataAccess.EFCore
 {
     public class DataContext : DbContext
@@ -22,7 +23,11 @@ namespace Common.DataAccess.EFCore
 
         public DbSet<UserPhoto> UserPhotos { get; set; }
 
-        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+        public DataContext(DbContextOptions<DataContext> options) : base(options) {
+
+            
+
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,5 +41,9 @@ namespace Common.DataAccess.EFCore
 
             modelBuilder.HasDefaultSchema("starter_core");
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            => optionsBuilder.UseNpgsql("HOST=localhost;PORT=5433;Username=dev;Password=nwdidb19;Database=dap_identity;Search Path=starter_core");
     }
 }
+

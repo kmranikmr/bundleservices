@@ -58,7 +58,7 @@ namespace DataAccess.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=dap_master;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("HOST=localhost;PORT=5433;Username=dev;Password=nwdidb19;Database=dap_master;Search Path=dap");
             }
         }
 

@@ -17,7 +17,7 @@ namespace Common.DIContainerCore
     {
         public static void Initialize(IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
 
             services.AddScoped<IDataBaseInitializer, DataBaseInitializer>();
 

@@ -33,7 +33,7 @@ namespace Common.DataAccess.EFCore
             var connectionString = configuration.GetConnectionString("localDb");
 
             var builder = new DbContextOptionsBuilder<DataContext>();
-            builder.UseSqlServer(connectionString);
+            builder.UseNpgsql(connectionString);
 
             return new DataContext(builder.Options);
         }
