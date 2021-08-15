@@ -71,7 +71,7 @@ namespace DataService.Controllers
             }
 
         }
-
+        [AllowAnonymous]
         // POST make shared url
         [HttpPost("[action]/{isWorkflow:bool=false}")]
         public async Task<ActionResult<UserSharedUrlDTO[]>> AddSharedUrl([FromBody] int[] searchHistoryIds, [FromHeader] string authorization , bool isWorkflow)
@@ -79,17 +79,17 @@ namespace DataService.Controllers
             try
             {
                 int userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                var allSharedUrl = _repository.GetSharedUrl(userId, isWorkflow);
+                var allSharedUrl = await _repository.GetSharedUrl(userId, isWorkflow);
                 if (allSharedUrl != null)
                 {
                     IEnumerable<int> notSetIds = null;
                     if (!isWorkflow)
                     {
-                        notSetIds = searchHistoryIds.Where(p => allSharedUrl.Result.All(p2 => p2.SearchHistoryId != p));
+                        notSetIds = searchHistoryIds.Where(p => allSharedUrl.All(p2 => p2.SearchHistoryId != p));
                     }
                     else
                     {
-                        notSetIds = searchHistoryIds.Where(p => allSharedUrl.Result.All(p2 => p2.WorkflowSearchHistoryId != p));
+                        notSetIds = searchHistoryIds.Where(p => allSharedUrl.All(p2 => p2.WorkflowSearchHistoryId != p));
                     }
 
                     if (notSetIds != null)
@@ -105,17 +105,17 @@ namespace DataService.Controllers
                 {
                     if (!isWorkflow)
                     {
-                        var history = _repository.GetSearchHistory(id, userId);
+                        var history = await _repository.GetSearchHistory(id, userId);
                         if (history != null)
                         {
                          
-                            string Name = history.Result.SearchHistoryName;
+                            string Name = history.SearchHistoryName;
                            
                             Console.WriteLine($"Name {Name}");
-                            var updated = _repository.AddSharedUrl(userId, id, $"/project/{Name}", false);
+                            var updated = await _repository.AddSharedUrl(userId, id, $"/project/{Name}", false);
                             
-                            Console.WriteLine($"resolvedquery {history.Result.ResolvedSearchQuery}");
-                            var ret = Utils.CallCreateView(history.Result.ResolvedSearchQuery, Name, authorization);
+                            Console.WriteLine($"resolvedquery {history.ResolvedSearchQuery}");
+                            var ret = Utils.CallCreateView(history.ResolvedSearchQuery, Name, authorization);
 
                             if ( ret.Result == false)
                             {
@@ -125,12 +125,12 @@ namespace DataService.Controllers
                     }
                     else
                     {
-                        var history = _repository.GetWorkflowSearchHistory(id, userId);
+                        var history = await _repository.GetWorkflowSearchHistory(id, userId);
                         if (history != null)
                         {
-                            string Name = history.Result.WorkflowSearchHistoryName;
+                            string Name = history.WorkflowSearchHistoryName;
 
-                            var updated = _repository.AddSharedUrl(userId, id, $"/workflow/{Name}", true);
+                            var updated = await _repository.AddSharedUrl(userId, id, $"/workflow/{Name}", true);
                         }
                     }
                 }
