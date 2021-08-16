@@ -71,7 +71,81 @@ namespace DataService.Controllers
             }
 
         }
+        //--
+        [HttpPost("[action]/{isWorkflow:bool=false}")]
+        public async Task<ActionResult<UserSharedUrlDTO[]>> AddSharedUrl([FromBody] int[] searchHistoryIds, [FromHeader] string authorization , bool isWorkflow)
+        {
+            try
+            {
+                int userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var allSharedUrl = await _repository.GetSharedUrl(userId, isWorkflow);
+                if (allSharedUrl != null)
+                {
+                    IEnumerable<int> notSetIds = null;
+                    if (!isWorkflow)
+                    {
+                        notSetIds = searchHistoryIds.Where(p => allSharedUrl.All(p2 => p2.SearchHistoryId != p));
+                    }
+                    else
+                    {
+                        notSetIds = searchHistoryIds.Where(p => allSharedUrl.All(p2 => p2.WorkflowSearchHistoryId != p));
+                    }
 
+                    if (notSetIds != null)
+                    {
+                        foreach (var item in notSetIds)
+                        {
+                            var ret = await _repository.RemoveSharedUrl(userId, item, isWorkflow);
+                        }
+                    }
+                }
+                
+                foreach (int id in searchHistoryIds)
+                {
+                    if (!isWorkflow)
+                    {
+                        var history = await _repository.GetSearchHistory(id, userId);
+                        if (history != null)
+                        {
+                         
+                            string Name = history.SearchHistoryName;
+                           
+                            Console.WriteLine($"Name {Name}");
+                            var updated = await _repository.AddSharedUrl(userId, id, $"/project/{Name}", false);
+                            
+                            Console.WriteLine($"resolvedquery {history.ResolvedSearchQuery}");
+                            var ret = Utils.CallCreateView(history.ResolvedSearchQuery, Name, authorization);
+
+                            if ( ret.Result == false)
+                            {
+                                return null;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var history = await _repository.GetWorkflowSearchHistory(id, userId);
+                        if (history != null)
+                        {
+                            string Name = history.WorkflowSearchHistoryName;
+
+                            var updated = await _repository.AddSharedUrl(userId, id, $"/workflow/{Name}", true);
+                        }
+                    }
+                }
+                var allSharedUrlNew = await _repository.GetSharedUrl(userId, isWorkflow);
+                var reDTO = _mapper.Map<UserSharedUrlDTO[]>(allSharedUrlNew);
+                return reDTO;
+                ///call getsearchistory with each id then get searchhistoryname.. construct urlll../api/project/{made upname}
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+            }
+        }
+        //--
+
+        /*
         // POST make shared url
         [HttpPost("[action]/{isWorkflow:bool=false}")]
         public async Task<ActionResult<UserSharedUrlDTO[]>> AddSharedUrl([FromBody] int[] searchHistoryIds, [FromHeader] string authorization , bool isWorkflow)
@@ -145,6 +219,8 @@ namespace DataService.Controllers
             }
         }
 
+        */
+        
         [AllowAnonymous]
         [HttpPost("[action]")]
         public async Task<ActionResult<bool>> Validate()//, [FromBody] string url)
