@@ -830,6 +830,8 @@ namespace DataService.Controllers
                         searchHistory.UserId = userId;
                         searchHistoryDTO.UserId = userId;
                         searchHistoryDTO.ProjectId = projectId;
+                        searchHistory.ResolvedSearchQuery = Utils.GetMappedQuery(searchHistory.SearchQuery, projectId, authorization,true).Result;
+                        Console.WriteLine($"searchHistory.ResolvedSearchQuery {searchHistory.ResolvedSearchQuery}");
                         searchHistoryDTO.SchemaVersionId = searchHistory.WorkflowVersionId;
                         _repository.Add(searchHistory);
 
