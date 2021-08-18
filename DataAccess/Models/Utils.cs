@@ -29,10 +29,10 @@ namespace DataAccess.Models
 
             return true;
         }
-        public static async Task<string> GetMappedQuery(string query, int projectId, string authorization)
+        public static async Task<string> GetMappedQuery(string query, int projectId, string authorization,  bool isWorkflow = false)
         {
             Console.WriteLine("GetMappedQuery");
-            var url = $"http://ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com:6004/api/Search/MappedQuery/false";//change this
+            var url = $"http://ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com:6004/api/Search/MappedQuery/{isWorkflow}";//change this
             var restClient = new RestClient(url);
             var requestTable = new RestRequest(Method.POST);
             requestTable.AddHeader("Accept", "application/json");
