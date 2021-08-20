@@ -782,7 +782,8 @@ namespace DataService.Controllers
                         searchHistory.SearchHistoryName = Utils.GetShortUrl();
                         searchHistoryDTO.UserId = userId;
                         searchHistoryDTO.ProjectId = projectId;
-                        searchHistory.ResolvedSearchQuery = Utils.GetMappedQuery(searchHistory.SearchQuery, projectId, authorization).Result;
+                        //searchHistory.ResolvedSearchQuery = Utils.GetMappedQuery(searchHistory.SearchQuery, projectId, authorization).Result;
+                        searchHistory.ResolvedSearchQuery = await Utils.GetMappedQuery(searchHistory.SearchQuery, projectId, authorization, -1,false );
                         Console.WriteLine($"searchHistory.ResolvedSearchQuery {searchHistory.ResolvedSearchQuery}");
                          // searchHistory.
                         //add cal to queryservic eget actual mappeed query
@@ -830,7 +831,8 @@ namespace DataService.Controllers
                         searchHistory.UserId = userId;
                         searchHistoryDTO.UserId = userId;
                         searchHistoryDTO.ProjectId = projectId;
-                        searchHistory.ResolvedSearchQuery = Utils.GetMappedQuery(searchHistory.SearchQuery, projectId, authorization,true).Result;
+                        //searchHistory.ResolvedSearchQuery = Utils.GetMappedQuery(searchHistory.SearchQuery, projectId, authorization,true).Result;
+                         searchHistory.ResolvedSearchQuery = await Utils.GetMappedQuery(searchHistory.SearchQuery, projectId, authorization, searchHistoryDTO.SchemaVersionId, true);
                         Console.WriteLine($"searchHistory.ResolvedSearchQuery {searchHistory.ResolvedSearchQuery}");
                         searchHistoryDTO.SchemaVersionId = searchHistory.WorkflowVersionId;
                         _repository.Add(searchHistory);
