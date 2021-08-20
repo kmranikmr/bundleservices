@@ -29,7 +29,39 @@ namespace DataAccess.Models
 
             return true;
         }
-        public static async Task<string> GetMappedQuery(string query, int projectId, string authorization,  bool isWorkflow = false)
+
+
+        public static async Task<string> GetMappedQuery(string query, int projectId, string authorization, int schemaId, bool isWorkflow = false, string queryServiceConnection = "http://ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com")
+        {
+            Console.WriteLine("GetMappedQuery");
+            var url = $"{queryServiceConnection}:6004/api/Search/MappedQuery/{isWorkflow}";//change this
+            var restClient = new RestClient(url);
+            var requestTable = new RestRequest(Method.POST);
+            requestTable.AddHeader("Accept", "application/json");
+            // requestTable.AddJsonBody(new { query, projectId });
+            string json = "";
+            if (schemaId != -1)
+            {
+                json = JsonConvert.SerializeObject(new { query, projectId , schemaId });
+            }
+            else
+            {
+                json = JsonConvert.SerializeObject(new { query, projectId });
+            }
+            requestTable.AddHeader("Authorization", authorization);
+            requestTable.AddParameter("application/json", json, ParameterType.RequestBody);
+
+            IRestResponse responseTable = await restClient.ExecuteAsync(requestTable);
+            if (responseTable != null)
+            {
+                Console.WriteLine($"mapped query : {responseTable.Content}");
+                return responseTable.Content;
+               
+            }
+            return "";
+        }
+
+        /*public static async Task<string> GetMappedQuery(string query, int projectId, string authorization,  bool isWorkflow = false)
         {
             Console.WriteLine("GetMappedQuery");
             var url = $"http://ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com:6004/api/Search/MappedQuery/{isWorkflow}";//change this
@@ -50,7 +82,7 @@ namespace DataAccess.Models
             }
             return "";
         }
-
+        */
         public static string GetShortUrl()
         {
             string URL = "";
