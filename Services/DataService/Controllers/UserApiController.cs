@@ -179,7 +179,7 @@ namespace DataService.Controllers
                 {
                     if (!isWorkflow)
                     {
-                        var history = _repository.GetSearchHistory(id, userId);
+                        var history =  _repository.GetSearchHistory(id, userId);
                         if (history != null)
                         {
                          
@@ -199,12 +199,19 @@ namespace DataService.Controllers
                     }
                     else
                     {
-                        var history = _repository.GetWorkflowSearchHistory(id, userId);
+                        var history =  _repository.GetWorkflowSearchHistory(id, userId);
+                        
                         if (history != null)
                         {
                             string Name = history.Result.WorkflowSearchHistoryName;
-
+                             Console.WriteLine($"Workflow Name {Name}");
                             var updated = _repository.AddSharedUrl(userId, id, $"/workflow/{Name}", true);
+                            var ret = Utils.CallCreateView(history.Result.ResolvedSearchQuery, Name, authorization);
+
+                            if (ret.Result == false)
+                            {
+                                return null;
+                            }
                         }
                     }
                 }
