@@ -831,6 +831,7 @@ namespace DataService.Controllers
                         searchHistory.UserId = userId;
                         searchHistoryDTO.UserId = userId;
                         searchHistoryDTO.ProjectId = projectId;
+                        searchHistory.WorkflowSearchHistoryName = Utils.GetShortUrl();
                         //searchHistory.ResolvedSearchQuery = Utils.GetMappedQuery(searchHistory.SearchQuery, projectId, authorization,true).Result;
                          searchHistory.ResolvedSearchQuery = await Utils.GetMappedQuery(searchHistory.SearchQuery, projectId, authorization, searchHistoryDTO.SchemaVersionId, true);
                         Console.WriteLine($"searchHistory.ResolvedSearchQuery {searchHistory.ResolvedSearchQuery}");
