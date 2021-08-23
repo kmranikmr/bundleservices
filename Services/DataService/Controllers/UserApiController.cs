@@ -130,7 +130,6 @@ namespace DataService.Controllers
                             string Name = history.WorkflowSearchHistoryName;
                             Console.WriteLine($"Workflow Name {Name}");
                              
-
                             var updated = await _repository.AddSharedUrl(userId, id, $"/workflow/{Name}", true);
                             var ret = Utils.CallCreateView(history.ResolvedSearchQuery, Name, authorization);
 
