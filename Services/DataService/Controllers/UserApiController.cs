@@ -128,8 +128,17 @@ namespace DataService.Controllers
                         if (history != null)
                         {
                             string Name = history.WorkflowSearchHistoryName;
+                            Console.WriteLine($"Workflow Name {Name}");
+                             
 
                             var updated = await _repository.AddSharedUrl(userId, id, $"/workflow/{Name}", true);
+                            var ret = Utils.CallCreateView(history.ResolvedSearchQuery, Name, authorization);
+
+                            if (ret.Result == false)
+                            {
+                                Console.WriteLine("return null");
+                                return null;
+                            }
                         }
                     }
                 }
