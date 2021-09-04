@@ -14,7 +14,8 @@ from joblib import load
 import pickle
 from keras.models import model_from_json
 import pandas as pd
-
+from get_all_tickers import get_tickers as gt
+import yfinance
 
 def run_id():
     if 'sessionIds' in  digdag.env.params:
