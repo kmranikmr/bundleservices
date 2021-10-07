@@ -536,7 +536,15 @@ namespace DataAccess.Models
                     }
                     if (task.oper == Operator.py)
                     {
-                        task.template = GetInputCode();
+                        //task.template = GetInputCode();
+                        if (!task.nodeType.Contains("api"))
+                        {
+                            task.template = GetInputCode();
+                        }
+                        else
+                        {
+                            task.template = GetInputCode("api");
+                        }
                         if (!cleared)
                         {
                             Console.WriteLine("temptables" + tempTables);
@@ -579,7 +587,15 @@ namespace DataAccess.Models
                 {
                     if ( task.oper == Operator.py)
                     {
-                        task.template = GetOutputCode();
+                        //task.template = GetOutputCode();
+                         if (!task.nodeType.Contains("csv"))
+                        {
+                            task.template = GetOutputCode();
+                        }
+                        else
+                        {
+                            task.template = GetOutputCode("csv");
+                        }                     
                         if (!isTest)
                         {
                             task.template = task.template.Replace("[DELETE_TEMP]", "remove_temp_db('drop table public.[INPUTNODENAME]_[INPUTNODEID]')");
@@ -587,6 +603,15 @@ namespace DataAccess.Models
                         else
                         {
                             task.template = task.template.Replace("[DELETE_TEMP]", "");
+                        }
+                        if (task.headerList != null && task.headerList.keyValuesMap != null)
+                        {
+                            Console.WriteLine("header check projectname");
+                            if (task.headerList.keyValuesMap.ContainsKey("projectPath"))
+                            {
+                                string projectPath = task.headerList.keyValuesMap["projectPath"];
+                                task.template = task.template.Replace("[PROJECT_PATH]", projectPath);
+                            }
                         }
                     }
                     else
@@ -746,7 +771,34 @@ namespace DataAccess.Models
                 task.commandBody = task.template;
                 if (task.oper == Operator.py)
                 {
+
                     if (task.nodeType.Contains("input"))
+                    {
+                        if (!task.nodeType.Contains("api"))
+                        {
+                            task.template = GetInputCode();
+                        }
+                        else
+                        {
+                            task.template = GetInputCode("api");
+                        }
+                    }
+                    else if (task.nodeType.Contains("process"))
+                    {
+                        task.template = GetProcessCode();
+                    }
+                    else if (task.nodeType.Contains("output"))
+                    {
+                        if (!task.nodeType.Contains("csv"))
+                        {
+                            task.template = GetOutputCode();
+                        }
+                        else
+                        {
+                            task.template = GetOutputCode("csv");
+                        }
+                    }
+                   /* if (task.nodeType.Contains("input"))
                     {
                         task.template = GetInputCode();
                     }
@@ -758,6 +810,7 @@ namespace DataAccess.Models
                     {
                         task.template = GetOutputCode();
                     }
+                   */
                 }
             }
             dec.schedule = null;
@@ -821,8 +874,20 @@ namespace DataAccess.Models
             return null;
         }
 
-        public static string GetInputCode()
+     /* public static string GetInputCode()
         {
+            using (StreamReader reader = new StreamReader("input_py.txt"))
+            {
+                var code = reader.ReadToEnd();
+                return code;
+            }
+        }*/
+         public static string GetInputCode(string nodeType = "input")
+        {
+            if ( nodeType.Contains("api"))
+            {
+                return GetInputCodeApi();
+            }
             using (StreamReader reader = new StreamReader("input_py.txt"))
             {
                 var code = reader.ReadToEnd();
@@ -837,9 +902,37 @@ namespace DataAccess.Models
                 return code;
             }
         }
-        public static string GetOutputCode()
+        /*public static string GetOutputCode()
         {
             using (StreamReader reader = new StreamReader("output_py.txt"))
+            {
+                var code = reader.ReadToEnd();
+                return code;
+            }
+        }*/
+        public static string GetOutputCode(string nodeType = "postgres")
+        {
+            if(nodeType.Contains("csv"))
+            {
+                return GetOutputCodeCsv();
+            }
+            using (StreamReader reader = new StreamReader("output_py.txt"))
+            {
+                var code = reader.ReadToEnd();
+                return code;
+            }
+        }
+         public static string GetInputCodeApi()
+        {
+            using (StreamReader reader = new StreamReader("api_input_py.txt"))
+            {
+                var code = reader.ReadToEnd();
+                return code;
+            }
+        }
+        public static string GetOutputCodeCsv()
+        {
+            using (StreamReader reader = new StreamReader("csv_output_py.txt"))
             {
                 var code = reader.ReadToEnd();
                 return code;
