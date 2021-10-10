@@ -88,20 +88,22 @@ namespace DataService.Controllers
         public async Task<IActionResult> Test([FromRoute] int projectWorkflowId, int workflowVersionId, [FromBody]  WorkflowTestDTO workflowTestDTO, bool isSample = false)
         {
             bool mock = false;
+            Console.Writeline("Test");
             if (!ModelState.IsValid)
             {
+                 Console.Writeline("Test - ModelState Not Valid");
                 return BadRequest(ModelState);
             }
             int userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
            
-            
+             Console.Writeline("Test - User ID ");
 
             //version == 0 then first create
 
             var workflowTest = _mapper.Map<WorkflowTest>(workflowTestDTO);
 
-           
+             Console.Writeline("Test - MapworkflowDTo")
             if (workflowVersionId == 0)
             {
                 var workflowVersion = new WorkflowVersion
@@ -112,21 +114,24 @@ namespace DataService.Controllers
                     WorkflowPropertyJson = workflowTestDTO.WorkflowPropertyJson
                 };
 
+               Console.Writeline("Test - workflowversionid is 0 ");
                 var workflowVer = await _repository.AddWorkFlowVersion(userId, projectWorkflowId, workflowVersion);
                 workflowTestDTO.WorkflowVersionId = workflowVer.WorkflowVersionId;
                 workflowTestDTO.VersionNumber = workflowVer.VersionNumber;
                 workflowTestDTO.UserId = userId;
+                
             }
 
 
             //create a test
             workflowTest = _repository.AddWorkflowTest(userId, projectWorkflowId, workflowTestDTO.WorkflowVersionId, workflowTestDTO.WorkflowJson, workflowTestDTO.WorkflowPropertyJson);
-
+             Console.Writeline("Test - create a Test");
             Thread.Sleep(1000);
             //publish
 
             var workflowProject = await _repository.GetWorkflowProject(userId, projectWorkflowId);
             string Workflow = "";
+             Console.Writeline("Test -Getworkfllow Project");
             if (!mock)
             {
 
@@ -134,6 +139,7 @@ namespace DataService.Controllers
                 List<ProjectQueryDetails> ModelList;
                 Workflow = NodeRepository.PrepareWorkflowJson(workflowTest.WorkflowTestId, workflowProject.ExternalProjectName + "_Test",
                                    workflowTest.WorkflowPropertyJson, userId, projectWorkflowId, workflowTest.WorkflowVersionId, _repository, out ModelList, true, isSample);
+                 Console.Writeline("Test - prepareworkflowjson done");
             }
 
 
