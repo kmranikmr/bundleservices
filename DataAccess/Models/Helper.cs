@@ -384,6 +384,7 @@ namespace DataAccess.Models
                                                  int workflowProjectId, int workflowVersionId, IRepository repository, out List<ProjectQueryDetails> ModelList, bool isTest = false, bool LimitedRun = false)
         {
 
+           try{
             Dictionary<string, List<string>> DestToSourceNodes = new Dictionary<string, List<string>>();
             char[] sep = new char[] { ' ', '-', ':' };
             Dictionary<string, string> UUidToNodeName = new Dictionary<string, string>();
@@ -821,6 +822,9 @@ namespace DataAccess.Models
             changedjson = changedjson.Replace("oper", "operator");
             // Workflow changedWorkflow = JsonConvert.DeserializeObject<Workflow>(changedjson);
             return changedjson;
+           }(Exception ex)
+              {Console.WriteLine(ex);return "";
+                       }
         }
         public static string[] TransformSqlQuery(string query, Dictionary<string, string> nodeNametoTempNode, out string transfomedSql)
         {
