@@ -103,7 +103,7 @@ namespace DataService.Controllers
 
             var workflowTest = _mapper.Map<WorkflowTest>(workflowTestDTO);
 
-             Console.WriteLine("Test - MapworkflowDTo")
+             Console.WriteLine("Test - MapworkflowDTo");
             if (workflowVersionId == 0)
             {
                 var workflowVersion = new WorkflowVersion
