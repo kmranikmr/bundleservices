@@ -822,7 +822,7 @@ namespace DataAccess.Models
             changedjson = changedjson.Replace("oper", "operator");
             // Workflow changedWorkflow = JsonConvert.DeserializeObject<Workflow>(changedjson);
             return changedjson;
-           }(Exception ex)
+           }catch(Exception ex)
               {Console.WriteLine(ex);return "";
                        }
         }
