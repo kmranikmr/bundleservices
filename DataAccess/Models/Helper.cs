@@ -823,7 +823,7 @@ namespace DataAccess.Models
             // Workflow changedWorkflow = JsonConvert.DeserializeObject<Workflow>(changedjson);
             return changedjson;
            }catch(Exception ex)
-              {Console.WriteLine(ex);return "";
+              {Console.WriteLine(ex);ModelList = null;return "";
                        }
         }
         public static string[] TransformSqlQuery(string query, Dictionary<string, string> nodeNametoTempNode, out string transfomedSql)
