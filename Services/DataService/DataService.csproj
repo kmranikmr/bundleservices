@@ -63,6 +63,14 @@
     <None Update="process_py.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+ <None Update="api_input_py.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+
+ <None Update="csv_output_py.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+
   </ItemGroup>
 
 </Project>
