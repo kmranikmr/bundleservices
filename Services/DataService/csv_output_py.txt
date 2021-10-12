@@ -54,6 +54,7 @@ def do_transformation(df, model_df):
     if isinstance(process_df, pd.DataFrame):
        print("regular")
        print(process_df.head())
+       currentTime = datetime.datetime.now()
        if not process_df.empty:
           process_df.to_csv("data_{}_{}.csv".format('[PROJECT_PATH]',currentTime.strftime("%Y%m%d%H%M%S")))
    
