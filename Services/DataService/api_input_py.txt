@@ -85,7 +85,7 @@ def [METHODNAME]():
     
     print("input_query" + input_query)
     #we will add the saved query in the nnniput query...
-    df = pd.DataFame()
+    df = pd.DataFrame()
     do_transformation(df)
 
 
