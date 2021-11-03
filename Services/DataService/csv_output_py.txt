@@ -26,7 +26,7 @@ import dill,base64,tempfile
 from joblib import load
 from sklearn.svm import LinearSVC, SVC
 import datetime
-
+import s3fs
 
 def run_id():
     if 'sessionIds' in  digdag.env.params:
@@ -56,7 +56,9 @@ def do_transformation(df, model_df):
        print(process_df.head())
        currentTime = datetime.datetime.now()
        if not process_df.empty:
-          process_df.to_csv("data_{}_{}.csv".format('[PROJECT_PATH]',currentTime.strftime("%Y%m%d%H%M%S")))
+          s3 = s3fs.S3FileSystem(key="AKIAYC4UH65JRCBE5L6Y",secret="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")
+          with s3.open("data_{}_{}.csv".format('[PROJECT_PATH]',currentTime.strftime("%Y%m%d%H%M%S")),'w') as f:
+              process_df.to_csv(f)
    
 
 
