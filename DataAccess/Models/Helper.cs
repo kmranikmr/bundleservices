@@ -478,6 +478,7 @@ namespace DataAccess.Models
            // {
 
           //  }
+              string resetSessionId = "";
             foreach (var task in dec.taskList)
             {
 
@@ -504,6 +505,14 @@ namespace DataAccess.Models
                                 {
                                     Console.WriteLine(" automationON true");
                                     automationON = true;
+                                }
+
+                                if (task.headerList.keyValuesMap.ContainsKey("scope"))
+                                {
+                                    if ( task.headerList.keyValuesMap["scope"].Contains("all"))
+                                    {
+                                        resetSessionId = "sessiondIdvalue = None";
+                                    }
                                 }
 
                             }
@@ -563,6 +572,8 @@ namespace DataAccess.Models
                     }
                     // replace inputdata
                     task.template = task.template.Replace("[INPUTDATA]", query);
+
+                    task.template = task.template.Replace("[RESET_SESSIONID]", resetSessionId);
                 }
 
                 if (task.nodeType.Contains("process"))
