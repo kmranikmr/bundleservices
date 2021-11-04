@@ -57,7 +57,7 @@ def do_transformation(df, model_df):
        currentTime = datetime.datetime.now()
        if not process_df.empty:
           s3 = s3fs.S3FileSystem(key="AKIAYC4UH65JRCBE5L6Y",secret="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")
-          with s3.open("data_{}_{}.csv".format('[PROJECT_PATH]',currentTime.strftime("%Y%m%d%H%M%S")),'w') as f:
+          with s3.open("{}data_{}.csv".format('[PROJECT_PATH]',currentTime.strftime("%Y%m%d%H%M%S")),'w') as f:
               process_df.to_csv(f)
    
 
