@@ -194,7 +194,8 @@ create table search_history(
 	md5 nvarchar(50) unique,
 	last_executed_on datetime2 not null default getdate(),
 	is_active bit default 1 not null,
-	is_deleted bit default 0 not null
+	is_deleted bit default 0 not null,
+       CONSTRAINT UC_md5 UNIQUE (project_id,md5)
 );
 
 create table search_graph(
@@ -311,7 +312,8 @@ create table workflow_search_history(
 	md5 nvarchar(50) unique,	
 	last_executed_on datetime2 not null default getdate(),
 	is_active bit default 1 not null,
-	is_deleted bit default 0 not null
+	is_deleted bit default 0 not null,
+       CONSTRAINT UCP_md5 UNIQUE (workflow_project_id,md5)
 );
 
 create table project_automation (
