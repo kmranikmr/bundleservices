@@ -472,11 +472,12 @@ namespace DataAccess.Models
                  }
                 }
                 tempTables = string.Join(",", TempTableNames);
-           // }
-           // else
-           // {
+            // }
+            // else
+            // {
 
-          //  }
+            //  }
+            string resetSessionId = "";
             foreach (var task in dec.taskList)
             {
 
@@ -496,7 +497,7 @@ namespace DataAccess.Models
                         {
                             projectId = task.inputData.projectQueryTask.projectId;
                             Console.WriteLine("automationCheck");
-                            if(task.headerList != null && task.headerList.keyValuesMap != null )
+                            if (task.headerList != null && task.headerList.keyValuesMap != null)
                             {
                                 Console.WriteLine("automation On key check");
                                 if (task.headerList.keyValuesMap.ContainsKey("automation"))
@@ -504,7 +505,13 @@ namespace DataAccess.Models
                                     Console.WriteLine(" automationON true");
                                     automationON = true;
                                 }
-
+                                if (task.headerList.keyValuesMap.ContainsKey("scope"))
+                                {
+                                    if ( task.headerList.keyValuesMap["scope"].Contains("all"))
+                                    {
+                                        resetSessionId = "sessiondIdvalue = None";
+                                    }
+                                }
                             }
                             if (task.inputData.projectQueryTask.queryList != null && task.inputData.projectQueryTask.queryList.Count > 0)
                             {
@@ -561,6 +568,7 @@ namespace DataAccess.Models
                     }
                     // replace inputdata
                     task.template = task.template.Replace("[INPUTDATA]", query);
+                    task.template = task.template.Replace("[RESET_SESSIONID]", resetSessionId);
                 }
 
                 if (task.nodeType.Contains("process"))
@@ -941,6 +949,33 @@ namespace DataAccess.Models
             task3.commandBody = "#def process_custom_code(df):\r\n#    add code here and uncomment\r\n#    return df\r\n\r\n\r\n";
             task3.template = GetOutputCode();//"import os\r\nimport psycopg2\r\nimport pandas as pd\r\nfrom pandas import DataFrame\r\nfrom numpy import repeat\r\nfrom psycopg2.extras import RealDictCursor\r\nfrom sqlalchemy import MetaData\r\nfrom sqlalchemy import create_engine\r\nfrom sqlalchemy import event\r\nimport pickle\r\nfrom sklearn.linear_model import LinearRegression\r\nfrom sklearn.compose import ColumnTransformer\r\nfrom sklearn.pipeline import Pipeline\r\nfrom sklearn.preprocessing import OneHotEncoder, StandardScaler, MinMaxScaler, PolynomialFeatures\r\n\r\n\r\n\r\ndef remove_temp_db(delete_query):\r\n    con = psycopg2.connect(database=\"digdagdb\", user=\"ubuntu\", password=\"password\", host=\"172.17.0.1\", port=\"5432\")\r\n    print(\"Database opened successfully\")\r\n    cur = con.cursor()\r\n    cur.execute(delete_query)\r\n\r\ndef do_transformation(df):\r\n    process_df = process_custom_code(df)\r\n    if isinstance(process_df, pd.DataFrame):\r\n       print(\"regular\")\r\n       insert_data_postgres(process_df, '[NODENAME]_[NODEID]', 'public')# process_block_{userid}_{digdagprojectid}_{digdagworkflowid}\r\n    else:\r\n       print(\"model\")\r\n       insert_model_data_postgres(process_df, '[NODENAME]_[NODEID]', 'public')\r\n       \r\n\r\ndef input_postgres(input_table):\r\n    input_query = \"select * from \"+input_table\r\n    con = psycopg2.connect(database=\"digdagdb\", user=\"ubuntu\", password=\"password\", host=\"172.17.0.1\", port=\"5432\")\r\n    print(\"Database opened successfully\")\r\n    with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:\r\n        cursor.execute(input_query)\r\n        while True:\r\n            col_names = []\r\n            records = cursor.fetchmany(size=1000)\r\n            col_set = False\r\n            if not col_set:\r\n                for elt in cursor.description:\r\n                    col_names.append(elt[0])\r\n            if not records:\r\n                break\r\n            col_set = True\r\n            df = DataFrame(records)\r\n            df.columns = col_names\r\n            do_transformation(df)\r\n            #insert_data_postgres(df, 'output11', 'public')\r\n        cursor.close()  # don't forget to cleanup\r\n    con.close()\r\n\r\n\r\n\r\ndef insert_data_postgres(df, table_name, schema):\r\n    dbschema = schema\r\n    print(\" postgre start \")\r\n    engine = create_engine('postgresql+psycopg2:\/\/postgres:dapdata123@idapt.duckdns.org:5432\/postgres', connect_args={'options': '-csearch_path={}'.format(dbschema)})\r\n\r\n    df.to_sql(table_name, engine, if_exists= 'append',  method='multi', index=False)\r\n    engine.dispose()\r\n    return True\r\n\r\ndef insert_model_data_postgres(model, table_name, schema):\r\n    dbschema = schema\r\n    sql_stmt = \"\"\"create table if not exists {}(model_pickle bytea)\"\"\".format( table_name)\r\n    #params = config()\r\n    # connect to the PostgresQL database\r\n    print(\"connect\")\r\n    conn = psycopg2.connect(dbname=\"digdagdb\",user=\"ubuntu\",password=\"password\",host=\"172.17.0.1\")\r\n    # create a new cursor object\r\n    print(\"connected\")\r\n    cur = conn.cursor()\r\n    cur.execute(sql_stmt)\r\n    # execute the INSERT statement\r\n    cur.execute(\"INSERT INTO \" + table_name +\" (model_pickle) \" +\r\n                    \"VALUES(%s)\",\r\n                    (psycopg2.Binary(pickle.dumps(model)),))\r\n    # commit the changes to the database\r\n    conn.commit()\r\n   # close the communication with the PostgresQL database\r\n    cur.close()\r\ndef output():\r\n\r\n    input_df = input_postgres('[NODENAME]_[INPUTNODEID]')\r\n    remove_temp_db('drop table public.[NODENAME]_[INPUTNODEID]')\r\n    print(\"done all\")\r\n\r\nif __name__ == \"__main__\":\r\n    output()\r\n";
 
+            NodeTask task4 = new NodeTask();
+            task4.headerList = new Header();//new List<Header>();
+            task4.headerList.headerType = "header4";
+            //task4.headerList.exportedVariables = new List<string>() { "x:2" };
+            // header.keyValues = new Dictionary<string, string>() { { "key1", "val1"}, { "key2", "val2" } };
+            //task1.headerList.Add(header);
+            task4.taskName = "api reader-py";
+            task4.taskDescription = "input api data";
+            task4.nodeType = "api input";
+            task4.oper = Operator.py;
+            task4.commandBody = "#def process_custom_code(df):\r\n#    add code here and uncomment\r\n#    return df\r\n\r\n\r\n";
+            task4.template = GetInputCodeApi();
+
+            NodeTask task5 = new NodeTask();
+            task5.headerList = new Header();//new List<Header>();
+            task5.headerList.headerType = "header5";
+            //task4.headerList.exportedVariables = new List<string>() { "x:2" };
+            // header.keyValues = new Dictionary<string, string>() { { "key1", "val1"}, { "key2", "val2" } };
+            //task1.headerList.Add(header);
+            task5.taskName = "csv output-py";
+            task5.taskDescription = "output csv data";
+            task5.nodeType = "csv output";
+            task5.oper = Operator.py;
+            task5.commandBody = "#def process_custom_code(df, model_df):\r\n#    add code here and uncomment\r\n#    return df\r\n\r\n\r\n";
+            task5.template = GetOutputCodeCsv();
+
+            var st = JsonConvert.SerializeObject(task5);
 
             return new List<NodeTask> { task1, task2, task3 };
         }

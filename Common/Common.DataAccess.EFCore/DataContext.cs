@@ -43,7 +43,7 @@ namespace Common.DataAccess.EFCore
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseNpgsql("HOST=localhost;PORT=5433;Username=dev;Password=nwdidb19;Database=dap_identity;Search Path=starter_core");
+            => optionsBuilder.UseNpgsql("HOST=localhost;PORT=5433;Username=dev;Password=nwdidb19;Database=nwdi_ts;Search Path=starter_core");
     }
 }
 

@@ -25,7 +25,8 @@ from io import BytesIO
 import dill,base64,tempfile
 from joblib import load
 from sklearn.svm import LinearSVC, SVC
-
+import datetime
+import yfinance as yf
 
 def run_id():
     if 'sessionIds' in  digdag.env.params:

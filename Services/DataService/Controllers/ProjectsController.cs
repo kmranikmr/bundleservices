@@ -14,6 +14,7 @@ using System.IO;
 using System.Text;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace DataService.Controllers
 {
@@ -28,11 +29,14 @@ namespace DataService.Controllers
 
         private readonly ILogger<ProjectsController> _logger;
 
-        public ProjectsController(IRepository repo, IMapper mapper, ILogger<ProjectsController> logger)
+        private string _queryServiceString = null;
+
+        public ProjectsController(IRepository repo, IMapper mapper, ILogger<ProjectsController> logger, IOptions<ConnectionStringsConfig> optionsAccessor)
         {
             _repository = repo;
             _mapper = mapper;
             _logger = logger;
+            _queryServiceString = optionsAccessor?.Value.QueryServiceConnection;
         }
 
         // GET: api/Projects        
@@ -782,7 +786,7 @@ namespace DataService.Controllers
                         searchHistory.SearchHistoryName = Utils.GetShortUrl();
                         searchHistoryDTO.UserId = userId;
                         searchHistoryDTO.ProjectId = projectId;
-                        searchHistory.ResolvedSearchQuery = Utils.GetMappedQuery(searchHistory.SearchQuery, projectId, authorization).Result;
+                        searchHistory.ResolvedSearchQuery = await Utils.GetMappedQuery(searchHistory.SearchQuery, projectId, authorization, -1,false );
                         Console.WriteLine($"searchHistory.ResolvedSearchQuery {searchHistory.ResolvedSearchQuery}");
                          // searchHistory.
                         //add cal to queryservic eget actual mappeed query
@@ -830,6 +834,9 @@ namespace DataService.Controllers
                         searchHistory.UserId = userId;
                         searchHistoryDTO.UserId = userId;
                         searchHistoryDTO.ProjectId = projectId;
+                        searchHistory.WorkflowSearchHistoryName = Utils.GetShortUrl();
+                        searchHistory.ResolvedSearchQuery = await Utils.GetMappedQuery(searchHistory.SearchQuery, projectId, authorization, searchHistoryDTO.SchemaVersionId, true);
+                        Console.WriteLine($"searchHistory.ResolvedSearchQuery {searchHistory.ResolvedSearchQuery}");
                         searchHistoryDTO.SchemaVersionId = searchHistory.WorkflowVersionId;
                         _repository.Add(searchHistory);
 
@@ -846,7 +853,22 @@ namespace DataService.Controllers
             }
             return this.StatusCode(StatusCodes.Status204NoContent, "ProjectId does not exist.");
         }
+        [HttpPost("[action]/{projectId}/{isWorkflow:bool=false}")]
+        public async Task<IActionResult> UpdateSearchQuery(int searchHistoryId , string friendlyName,  [FromRoute] bool isWorkflow = false)//add option workflow..mapping versionid-> projectid
+        {
+            int userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if ( !isWorkflow)
+            {
+                var ret = await _repository.UpdateSearchHistory(searchHistoryId, userId, friendlyName);
+                return Ok(friendlyName);
+            }
+            return this.StatusCode(StatusCodes.Status204NoContent, "No searchHistoryId");
+        }
         public static string MD5Hash(string input)
         {
             StringBuilder hash = new StringBuilder();

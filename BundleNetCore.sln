@@ -44,6 +44,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GatewayApi", "GatewayApi\Ga
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{414A509C-2B18-4FE2-A3F2-F9A914202C4B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataService.Test", "..\DataService.Test\DataService.Test.csproj", "{265D3A88-5BDD-430F-8483-AB7DCD4434BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +116,10 @@ Global
 		{414A509C-2B18-4FE2-A3F2-F9A914202C4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{414A509C-2B18-4FE2-A3F2-F9A914202C4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{414A509C-2B18-4FE2-A3F2-F9A914202C4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{265D3A88-5BDD-430F-8483-AB7DCD4434BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{265D3A88-5BDD-430F-8483-AB7DCD4434BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{265D3A88-5BDD-430F-8483-AB7DCD4434BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{265D3A88-5BDD-430F-8483-AB7DCD4434BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,4 +146,3 @@ Global
 		SolutionGuid = {328B8E10-FED4-47C9-86C2-27E2B708C6E0}
 	EndGlobalSection
 EndGlobal
-

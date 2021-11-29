@@ -5,10 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20190304135134_MigrationName.cs" />
-    <Compile Remove="Migrations\20190304135134_MigrationName.Designer.cs" />
-    <Compile Remove="Migrations\20210426172741_init.cs" />
-    <Compile Remove="Migrations\20210426172741_init.Designer.cs" />
+    <Compile Remove="Migrations\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <None Remove="Migrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Migrations\20210809185451_init.cs" />
+    <Compile Include="Migrations\20210809185451_init.Designer.cs" />
+    <Compile Include="Migrations\DataContextModelSnapshot.cs" />
   </ItemGroup>
 
   <ItemGroup>

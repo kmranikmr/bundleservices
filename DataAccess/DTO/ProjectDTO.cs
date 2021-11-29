@@ -52,6 +52,8 @@ namespace DataAccess.DTO
         public int? ReaderId { get; set; }
 
         public ReaderDTO Reader { get; set; }
+
+        public DateTime UploadDate { get; set; }
     }
 
 

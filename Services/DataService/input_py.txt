@@ -124,6 +124,7 @@ def [METHODNAME]():
     
     print("sessiondIdvalue " + sessiondIdvalue)
     input_query = ""
+	[RESET_SESSIONID]
     if not sessiondIdvalue:
        input_query = """[INPUTDATA]"""
     else:

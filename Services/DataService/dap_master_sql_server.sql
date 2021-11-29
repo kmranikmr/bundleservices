@@ -309,10 +309,11 @@ create table workflow_search_history(
 	workflow_version_id int not null references workflow_version,
 	search_query nvarchar(max),
 	resolved_search_query nvarchar(max),
-	md5 nvarchar(50) unique,	
+	md5 nvarchar(50),	
 	last_executed_on datetime2 not null default getdate(),
 	is_active bit default 1 not null,
-	is_deleted bit default 0 not null
+	is_deleted bit default 0 not null,
+	 CONSTRAINT WUC_md5 UNIQUE (workflow_project_id,md5)
 );
 
 create table project_automation (

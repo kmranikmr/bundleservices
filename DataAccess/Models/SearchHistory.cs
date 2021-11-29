@@ -22,7 +22,7 @@ namespace DataAccess.Models
         public DateTime LastExecutedOn { get; set; }
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
-
+        public string FirendlyName { get; set; }
         public Project Project { get; set; }
         public Writer Writer { get; set; }
         public ICollection<SearchGraph> SearchGraphs { get; set; }

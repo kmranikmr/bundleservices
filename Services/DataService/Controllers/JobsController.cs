@@ -81,7 +81,7 @@ namespace DataService.Controllers
                         if (j.CompletedOn.HasValue) fl.EndTime = j.CompletedOn.Value;
                         jobSummary.FileList.Add(fl);
                     }
-                    var job_project = await _repository.GetJobSummary(jobs.ElementAt(0).ProjectId, true);
+                    var job_project = await _repository.GetJobSummary(jobs.ElementAt(0).ProjectId, true);//comment this out
                     foreach(var j in job_project)
                     {
                         if (j.JobId == jobId) continue;
