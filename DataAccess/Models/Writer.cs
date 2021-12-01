@@ -19,8 +19,8 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public WriterType WriterType { get; set; }
-        public ICollection<ProjectWriter> ProjectWriters { get; set; }
-        public ICollection<SearchHistory> SearchHistories { get; set; }
+        public virtual WriterType WriterType { get; set; }
+        public virtual ICollection<ProjectWriter> ProjectWriters { get; set; }
+        public virtual ICollection<SearchHistory> SearchHistories { get; set; }
     }
 }

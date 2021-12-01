@@ -12,6 +12,6 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public SearchHistory SearchHistory { get; set; }
+        public virtual SearchHistory SearchHistory { get; set; }
     }
 }

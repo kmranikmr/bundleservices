@@ -13,8 +13,8 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public WorkflowAutomationState WorkflowAutomationState { get; set; }
-        public WorkflowProject WorkflowProject { get; set; }
-        public WorkflowVersion WorkflowVersion { get; set; }
+        public virtual WorkflowAutomationState WorkflowAutomationState { get; set; }
+        public virtual WorkflowProject WorkflowProject { get; set; }
+        public virtual WorkflowVersion WorkflowVersion { get; set; }
     }
 }

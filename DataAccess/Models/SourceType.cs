@@ -13,6 +13,6 @@ namespace DataAccess.Models
         public int SourceTypeId { get; set; }
         public string SourceTypeName { get; set; }
 
-        public ICollection<ProjectFile> ProjectFiles { get; set; }
+        public virtual ICollection<ProjectFile> ProjectFiles { get; set; }
     }
 }

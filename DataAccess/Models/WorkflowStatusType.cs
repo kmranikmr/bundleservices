@@ -14,7 +14,7 @@ namespace DataAccess.Models
         public int WorkflowStatusTypeId { get; set; }
         public string WorkflowStatusTypeName { get; set; }
 
-        public ICollection<WorkflowSessionAttempt> WorkflowSessionAttempts { get; set; }
-        public ICollection<WorkflowTest> WorkflowTests { get; set; }
+        public virtual ICollection<WorkflowSessionAttempt> WorkflowSessionAttempts { get; set; }
+        public virtual ICollection<WorkflowTest> WorkflowTests { get; set; }
     }
 }

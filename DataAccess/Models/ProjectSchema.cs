@@ -22,10 +22,10 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public Project Project { get; set; }
-        public ICollection<Job> Jobs { get; set; }
-        public ICollection<ProjectAutomation> ProjectAutomations { get; set; }
-        public ICollection<ProjectFile> ProjectFiles { get; set; }
-        public ICollection<SchemaModel> SchemaModels { get; set; }
+        public virtual Project Project { get; set; }
+        public virtual ICollection<Job> Jobs { get; set; }
+        public virtual ICollection<ProjectAutomation> ProjectAutomations { get; set; }
+        public virtual ICollection<ProjectFile> ProjectFiles { get; set; }
+        public virtual ICollection<SchemaModel> SchemaModels { get; set; }
     }
 }

@@ -29,15 +29,15 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public ICollection<Job> Jobs { get; set; }
-        public ICollection<ModelMetadata> ModelMetadatas { get; set; }
-        public ICollection<ProjectAutomation> ProjectAutomations { get; set; }
-        public ICollection<ProjectFile> ProjectFiles { get; set; }
-        public ICollection<ProjectReader> ProjectReaders { get; set; }
-        public ICollection<ProjectSchema> ProjectSchemas { get; set; }
-        public ICollection<ProjectUser> ProjectUsers { get; set; }
-        public ICollection<ProjectWriter> ProjectWriters { get; set; }
-        public ICollection<SchemaModel> SchemaModels { get; set; }
-        public ICollection<SearchHistory> SearchHistories { get; set; }
+        public virtual ICollection<Job> Jobs { get; set; }
+        public virtual ICollection<ModelMetadata> ModelMetadatas { get; set; }
+        public virtual ICollection<ProjectAutomation> ProjectAutomations { get; set; }
+        public virtual ICollection<ProjectFile> ProjectFiles { get; set; }
+        public virtual ICollection<ProjectReader> ProjectReaders { get; set; }
+        public virtual ICollection<ProjectSchema> ProjectSchemas { get; set; }
+        public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
+        public virtual ICollection<ProjectWriter> ProjectWriters { get; set; }
+        public virtual ICollection<SchemaModel> SchemaModels { get; set; }
+        public virtual ICollection<SearchHistory> SearchHistories { get; set; }
     }
 }

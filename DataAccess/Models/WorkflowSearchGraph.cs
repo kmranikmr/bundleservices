@@ -12,6 +12,6 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public WorkflowSearchHistory WorkflowSearchHistory { get; set; }
+        public virtual WorkflowSearchHistory WorkflowSearchHistory { get; set; }
     }
 }

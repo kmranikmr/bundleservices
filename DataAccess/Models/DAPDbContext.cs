@@ -64,9 +64,12 @@ namespace DataAccess.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
+
             modelBuilder.Entity<Job>(entity =>
             {
-                entity.HasKey(e => new { e.JobId, e.ProjectFileId });
+                entity.HasKey(e => new { e.JobId, e.ProjectFileId })
+                    .HasName("PK__job__75C9C5C5427EE713");
 
                 entity.ToTable("job");
 
@@ -105,29 +108,30 @@ namespace DataAccess.Models
                     .WithMany(p => p.Jobs)
                     .HasForeignKey(d => d.JobStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__job__job_status___72C60C4A");
+                    .HasConstraintName("FK__job__job_status___73BA3083");
 
                 entity.HasOne(d => d.ProjectFile)
                     .WithMany(p => p.Jobs)
                     .HasForeignKey(d => d.ProjectFileId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__job__project_fil__71D1E811");
+                    .HasConstraintName("FK__job__project_fil__72C60C4A");
 
                 entity.HasOne(d => d.Project)
                     .WithMany(p => p.Jobs)
                     .HasForeignKey(d => d.ProjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__job__project_id__73BA3083");
+                    .HasConstraintName("FK__job__project_id__74AE54BC");
 
                 entity.HasOne(d => d.Schema)
                     .WithMany(p => p.Jobs)
                     .HasForeignKey(d => d.SchemaId)
-                    .HasConstraintName("FK__job__schema_id__74AE54BC");
+                    .HasConstraintName("FK__job__schema_id__75A278F5");
             });
 
             modelBuilder.Entity<JobStatus>(entity =>
             {
-                entity.HasKey(e => e.JobStatusId);
+                entity.HasKey(e => e.JobStatusId)
+                    .HasName("PK__job_stat__42A603BFBA529FE2");
 
                 entity.ToTable("job_status");
 
@@ -152,7 +156,8 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<ModelMetadata>(entity =>
             {
-                entity.HasKey(e => e.MetadataId);
+                entity.HasKey(e => e.MetadataId)
+                    .HasName("PK__model_me__C1088FC40304B217");
 
                 entity.ToTable("model_metadata");
 
@@ -187,13 +192,13 @@ namespace DataAccess.Models
                     .WithMany(p => p.ModelMetadatas)
                     .HasForeignKey(d => d.ModelId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__model_met__model__66603565");
+                    .HasConstraintName("FK__model_met__model__6754599E");
 
                 entity.HasOne(d => d.Project)
                     .WithMany(p => p.ModelMetadatas)
                     .HasForeignKey(d => d.ProjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__model_met__proje__656C112C");
+                    .HasConstraintName("FK__model_met__proje__66603565");
             });
 
             modelBuilder.Entity<Project>(entity =>
@@ -201,7 +206,7 @@ namespace DataAccess.Models
                 entity.ToTable("project");
 
                 entity.HasIndex(e => e.ProjectName)
-                    .HasName("UQ__project__4A0B0D699EB55863")
+                    .HasName("UQ__project__4A0B0D6911658A33")
                     .IsUnique();
 
                 entity.Property(e => e.ProjectId).HasColumnName("project_id");
@@ -265,19 +270,19 @@ namespace DataAccess.Models
                     .WithMany(p => p.ProjectAutomations)
                     .HasForeignKey(d => d.ProjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__project_a__proje__367C1819");
+                    .HasConstraintName("FK__project_a__proje__395884C4");
 
                 entity.HasOne(d => d.ProjectSchema)
                     .WithMany(p => p.ProjectAutomations)
                     .HasForeignKey(d => d.ProjectSchemaId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__project_a__proje__3864608B");
+                    .HasConstraintName("FK__project_a__proje__3B40CD36");
 
                 entity.HasOne(d => d.Reader)
                     .WithMany(p => p.ProjectAutomations)
                     .HasForeignKey(d => d.ReaderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__project_a__reade__37703C52");
+                    .HasConstraintName("FK__project_a__reade__3A4CA8FD");
             });
 
             modelBuilder.Entity<ProjectFile>(entity =>
@@ -344,7 +349,8 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<ProjectReader>(entity =>
             {
-                entity.HasKey(e => new { e.ProjectId, e.ReaderId });
+                entity.HasKey(e => new { e.ProjectId, e.ReaderId })
+                    .HasName("PK__project___2877A637819FB1F2");
 
                 entity.ToTable("project_reader");
 
@@ -367,7 +373,8 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<ProjectSchema>(entity =>
             {
-                entity.HasKey(e => e.SchemaId);
+                entity.HasKey(e => e.SchemaId)
+                    .HasName("PK__project___178572D67A6EBCF9");
 
                 entity.ToTable("project_schema");
 
@@ -408,7 +415,8 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<ProjectUser>(entity =>
             {
-                entity.HasKey(e => new { e.ProjectId, e.UserId });
+                entity.HasKey(e => new { e.ProjectId, e.UserId })
+                    .HasName("PK__project___57E27D6F1CC5AA22");
 
                 entity.ToTable("project_user");
 
@@ -431,7 +439,8 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<ProjectWriter>(entity =>
             {
-                entity.HasKey(e => new { e.ProjectId, e.WriterId });
+                entity.HasKey(e => new { e.ProjectId, e.WriterId })
+                    .HasName("PK__project___4A8404070EF9D4EF");
 
                 entity.ToTable("project_writer");
 
@@ -491,7 +500,7 @@ namespace DataAccess.Models
                 entity.ToTable("reader_type");
 
                 entity.HasIndex(e => e.ReaderTypeName)
-                    .HasName("UQ__reader_t__8BCDA5A9693B60D0")
+                    .HasName("UQ__reader_t__8BCDA5A9F2C58E12")
                     .IsUnique();
 
                 entity.Property(e => e.ReaderTypeId).HasColumnName("reader_type_id");
@@ -516,7 +525,8 @@ namespace DataAccess.Models
 
             modelBuilder.Entity<SchemaModel>(entity =>
             {
-                entity.HasKey(e => e.ModelId);
+                entity.HasKey(e => e.ModelId)
+                    .HasName("PK__schema_m__DC39CAF4664A6305");
 
                 entity.ToTable("schema_model");
 
@@ -539,6 +549,10 @@ namespace DataAccess.Models
                     .HasColumnName("model_name")
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.ModelSize)
+                    .HasColumnName("model_size")
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.ProjectId).HasColumnName("project_id");
 
@@ -584,19 +598,23 @@ namespace DataAccess.Models
                     .WithMany(p => p.SearchGraphs)
                     .HasForeignKey(d => d.SearchHistoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__search_gr__searc__04E4BC85");
+                    .HasConstraintName("FK__search_gr__searc__06CD04F7");
             });
 
             modelBuilder.Entity<SearchHistory>(entity =>
             {
                 entity.ToTable("search_history");
 
-                entity.HasIndex(e => e.Md5)
-                    .HasName("UQ__search_h__DF502978CAD6D233")
+                entity.HasIndex(e => e.FriendlyName)
+                    .HasName("UQ__search_h__A3012EDD9E3E1C4B")
                     .IsUnique();
 
                 entity.HasIndex(e => e.SearchHistoryName)
-                    .HasName("UQ__search_h__398B8157921017F4")
+                    .HasName("UQ__search_h__398B81570FBAC33D")
+                    .IsUnique();
+
+                entity.HasIndex(e => new { e.ProjectId, e.Md5 })
+                    .HasName("UC_md5")
                     .IsUnique();
 
                 entity.Property(e => e.SearchHistoryId).HasColumnName("search_history_id");
@@ -604,6 +622,8 @@ namespace DataAccess.Models
                 entity.Property(e => e.CreatedOn)
                     .HasColumnName("created_on")
                     .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.FriendlyName).HasColumnName("friendly_name");
 
                 entity.Property(e => e.IsActive)
                     .IsRequired()
@@ -638,13 +658,13 @@ namespace DataAccess.Models
                     .WithMany(p => p.SearchHistories)
                     .HasForeignKey(d => d.ProjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__search_hi__proje__7D439ABD");
+                    .HasConstraintName("FK__search_hi__proje__7F2BE32F");
 
                 entity.HasOne(d => d.Writer)
                     .WithMany(p => p.SearchHistories)
                     .HasForeignKey(d => d.WriterId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__search_hi__write__7E37BEF6");
+                    .HasConstraintName("FK__search_hi__write__00200768");
             });
 
             modelBuilder.Entity<SourceType>(entity =>
@@ -775,19 +795,19 @@ namespace DataAccess.Models
                     .WithMany(p => p.WorkflowAutomations)
                     .HasForeignKey(d => d.WorkflowAutomationStateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__69FBBC1F");
+                    .HasConstraintName("FK__workflow___workf__6CD828CA");
 
                 entity.HasOne(d => d.WorkflowProject)
                     .WithMany(p => p.WorkflowAutomations)
                     .HasForeignKey(d => d.WorkflowProjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__681373AD");
+                    .HasConstraintName("FK__workflow___workf__6AEFE058");
 
                 entity.HasOne(d => d.WorkflowVersion)
                     .WithMany(p => p.WorkflowAutomations)
                     .HasForeignKey(d => d.WorkflowVersionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__690797E6");
+                    .HasConstraintName("FK__workflow___workf__6BE40491");
             });
 
             modelBuilder.Entity<WorkflowAutomationState>(entity =>
@@ -818,7 +838,7 @@ namespace DataAccess.Models
                     .WithMany(p => p.WorkflowAutomationStates)
                     .HasForeignKey(d => d.WorkflowVersionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__58D1301D");
+                    .HasConstraintName("FK__workflow___workf__5BAD9CC8");
             });
 
             modelBuilder.Entity<WorkflowElement>(entity =>
@@ -877,13 +897,13 @@ namespace DataAccess.Models
                     .WithMany(p => p.WorkflowModelMetadatas)
                     .HasForeignKey(d => d.WorkflowOutputModelId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__4A8310C6");
+                    .HasConstraintName("FK__workflow___workf__4D5F7D71");
 
                 entity.HasOne(d => d.WorkflowVersion)
                     .WithMany(p => p.WorkflowModelMetadatas)
                     .HasForeignKey(d => d.WorkflowVersionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__498EEC8D");
+                    .HasConstraintName("FK__workflow___workf__4C6B5938");
             });
 
             modelBuilder.Entity<WorkflowMonitor>(entity =>
@@ -916,24 +936,24 @@ namespace DataAccess.Models
                 entity.HasOne(d => d.Model)
                     .WithMany(p => p.WorkflowMonitors)
                     .HasForeignKey(d => d.ModelId)
-                    .HasConstraintName("FK__workflow___model__5224328E");
+                    .HasConstraintName("FK__workflow___model__55009F39");
 
                 entity.HasOne(d => d.WorkflowOutputModel)
                     .WithMany(p => p.WorkflowMonitors)
                     .HasForeignKey(d => d.WorkflowOutputModelId)
-                    .HasConstraintName("FK__workflow___workf__531856C7");
+                    .HasConstraintName("FK__workflow___workf__55F4C372");
 
                 entity.HasOne(d => d.WorkflowProject)
                     .WithMany(p => p.WorkflowMonitors)
                     .HasForeignKey(d => d.WorkflowProjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__503BEA1C");
+                    .HasConstraintName("FK__workflow___workf__531856C7");
 
                 entity.HasOne(d => d.WorkflowVersion)
                     .WithMany(p => p.WorkflowMonitors)
                     .HasForeignKey(d => d.WorkflowVersionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__51300E55");
+                    .HasConstraintName("FK__workflow___workf__540C7B00");
             });
 
             modelBuilder.Entity<WorkflowOutputModel>(entity =>
@@ -971,13 +991,13 @@ namespace DataAccess.Models
                     .WithMany(p => p.WorkflowOutputModels)
                     .HasForeignKey(d => d.WorkflowProjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__42E1EEFE");
+                    .HasConstraintName("FK__workflow___workf__45BE5BA9");
 
                 entity.HasOne(d => d.WorkflowVersion)
                     .WithMany(p => p.WorkflowOutputModels)
                     .HasForeignKey(d => d.WorkflowVersionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__43D61337");
+                    .HasConstraintName("FK__workflow___workf__46B27FE2");
             });
 
             modelBuilder.Entity<WorkflowProject>(entity =>
@@ -1022,7 +1042,7 @@ namespace DataAccess.Models
                 entity.HasOne(d => d.WorkflowServerType)
                     .WithMany(p => p.WorkflowProjects)
                     .HasForeignKey(d => d.WorkflowServerTypeId)
-                    .HasConstraintName("FK__workflow___workf__0D7A0286");
+                    .HasConstraintName("FK__workflow___workf__0F624AF8");
             });
 
             modelBuilder.Entity<WorkflowSearchGraph>(entity =>
@@ -1050,19 +1070,23 @@ namespace DataAccess.Models
                     .WithMany(p => p.WorkflowSearchGraphs)
                     .HasForeignKey(d => d.WorkflowSearchHistoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__3E1D39E1");
+                    .HasConstraintName("FK__workflow___workf__40F9A68C");
             });
 
             modelBuilder.Entity<WorkflowSearchHistory>(entity =>
             {
                 entity.ToTable("workflow_search_history");
 
-                entity.HasIndex(e => e.Md5)
-                    .HasName("UQ__workflow__DF50297844FD06F6")
+                entity.HasIndex(e => e.FriendlyName)
+                    .HasName("UQ__workflow__A3012EDD37399884")
                     .IsUnique();
 
                 entity.HasIndex(e => e.WorkflowSearchHistoryName)
-                    .HasName("UQ__workflow__BED47C7F5C62B2B8")
+                    .HasName("UQ__workflow__BED47C7F0694D438")
+                    .IsUnique();
+
+                entity.HasIndex(e => new { e.WorkflowProjectId, e.Md5 })
+                    .HasName("UCP_md5")
                     .IsUnique();
 
                 entity.Property(e => e.WorkflowSearchHistoryId).HasColumnName("workflow_search_history_id");
@@ -1070,6 +1094,8 @@ namespace DataAccess.Models
                 entity.Property(e => e.CreatedOn)
                     .HasColumnName("created_on")
                     .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.FriendlyName).HasColumnName("friendly_name");
 
                 entity.Property(e => e.IsActive)
                     .IsRequired()
@@ -1104,13 +1130,13 @@ namespace DataAccess.Models
                     .WithMany(p => p.WorkflowSearchHistories)
                     .HasForeignKey(d => d.WorkflowProjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__2FCF1A8A");
+                    .HasConstraintName("FK__workflow___workf__32AB8735");
 
                 entity.HasOne(d => d.WorkflowVersion)
                     .WithMany(p => p.WorkflowSearchHistories)
                     .HasForeignKey(d => d.WorkflowVersionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__30C33EC3");
+                    .HasConstraintName("FK__workflow___workf__339FAB6E");
             });
 
             modelBuilder.Entity<WorkflowServerType>(entity =>
@@ -1170,19 +1196,19 @@ namespace DataAccess.Models
                 entity.HasOne(d => d.WorkflowProject)
                     .WithMany(p => p.WorkflowSessionAttempts)
                     .HasForeignKey(d => d.WorkflowProjectId)
-                    .HasConstraintName("FK__workflow___workf__1CBC4616");
+                    .HasConstraintName("FK__workflow___workf__1EA48E88");
 
                 entity.HasOne(d => d.WorkflowStatusType)
                     .WithMany(p => p.WorkflowSessionAttempts)
                     .HasForeignKey(d => d.WorkflowStatusTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__1EA48E88");
+                    .HasConstraintName("FK__workflow___workf__208CD6FA");
 
                 entity.HasOne(d => d.WorkflowVersion)
                     .WithMany(p => p.WorkflowSessionAttempts)
                     .HasForeignKey(d => d.WorkflowVersionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__1BC821DD");
+                    .HasConstraintName("FK__workflow___workf__1DB06A4F");
             });
 
             modelBuilder.Entity<WorkflowSessionLog>(entity =>
@@ -1208,12 +1234,12 @@ namespace DataAccess.Models
                 entity.HasOne(d => d.WorkflowProject)
                     .WithMany(p => p.WorkflowSessionLogs)
                     .HasForeignKey(d => d.WorkflowProjectId)
-                    .HasConstraintName("FK__workflow___workf__25518C17");
+                    .HasConstraintName("FK__workflow___workf__2739D489");
 
                 entity.HasOne(d => d.WorkflowSessionAttempt)
                     .WithMany(p => p.WorkflowSessionLogs)
                     .HasForeignKey(d => d.WorkflowSessionAttemptId)
-                    .HasConstraintName("FK__workflow___workf__245D67DE");
+                    .HasConstraintName("FK__workflow___workf__2645B050");
             });
 
             modelBuilder.Entity<WorkflowStateModelMap>(entity =>
@@ -1246,24 +1272,24 @@ namespace DataAccess.Models
                 entity.HasOne(d => d.Model)
                     .WithMany(p => p.WorkflowStateModelMaps)
                     .HasForeignKey(d => d.ModelId)
-                    .HasConstraintName("FK__workflow___model__6166761E");
+                    .HasConstraintName("FK__workflow___model__6442E2C9");
 
                 entity.HasOne(d => d.WorkflowAutomationState)
                     .WithMany(p => p.WorkflowStateModelMaps)
                     .HasForeignKey(d => d.WorkflowAutomationStateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__5F7E2DAC");
+                    .HasConstraintName("FK__workflow___workf__625A9A57");
 
                 entity.HasOne(d => d.WorkflowOutputModel)
                     .WithMany(p => p.WorkflowStateModelMaps)
                     .HasForeignKey(d => d.WorkflowOutputModelId)
-                    .HasConstraintName("FK__workflow___workf__625A9A57");
+                    .HasConstraintName("FK__workflow___workf__65370702");
 
                 entity.HasOne(d => d.WorkflowVersion)
                     .WithMany(p => p.WorkflowStateModelMaps)
                     .HasForeignKey(d => d.WorkflowVersionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__607251E5");
+                    .HasConstraintName("FK__workflow___workf__634EBE90");
             });
 
             modelBuilder.Entity<WorkflowStatusType>(entity =>
@@ -1329,19 +1355,19 @@ namespace DataAccess.Models
                     .WithMany(p => p.WorkflowTests)
                     .HasForeignKey(d => d.WorkflowProjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__6FB49575");
+                    .HasConstraintName("FK__workflow___workf__72910220");
 
                 entity.HasOne(d => d.WorkflowStatusType)
                     .WithMany(p => p.WorkflowTests)
                     .HasForeignKey(d => d.WorkflowStatusTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__73852659");
+                    .HasConstraintName("FK__workflow___workf__76619304");
 
                 entity.HasOne(d => d.WorkflowVersion)
                     .WithMany(p => p.WorkflowTests)
                     .HasForeignKey(d => d.WorkflowVersionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__70A8B9AE");
+                    .HasConstraintName("FK__workflow___workf__73852659");
             });
 
             modelBuilder.Entity<WorkflowVersion>(entity =>
@@ -1396,13 +1422,13 @@ namespace DataAccess.Models
                 entity.HasOne(d => d.LastWorkflowSessionAttempt)
                     .WithMany(p => p.WorkflowVersions)
                     .HasForeignKey(d => d.LastWorkflowSessionAttemptId)
-                    .HasConstraintName("FK__workflow___last___2180FB33");
+                    .HasConstraintName("FK__workflow___last___236943A5");
 
                 entity.HasOne(d => d.WorkflowProject)
                     .WithMany(p => p.WorkflowVersions)
                     .HasForeignKey(d => d.WorkflowProjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__workflow___workf__14270015");
+                    .HasConstraintName("FK__workflow___workf__160F4887");
             });
 
             modelBuilder.Entity<Writer>(entity =>
@@ -1443,7 +1469,7 @@ namespace DataAccess.Models
                 entity.ToTable("writer_type");
 
                 entity.HasIndex(e => e.WriterTypeName)
-                    .HasName("UQ__writer_t__5476CA987357A0E0")
+                    .HasName("UQ__writer_t__5476CA98C12A8312")
                     .IsUnique();
 
                 entity.Property(e => e.WriterTypeId).HasColumnName("writer_type_id");

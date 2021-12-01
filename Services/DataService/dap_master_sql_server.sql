@@ -134,6 +134,7 @@ create table schema_model(
 	project_id int not null references project,	
 	model_name varchar(50),
 	model_config nvarchar(max),
+	model_size bigint default 0,
 	[user_id] int not null,	
 	created_on datetime2 not null default getdate(),
 	is_active bit default 1 not null,
@@ -191,11 +192,12 @@ create table search_history(
 	writer_id int not null references writer,
 	search_query nvarchar(max),
 	resolved_search_query nvarchar(max),
-	md5 nvarchar(50) unique,
+	md5 nvarchar(50),
 	last_executed_on datetime2 not null default getdate(),
 	is_active bit default 1 not null,
 	is_deleted bit default 0 not null,
-       CONSTRAINT UC_md5 UNIQUE (project_id,md5)
+	friendly_name nvarchar(450) unique,
+    CONSTRAINT UC_md5 UNIQUE (project_id,md5)
 );
 
 create table search_graph(
@@ -309,11 +311,12 @@ create table workflow_search_history(
 	workflow_version_id int not null references workflow_version,
 	search_query nvarchar(max),
 	resolved_search_query nvarchar(max),
-	md5 nvarchar(50) unique,	
+	md5 nvarchar(50),	
+	friendly_name nvarchar(450) unique,
 	last_executed_on datetime2 not null default getdate(),
 	is_active bit default 1 not null,
 	is_deleted bit default 0 not null,
-       CONSTRAINT UCP_md5 UNIQUE (workflow_project_id,md5)
+    CONSTRAINT UCP_md5 UNIQUE (workflow_project_id,md5)
 );
 
 create table project_automation (

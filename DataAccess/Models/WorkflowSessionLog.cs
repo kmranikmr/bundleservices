@@ -13,7 +13,7 @@ namespace DataAccess.Models
         public DateTime CreatedOn { get; set; }
         public string LogData { get; set; }
 
-        public WorkflowProject WorkflowProject { get; set; }
-        public WorkflowSessionAttempt WorkflowSessionAttempt { get; set; }
+        public virtual WorkflowProject WorkflowProject { get; set; }
+        public virtual WorkflowSessionAttempt WorkflowSessionAttempt { get; set; }
     }
 }

@@ -22,10 +22,10 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public WorkflowProject WorkflowProject { get; set; }
-        public WorkflowVersion WorkflowVersion { get; set; }
-        public ICollection<WorkflowModelMetadata> WorkflowModelMetadatas { get; set; }
-        public ICollection<WorkflowMonitor> WorkflowMonitors { get; set; }
-        public ICollection<WorkflowStateModelMap> WorkflowStateModelMaps { get; set; }
+        public virtual WorkflowProject WorkflowProject { get; set; }
+        public virtual WorkflowVersion WorkflowVersion { get; set; }
+        public virtual ICollection<WorkflowModelMetadata> WorkflowModelMetadatas { get; set; }
+        public virtual ICollection<WorkflowMonitor> WorkflowMonitors { get; set; }
+        public virtual ICollection<WorkflowStateModelMap> WorkflowStateModelMaps { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace DataAccess.Models
         public long PermissionBit { get; set; }
         public DateTime CreatedOn { get; set; }
 
-        public Project Project { get; set; }
+        public virtual Project Project { get; set; }
     }
 }

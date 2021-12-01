@@ -21,9 +21,9 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public ReaderType ReaderType { get; set; }
-        public ICollection<ProjectAutomation> ProjectAutomations { get; set; }
-        public ICollection<ProjectFile> ProjectFiles { get; set; }
-        public ICollection<ProjectReader> ProjectReaders { get; set; }
+        public virtual ReaderType ReaderType { get; set; }
+        public virtual ICollection<ProjectAutomation> ProjectAutomations { get; set; }
+        public virtual ICollection<ProjectFile> ProjectFiles { get; set; }
+        public virtual ICollection<ProjectReader> ProjectReaders { get; set; }
     }
 }

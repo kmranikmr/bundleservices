@@ -13,6 +13,6 @@ namespace DataAccess.Models
         public int WorkflowServerTypeId { get; set; }
         public string WorkflowServerTypeName { get; set; }
 
-        public ICollection<WorkflowProject> WorkflowProjects { get; set; }
+        public virtual ICollection<WorkflowProject> WorkflowProjects { get; set; }
     }
 }

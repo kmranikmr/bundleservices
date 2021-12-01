@@ -14,7 +14,7 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public WorkflowOutputModel WorkflowOutputModel { get; set; }
-        public WorkflowVersion WorkflowVersion { get; set; }
+        public virtual WorkflowOutputModel WorkflowOutputModel { get; set; }
+        public virtual WorkflowVersion WorkflowVersion { get; set; }
     }
 }

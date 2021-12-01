@@ -14,8 +14,8 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public Project Project { get; set; }
-        public ProjectSchema ProjectSchema { get; set; }
-        public Reader Reader { get; set; }
+        public virtual Project Project { get; set; }
+        public virtual ProjectSchema ProjectSchema { get; set; }
+        public virtual Reader Reader { get; set; }
     }
 }

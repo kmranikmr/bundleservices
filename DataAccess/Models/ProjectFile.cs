@@ -23,10 +23,10 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public Project Project { get; set; }
-        public Reader Reader { get; set; }
-        public ProjectSchema Schema { get; set; }
-        public SourceType SourceType { get; set; }
-        public ICollection<Job> Jobs { get; set; }
+        public virtual Project Project { get; set; }
+        public virtual Reader Reader { get; set; }
+        public virtual ProjectSchema Schema { get; set; }
+        public virtual SourceType SourceType { get; set; }
+        public virtual ICollection<Job> Jobs { get; set; }
     }
 }

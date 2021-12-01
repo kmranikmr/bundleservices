@@ -17,15 +17,16 @@ namespace DataAccess.Models
         public int ProjectId { get; set; }
         public string ModelName { get; set; }
         public string ModelConfig { get; set; }
+        public long? ModelSize { get; set; }
         public int UserId { get; set; }
         public DateTime CreatedOn { get; set; }
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public Project Project { get; set; }
-        public ProjectSchema Schema { get; set; }
-        public ICollection<ModelMetadata> ModelMetadatas { get; set; }
-        public ICollection<WorkflowMonitor> WorkflowMonitors { get; set; }
-        public ICollection<WorkflowStateModelMap> WorkflowStateModelMaps { get; set; }
+        public virtual Project Project { get; set; }
+        public virtual ProjectSchema Schema { get; set; }
+        public virtual ICollection<ModelMetadata> ModelMetadatas { get; set; }
+        public virtual ICollection<WorkflowMonitor> WorkflowMonitors { get; set; }
+        public virtual ICollection<WorkflowStateModelMap> WorkflowStateModelMaps { get; set; }
     }
 }

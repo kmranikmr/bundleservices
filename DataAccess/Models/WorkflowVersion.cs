@@ -35,16 +35,16 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public WorkflowSessionAttempt LastWorkflowSessionAttempt { get; set; }
-        public WorkflowProject WorkflowProject { get; set; }
-        public ICollection<WorkflowAutomationState> WorkflowAutomationStates { get; set; }
-        public ICollection<WorkflowAutomation> WorkflowAutomations { get; set; }
-        public ICollection<WorkflowModelMetadata> WorkflowModelMetadatas { get; set; }
-        public ICollection<WorkflowMonitor> WorkflowMonitors { get; set; }
-        public ICollection<WorkflowOutputModel> WorkflowOutputModels { get; set; }
-        public ICollection<WorkflowSearchHistory> WorkflowSearchHistories { get; set; }
-        public ICollection<WorkflowSessionAttempt> WorkflowSessionAttempts { get; set; }
-        public ICollection<WorkflowStateModelMap> WorkflowStateModelMaps { get; set; }
-        public ICollection<WorkflowTest> WorkflowTests { get; set; }
+        public virtual WorkflowSessionAttempt LastWorkflowSessionAttempt { get; set; }
+        public virtual WorkflowProject WorkflowProject { get; set; }
+        public virtual ICollection<WorkflowAutomationState> WorkflowAutomationStates { get; set; }
+        public virtual ICollection<WorkflowAutomation> WorkflowAutomations { get; set; }
+        public virtual ICollection<WorkflowModelMetadata> WorkflowModelMetadatas { get; set; }
+        public virtual ICollection<WorkflowMonitor> WorkflowMonitors { get; set; }
+        public virtual ICollection<WorkflowOutputModel> WorkflowOutputModels { get; set; }
+        public virtual ICollection<WorkflowSearchHistory> WorkflowSearchHistories { get; set; }
+        public virtual ICollection<WorkflowSessionAttempt> WorkflowSessionAttempts { get; set; }
+        public virtual ICollection<WorkflowStateModelMap> WorkflowStateModelMaps { get; set; }
+        public virtual ICollection<WorkflowTest> WorkflowTests { get; set; }
     }
 }

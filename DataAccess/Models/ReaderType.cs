@@ -16,6 +16,6 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public ICollection<Reader> Readers { get; set; }
+        public virtual ICollection<Reader> Readers { get; set; }
     }
 }

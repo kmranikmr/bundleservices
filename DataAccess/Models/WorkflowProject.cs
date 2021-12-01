@@ -29,14 +29,14 @@ namespace DataAccess.Models
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public WorkflowServerType WorkflowServerType { get; set; }
-        public ICollection<WorkflowAutomation> WorkflowAutomations { get; set; }
-        public ICollection<WorkflowMonitor> WorkflowMonitors { get; set; }
-        public ICollection<WorkflowOutputModel> WorkflowOutputModels { get; set; }
-        public ICollection<WorkflowSearchHistory> WorkflowSearchHistories { get; set; }
-        public ICollection<WorkflowSessionAttempt> WorkflowSessionAttempts { get; set; }
-        public ICollection<WorkflowSessionLog> WorkflowSessionLogs { get; set; }
-        public ICollection<WorkflowTest> WorkflowTests { get; set; }
-        public ICollection<WorkflowVersion> WorkflowVersions { get; set; }
+        public virtual WorkflowServerType WorkflowServerType { get; set; }
+        public virtual ICollection<WorkflowAutomation> WorkflowAutomations { get; set; }
+        public virtual ICollection<WorkflowMonitor> WorkflowMonitors { get; set; }
+        public virtual ICollection<WorkflowOutputModel> WorkflowOutputModels { get; set; }
+        public virtual ICollection<WorkflowSearchHistory> WorkflowSearchHistories { get; set; }
+        public virtual ICollection<WorkflowSessionAttempt> WorkflowSessionAttempts { get; set; }
+        public virtual ICollection<WorkflowSessionLog> WorkflowSessionLogs { get; set; }
+        public virtual ICollection<WorkflowTest> WorkflowTests { get; set; }
+        public virtual ICollection<WorkflowVersion> WorkflowVersions { get; set; }
     }
 }
