@@ -88,7 +88,7 @@ namespace DataAccess.Models
         Task<WorkflowSearchHistory> GetWorkflowSearchHistory(string searchHistoryName, int userId);
         Task<WorkflowSearchHistory> GetWorkflowSearchHistoryByMd5(string md5, int userId, int projectId);
         Task<SearchHistory> GetSearchHistory(string searchName, int userId);
-
+        Task<SearchHistory> UpdateSearchHistory(int searchHistoryId, int userId, string friendlyName);
         #endregion
 
         #region automation

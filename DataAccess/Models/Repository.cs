@@ -678,6 +678,22 @@ namespace DataAccess.Models
             return null;
         }
 
+        public async Task<SearchHistory> UpdateSearchHistory(int searchHistoryId, int userId, string friendlyName)
+        {
+            SearchHistory query = _context.SearchHistories.FindAsync(searchHistoryId).Result;
+            if (query != null)
+            {
+                query.FriendlyName = friendlyName;
+
+                _context.Entry(query).Property(x => x.FriendlyName).IsModified = true;
+
+                await _context.SaveChangesAsync();
+
+                return query;
+            }
+            return null;
+        }
+
         public async Task<SearchHistory> GetSearchHistoryByMd5(string md5, int userId, int projectId)
         {
             SearchHistory query = _context.SearchHistories.Where(x => x.UserId ==userId && x.Md5 == md5 && x.ProjectId == projectId).FirstOrDefault();

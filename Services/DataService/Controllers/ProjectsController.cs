@@ -852,6 +852,23 @@ namespace DataService.Controllers
             return this.StatusCode(StatusCodes.Status204NoContent, "ProjectId does not exist.");
         }
 
+        [HttpPost("[action]/{projectId}/{isWorkflow:bool=false}")]
+        public async Task<IActionResult> UpdateSearchQuery(int searchHistoryId, [FromBody] string friendlyName, [FromRoute] bool isWorkflow = false)//add option workflow..mapping versionid-> projectid
+        {
+            int userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!isWorkflow)
+            {
+                var ret = await _repository.UpdateSearchHistory(searchHistoryId, userId, friendlyName);
+                return Ok(friendlyName);
+            }
+            return this.StatusCode(StatusCodes.Status204NoContent, "No searchHistoryId");
+        }
+
         public static string MD5Hash(string input)
         {
             StringBuilder hash = new StringBuilder();
