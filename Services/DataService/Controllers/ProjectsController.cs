@@ -119,12 +119,13 @@ namespace DataService.Controllers
 
                 if (!isWorkflow)
                 {
+                    Console.WriteLine("GetProjectTree");
                     var results = await _repository.GetAllProjectsByUserId(userId, false, true);
-
+                    Console.WriteLine("GetProjectTree GetAllProjectsByUserId");
                     if (!results.Any()) return NotFound("no project found for the user.");
 
                     var projectDTOs = _mapper.Map<ProjectTreeDTO[]>(results);
-
+                    Console.WriteLine("GetProjectTree mapper");
                     //if workflow projetid -> workflowprojectid , name
                     //SchemaId ->workflowversionid, version ->schemaname
                     //ModelID -> attemptid..modelname-> tablename  [datetime]...we will extend the queryrequest class to inlcude workflowversionid, attemptid..and query service wi
