@@ -856,7 +856,9 @@ namespace DataService.Controllers
         [HttpPost("[action]/{projectId}/{isWorkflow:bool=false}")]
         public async Task<IActionResult> UpdateSearchQuery(int searchHistoryId, [FromBody] string friendlyName, [FromRoute] bool isWorkflow = false)//add option workflow..mapping versionid-> projectid
         {
-            int userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            Console.WriteLine("update search query");
+
+          int userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             if (!ModelState.IsValid)
             {
@@ -864,8 +866,10 @@ namespace DataService.Controllers
             }
             if (!isWorkflow)
             {
+                Console.WriteLine("update search query" + searchHistoryId + " " + friendlyName);
                 var ret = await _repository.UpdateSearchHistory(searchHistoryId, userId, friendlyName);
-                return Ok(friendlyName);
+                Console.WriteLine("update search query done" + searchHistoryId + " " + friendlyName);
+                return Ok(ret);
             }
             return this.StatusCode(StatusCodes.Status204NoContent, "No searchHistoryId");
         }
