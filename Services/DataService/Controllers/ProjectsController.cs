@@ -866,9 +866,9 @@ namespace DataService.Controllers
             }
             if (!isWorkflow)
             {
-                Console.WriteLine("update search query" + searchHistoryId + " " + friendlyName);
+                Console.WriteLine("update search query" + searchHistoryId.ToString() + " " + friendlyName);
                 var ret = await _repository.UpdateSearchHistory(searchHistoryId, userId, friendlyName);
-                Console.WriteLine("update search query done" + searchHistoryId + " " + friendlyName);
+                Console.WriteLine("update search query done" + searchHistoryId.ToString() + " " + friendlyName);
                 return Ok(ret);
             }
             return this.StatusCode(StatusCodes.Status204NoContent, "No searchHistoryId");
