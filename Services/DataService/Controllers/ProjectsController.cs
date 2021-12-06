@@ -853,7 +853,7 @@ namespace DataService.Controllers
             return this.StatusCode(StatusCodes.Status204NoContent, "ProjectId does not exist.");
         }
 
-        [HttpPost("[action]/{projectId}/{isWorkflow:bool=false}")]
+        [HttpPost("[action]/{searchHistoryId}/{isWorkflow:bool=false}")]
         public async Task<IActionResult> UpdateSearchQuery(int searchHistoryId, [FromBody] string friendlyName, [FromRoute] bool isWorkflow = false)//add option workflow..mapping versionid-> projectid
         {
             Console.WriteLine("update search query");
