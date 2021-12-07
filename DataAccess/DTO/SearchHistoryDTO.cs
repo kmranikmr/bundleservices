@@ -17,7 +17,7 @@ namespace DataAccess.DTO
 
         public int UserId { get; set; }
         public int SearchHistoryId { get; set; }
-
+        public string FriendlyName { get; set; }
         public SearchGraphDTO[] SearchGraphs { get; set; }
 
         public SearchHistoryDTO()
