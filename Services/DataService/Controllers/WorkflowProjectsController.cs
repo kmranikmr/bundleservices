@@ -91,13 +91,16 @@ namespace DataService.Controllers
                     foreach (var mystate in list_states)
                     {
                         string key = mystate;
+                        Console.WriteLine($"attempt.Result{attempt.Result}");
                         if (attempt.Result.ToLower().Contains(key))
                         {
                             if (mystate == "processing")
                             {
                                 if (attempt.EndDate != null)
                                 {
+                                    Console.WriteLine($"attempt.EndDate{attempt.EndDate}");
                                     var delta = DateTime.Now.Subtract((DateTime)attempt.EndDate);
+                                    Console.WriteLine($"delta{delta.Minutes}");
                                     if (delta.TotalMinutes > 30)
                                     {
                                         key = "discarded";
@@ -106,11 +109,11 @@ namespace DataService.Controllers
                             }
                             if (dict.ContainsKey(key))
                             {
-                                dict[mystate] += 1;
+                                dict[key] += 1;
                             }
                             else
                             {
-                                dict.Add(mystate, 1);
+                                dict.Add(key, 1);
                             }
                             break;
                         }
