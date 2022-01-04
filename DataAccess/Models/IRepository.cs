@@ -125,6 +125,7 @@ namespace DataAccess.Models
         Task<WorkflowSearchHistory[]> GetWorkflowSearchHistories(int userId);
         Task<bool> DeleteWorkflowProjects(int userId, int workflowProjectId);
         Task<bool> DeleteWorkflowVersion(int userId, int workflowProjectId, int workflowVersionId);
+        Task<WorkflowSessionAttempt[]> GetAllWorkflowVersionAttempts(int userId);
         Task<WorkflowElement[]> GetNodeRepository();
         #endregion
         Task<WorkflowProject[]> GetAllWorkflowProjectsByUserId(int userId, bool includeModelSchema = false);

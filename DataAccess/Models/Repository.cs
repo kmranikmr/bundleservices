@@ -855,6 +855,19 @@ namespace DataAccess.Models
 
             return false;
         }
+
+        public async Task<WorkflowSessionAttempt[]> GetAllWorkflowVersionAttempts(int userId)
+        {
+            IQueryable<WorkflowSessionAttempt> query = _context.WorkflowSessionAttempts.Where(x => x.UserId == userId);
+            ///query = query.Where(x => x.IsDeleted == false);
+            if (query == null)
+            {
+                return null;
+            }
+
+            return await query.ToArrayAsync();
+        }
+
         // delete workflow versions given workflowprojectid/workflowversionid
         public async Task<bool> DeleteWorkflowVersion(int userId, int workflowProjectId, int workflowVersionId)
         {

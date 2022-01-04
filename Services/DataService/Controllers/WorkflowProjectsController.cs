@@ -71,6 +71,57 @@ namespace DataService.Controllers
         ///
         /// 
         ///
+        [HttpGet()]//"[action]"
+        public async Task<IActionResult> GetSummary()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var res = await _repository.GetAllWorkflowVersionAttempts(userId);
+                Dictionary<string, int> dict = new Dictionary<string, int>();
+                string[] list_states = new string[] { "success", "failure", "processing" };
+                foreach (var attempt in res)
+                {
+                    foreach (var mystate in list_states)
+                    {
+                        string key = mystate;
+                        if (attempt.Result.ToLower().Contains(key))
+                        {
+                            if (mystate == "processing")
+                            {
+                                if (attempt.EndDate != null)
+                                {
+                                    var delta = DateTime.Now.Subtract((DateTime)attempt.EndDate);
+                                    if (delta.TotalMinutes > 30)
+                                    {
+                                        key = "discarded";
+                                    }
+                                }
+                            }
+                            if (dict.ContainsKey(key))
+                            {
+                                dict[mystate] += 1;
+                            }
+                            else
+                            {
+                                dict.Add(mystate, 1);
+                            }
+                            break;
+                        }
+                    }
+                }
+                return Ok(dict);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
 
         [HttpGet("[action]/{workflowProjectid}/{workflowVersionId}/{workflowModelId}")]//"[action]"
         public async Task<ActionResult<string>>WorkflowModelName(int workflowProjectid, int workflowVersionId, int workflowModelId)
