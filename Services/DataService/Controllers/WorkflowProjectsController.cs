@@ -71,7 +71,7 @@ namespace DataService.Controllers
         ///
         /// 
         ///
-        [HttpGet()]//"[action]"
+        [HttpGet("[action]")]//"[action]"
         public async Task<IActionResult> GetSummary()
         {
             if (!ModelState.IsValid)
@@ -85,6 +85,7 @@ namespace DataService.Controllers
                 var res = await _repository.GetAllWorkflowVersionAttempts(userId);
                 Dictionary<string, int> dict = new Dictionary<string, int>();
                 string[] list_states = new string[] { "success", "failure", "processing" };
+                Console.WriteLine("GetSummary");
                 foreach (var attempt in res)
                 {
                     foreach (var mystate in list_states)
