@@ -15,6 +15,7 @@ namespace DataAccess.DTO
         public int WriterId { get; set; }
         public int UserId { get; set; }
         public int SearchHistoryId { get; set; }
+        public string FriendlyName { get; set; }
     }
 
 }
