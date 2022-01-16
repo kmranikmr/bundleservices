@@ -825,7 +825,7 @@ namespace DataAccess.Models
                    */
                 }
             }
-            dec.schedule = null;
+          //  dec.schedule = null;
             ModelList = ListOfModels;
             Console.WriteLine($" out");
 
