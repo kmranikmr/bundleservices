@@ -17,7 +17,7 @@ namespace DataAccess.DTO
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }
         public string WorkflowJson { get; set; }
-        public bool? IsPublished { get; set; }
+        public bool? IsPublished { get; set; }  
         public string UploadedPath { get; set; }
         public string WorkflowPropertyJson { get; set; }
         public string Status { get; set; }
