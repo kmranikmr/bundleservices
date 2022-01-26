@@ -74,6 +74,7 @@ namespace DataAccess.Models
         Task<Project> GetProjectByName(string projectName);
         Task<SchemaModel> GetModel(int userId, int projectId, string schemaName, string ModelName);
         Task<SchemaModel> GetModel(int userId, string projectName, string schemaName, string ModelName);
+        Task<long> GetTotalModelSize(int userId);
         #endregion
 
         #region Search History
@@ -114,8 +115,10 @@ namespace DataAccess.Models
         Task<WorkflowOutputModel> AddWorkflowOutputTable(int workflowProjectId, int workflowVersionId, int userId);
         Task<WorkflowOutputModel> UpdateWorkflowOutputTable(int pkindex, int workflowProjectId, int workflowVersionId, string displayName);
         Task<WorkflowOutputModel[]> GetWorkflowOutputTable(int workflowProjectId, int workflowVersionId, int userId, bool inlcude = false);
-      
-   
+        Task<bool> DisableWorkflowVersion(int workflowVersionId, int workflowProjectId);
+        Task<bool> DisableWorkflowVersionAttempt(int externalWorkflowVersionId, int externalProjectId);
+
+
         Task<WorkflowSessionAttempt> AddWorkflowAttempt(int workflowProjectId, int userId, int workflowId);
         Task<WorkflowSessionAttempt> UpdateWorkflowAttempt(int attemptId, int workflowProjectId, int userId, int workflowId, string Result);
         Task<WorkflowSessionAttempt> UpdateWorkflowAttempt(int externalAttemptId, int externalWorkflowId, int userId, string Result, string Log);

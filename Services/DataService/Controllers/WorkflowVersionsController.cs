@@ -422,103 +422,155 @@ namespace DataService.Controllers
 
         }
 
-      
+        [HttpPost("[action]/{projectId}/]/{workflowId}")]//[action]
+        public async Task<ActionResult<WorkflowVersionDTO[]>> StopSchedule([FromRoute] int projectId, [FromRoute] int workflowId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            try
+            {
+                var workflow = await _repository.GetWorkflowVersion(userId, workflowId);
+                if (workflow == null) return StatusCode(StatusCodes.Status404NotFound);
+                var client = new RestClient();
+                string url = "http://idapt.duckdns.org:65432/api/schedules";
+                var requestRest = new RestRequest(url, Method.GET, DataFormat.Json);
+                IRestResponse response = await client.ExecuteAsync(requestRest);
+                var res = response.Content;
+                var result = JsonConvert.DeserializeObject<Schedules>(res);
+                var schedule = result.schedules.Where(x => x.workflow.id == workflow.ExternalWorkflowId.ToString() && workflow.ExternalProjectId.ToString() == x.project.id).FirstOrDefault();
+                if (schedule != null)
+                {
+                    url = $"http://idapt.duckdns.org:65432/api/schedule/{schedule.id}/disable";
+                    requestRest = new RestRequest(url, Method.POST, DataFormat.Json);
+                    response = await client.ExecuteAsync(requestRest);
+                    var ret = await _repository.DisableWorkflowVersion(workflow.WorkflowVersionId, workflow.WorkflowProjectId);
+                    if (workflow.ExternalWorkflowId != null)
+                    {
+                        ret = await _repository.DisableWorkflowVersionAttempt((int)workflow.ExternalWorkflowId, workflow.ExternalProjectId);
+                    }
 
+                    var versionsData = await _repository.GetWorkflowVersions(userId, projectId, false, true);
+                    var workflowVersionDTOs = _mapper.Map<WorkflowVersionDTO[]>(versionsData);
+                    if (workflowVersionDTOs == null)
+                    {
+                        return this.StatusCode(StatusCodes.Status204NoContent, "");
+                    }
+                    else
+                    {
+                        return workflowVersionDTOs;
+                    }
+                }
 
-      
-            //// GET: api/WorkflowProjects/5
-            //[HttpGet("{id}")]
-            //public async Task<IActionResult> GetWorkflowProject([FromRoute] int id)
-            //{
-            //    if (!ModelState.IsValid)
-            //    {
-            //        return BadRequest(ModelState);
-            //    }
-
-            //    var workflowProject = await _context.WorkflowProjects.FindAsync(id);
-
-            //    if (workflowProject == null)
-            //    {
-            //        return NotFound();
-            //    }
-
-            //    return Ok(workflowProject);
-            //}
-
-            //// PUT: api/WorkflowProjects/5
-            //[HttpPut("{id}")]
-            //public async Task<IActionResult> PutWorkflowProject([FromRoute] int id, [FromBody] WorkflowProject workflowProject)
-            //{
-            //    if (!ModelState.IsValid)
-            //    {
-            //        return BadRequest(ModelState);
-            //    }
-
-            //    if (id != workflowProject.WorkflowProjectId)
-            //    {
-            //        return BadRequest();
-            //    }
-
-            //    _context.Entry(workflowProject).State = EntityState.Modified;
-
-            //    try
-            //    {
-            //        await _context.SaveChangesAsync();
-            //    }
-            //    catch (DbUpdateConcurrencyException)
-            //    {
-            //        if (!WorkflowProjectExists(id))
-            //        {
-            //            return NotFound();
-            //        }
-            //        else
-            //        {
-            //            throw;
-            //        }
-            //    }
-
-            //    return NoContent();
-            //}
-
-            //// POST: api/WorkflowProjects
-            //[HttpPost]
-            //public async Task<IActionResult> PostWorkflowProject([FromBody] WorkflowProject workflowProject)
-            //{
-            //    if (!ModelState.IsValid)
-            //    {
-            //        return BadRequest(ModelState);
-            //    }
-
-            //    _context.WorkflowProjects.Add(workflowProject);
-            //    await _context.SaveChangesAsync();
-
-            //    return CreatedAtAction("GetWorkflowProject", new { id = workflowProject.WorkflowProjectId }, workflowProject);
-            //}
-
-            //// DELETE: api/WorkflowProjects/5
-            //[HttpDelete("{id}")]
-            //public async Task<IActionResult> DeleteWorkflowProject([FromRoute] int id)
-            //{
-            //    if (!ModelState.IsValid)
-            //    {
-            //        return BadRequest(ModelState);
-            //    }
-
-            //    var workflowProject = await _context.WorkflowProjects.FindAsync(id);
-            //    if (workflowProject == null)
-            //    {
-            //        return NotFound();
-            //    }
-
-            //    _context.WorkflowProjects.Remove(workflowProject);
-            //    await _context.SaveChangesAsync();
-
-            //    return Ok(workflowProject);
-            //}
-
-            //private bool WorkflowProjectExists(int id)
-            //{
-            //    return _context.WorkflowProjects.Any(e => e.WorkflowProjectId == id);
-            //}
+            }catch(Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status204NoContent, "");
+            }
+            return this.StatusCode(StatusCodes.Status204NoContent, "");
+            //deseriliazation
+            //get scheuyleid = go through array and look fpor prohject id annd workflowid...linq
+            //call disable to disable all
+            //some repo call to update isactive = false
+            //return workflowdto fr that projectid
         }
+
+
+
+        //// GET: api/WorkflowProjects/5
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetWorkflowProject([FromRoute] int id)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    var workflowProject = await _context.WorkflowProjects.FindAsync(id);
+
+        //    if (workflowProject == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return Ok(workflowProject);
+        //}
+
+        //// PUT: api/WorkflowProjects/5
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutWorkflowProject([FromRoute] int id, [FromBody] WorkflowProject workflowProject)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    if (id != workflowProject.WorkflowProjectId)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    _context.Entry(workflowProject).State = EntityState.Modified;
+
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!WorkflowProjectExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return NoContent();
+        //}
+
+        //// POST: api/WorkflowProjects
+        //[HttpPost]
+        //public async Task<IActionResult> PostWorkflowProject([FromBody] WorkflowProject workflowProject)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    _context.WorkflowProjects.Add(workflowProject);
+        //    await _context.SaveChangesAsync();
+
+        //    return CreatedAtAction("GetWorkflowProject", new { id = workflowProject.WorkflowProjectId }, workflowProject);
+        //}
+
+        //// DELETE: api/WorkflowProjects/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteWorkflowProject([FromRoute] int id)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    var workflowProject = await _context.WorkflowProjects.FindAsync(id);
+        //    if (workflowProject == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _context.WorkflowProjects.Remove(workflowProject);
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok(workflowProject);
+        //}
+
+        //private bool WorkflowProjectExists(int id)
+        //{
+        //    return _context.WorkflowProjects.Any(e => e.WorkflowProjectId == id);
+        //}
+    }
     }

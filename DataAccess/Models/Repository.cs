@@ -52,7 +52,7 @@ namespace DataAccess.Models
 
             return await query.FirstOrDefaultAsync();
         }
-
+        
         public async Task<Project[]> GetAllProjectsByUserId(int userId, bool includeSummary = false, bool includeModelSchema = false)
         {
             IQueryable<Project> query = _context.Projects;
@@ -133,6 +133,17 @@ namespace DataAccess.Models
         #endregion
 
         #region Schema
+        public async Task<long> GetTotalModelSize(int userId)
+        {
+            IQueryable<SchemaModel> query = _context.SchemaModels;
+            var sm = query.Where(x => x.UserId == userId); 
+            if (sm != null)
+            {
+                return await sm.SumAsync(x => x.ModelSize.HasValue ? x.ModelSize.Value : 0);
+                
+            }
+            return 0;
+        }
 
         public async Task<ProjectSchema[]> GetSchemasAsync(int userId, int projectId, bool includeModels = false)
         {
@@ -992,6 +1003,38 @@ namespace DataAccess.Models
             }
             return false;
         }
+
+
+        public async Task<bool> DisableWorkflowVersion(int workflowVersionId, int workflowProjectId )
+        {
+
+            var versionFlow = await _context.WorkflowVersions.FindAsync(workflowVersionId);
+            if (versionFlow != null)
+            {
+                
+                _context.Entry(versionFlow).Property(x => x.IsActive).IsModified = false;
+              
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        //update workflow version to disable
+        //public async Task<bool> UpdateWorkflowVersionOutputTable(int workflowVersionId, int workflowProjectId, string outputTable)
+        //{
+        //    var versionFlow = await _context.WorkflowVersions.FindAsync(workflowVersionId, workflowProjectId);
+        //    if (versionFlow != null)
+        //    {
+        //        versionFlow.OutputModelName = outputTable;
+        //        _context.Entry(versionFlow).Property(x => x.OutputModelName).IsModified = true;
+        //        await _context.SaveChangesAsync();
+        //        return true;
+        //    }
+        //    return false;
+
+        //}
         //update  withexternal attempt id
 
         //public async Task<bool> UpdateWorkflowAttemptId(int workflowVersionId, int workflowProjectId, int workflowAttemptId, int externalAttemptId)
@@ -1003,7 +1046,7 @@ namespace DataAccess.Models
         //        attempt.e
         //    }
         //}
-              //update workflow version's json
+        //update workflow version's json
         public async Task<bool> UpdateWorkflowVersionJson(int workflowVersionId, int workflowProjectId, string workflowJson, string workflowPropertyJson)
         {
             var versionFlow = await _context.WorkflowVersions.FindAsync(workflowVersionId, workflowProjectId);
@@ -1242,6 +1285,23 @@ namespace DataAccess.Models
             }
             return null;
         }
+        public async Task<bool> DisableWorkflowVersionAttempt(int externalWorkflowVersionId, int externalProjectId)
+        {
+
+            var versionFlow =  _context.WorkflowSessionAttempts.Where(x=>x.ExternalWorkflowId == externalProjectId && x.ExternalProjectId == externalProjectId).SingleOrDefault();
+            if (versionFlow != null)
+            {
+
+                _context.Entry(versionFlow).Property(x => x.IsActive).IsModified = false;
+
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+
         //Update workflow Attempt Log
         public async Task<WorkflowSessionLog> UpdateWorkflowAttemptLog(int attemptId, int workflowProjectId, int userId, int workflowId, string Log)
         {

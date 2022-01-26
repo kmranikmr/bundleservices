@@ -21,7 +21,7 @@ namespace DataAccess.DTO
         public string UploadedPath { get; set; }
         public string WorkflowPropertyJson { get; set; }
         public string Status { get; set; }
-       
+        public bool? IsActive { get; set; }
 
     }
 }

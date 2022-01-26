@@ -999,5 +999,27 @@ namespace DataService.Controllers
             }
         }
 
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetTotalModelSize()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                int userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                long totalSize = await _repository.GetTotalModelSize(userId);
+                Console.WriteLine("totalSize" + totalSize);
+                return Ok(totalSize);
+            }
+            catch (Exception ex)
+            {
+
+                return this.StatusCode(StatusCodes.Status204NoContent, "Database error");
+            }
+        }
+
     }
 }
