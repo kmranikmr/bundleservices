@@ -422,7 +422,7 @@ namespace DataService.Controllers
 
         }
 
-        [HttpPost("[action]/{projectId}/]/{workflowId}")]//[action]
+        [HttpPost("[action]/{projectId}/{workflowId}")]//[action]
         public async Task<ActionResult<WorkflowVersionDTO[]>> StopSchedule([FromRoute] int projectId, [FromRoute] int workflowId)
         {
             if (!ModelState.IsValid)
