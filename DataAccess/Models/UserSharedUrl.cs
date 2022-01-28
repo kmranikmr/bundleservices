@@ -12,5 +12,8 @@ namespace DataAccess.Models
         public string SharedUrl { get; set; }
         public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
+        public string FriendlyName { get; set; }
+        public virtual ICollection<SearchHistory> SearchHistories { get; set; }
+        public virtual ICollection<WorkflowSearchHistory> WorkflowSearchHistories { get; set; }
     }
 }

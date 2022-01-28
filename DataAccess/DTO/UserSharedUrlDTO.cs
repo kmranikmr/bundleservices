@@ -14,6 +14,7 @@ namespace DataAccess.DTO
         public int? SearchHistoryId { get; set; }
         public int? WorkflowSearchHistoryId { get; set; }
         public string SharedUrl { get; set; }
+        public string FriendlyName { get; set; }
     }
     
 }

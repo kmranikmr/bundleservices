@@ -1782,11 +1782,11 @@ namespace DataAccess.Models
             UserSharedUrl sharedUrl = null;
             if (!isWorkflow)
             {
-                query = _context.UserSharedUrls.Where(x => x.SearchHistoryId == searchHistoryIds && x.IsDeleted == false).FirstOrDefault();
+                query = _context.UserSharedUrls.Include(y=>y.SearchHistories).Where(x => x.SearchHistoryId == searchHistoryIds && x.IsDeleted == false).FirstOrDefault();
             }
             else
             {
-                query = _context.UserSharedUrls.Where(x => x.WorkflowSearchHistoryId== searchHistoryIds && x.IsDeleted == false).FirstOrDefault();
+                query = _context.UserSharedUrls.Include(y=>y.WorkflowSearchHistories).Where(x => x.WorkflowSearchHistoryId== searchHistoryIds && x.IsDeleted == false).FirstOrDefault();
             }
             if (!isWorkflow)
             {
@@ -1796,7 +1796,8 @@ namespace DataAccess.Models
                     {
                         UserId = userId,
                         SearchHistoryId = searchHistoryIds,
-                        SharedUrl = Url
+                        SharedUrl = Url,
+                        FriendlyName = query.FriendlyName
 
                     };
 
@@ -1810,7 +1811,8 @@ namespace DataAccess.Models
                     {
                         UserId = userId,
                         WorkflowSearchHistoryId = searchHistoryIds,
-                        SharedUrl = Url
+                        SharedUrl = Url,
+                        FriendlyName = query.FriendlyName
 
                     };
 
