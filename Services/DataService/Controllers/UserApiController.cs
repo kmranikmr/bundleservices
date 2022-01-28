@@ -143,6 +143,34 @@ namespace DataService.Controllers
                 }
                 var allSharedUrlNew = await _repository.GetSharedUrl(userId, isWorkflow);
                 var reDTO = _mapper.Map<UserSharedUrlDTO[]>(allSharedUrlNew);
+                foreach ( var dto in reDTO)
+                {
+                    if ( dto.SearchHistoryId != null )
+                    {
+                        var sh = await _repository.GetSearchHistory((int)dto.SearchHistoryId, userId);
+                        if (sh.FriendlyName == null)
+                        {
+                            dto.FriendlyName = sh.SearchQuery;
+                        }
+                        else
+                        {
+                            dto.FriendlyName = sh.FriendlyName;
+                        }
+                    }
+                    else if (dto.WorkflowSearchHistoryId != null )
+                    {
+                        var sh = await _repository.GetWorkflowSearchHistory((int)dto.WorkflowSearchHistoryId, userId);
+                        if (sh.FriendlyName == null)
+                        {
+                            dto.FriendlyName = sh.SearchQuery;
+                        }
+                        else
+                        {
+
+                            dto.FriendlyName = sh.FriendlyName;
+                        }
+                    }
+                }
                 return reDTO;
                 ///call getsearchistory with each id then get searchhistoryname.. construct urlll../api/project/{made upname}
             }
