@@ -74,11 +74,11 @@ namespace DataService.Controllers
             var dbContext = new DAPDbContext(options);
             IRepository repo = new Repository(dbContext, null);
 
-            await Task.Delay(1000);
+            Thread.Sleep(1000);
 
             var pubResult = await repo.UpdateWorkflowTestResult(workflowTestId, workflowTestId, userId, "processing", "");
 
-            await Task.Delay(5000);
+            Thread.Sleep(1000);
             pubResult = await repo.UpdateWorkflowTestResult(workflowTestId, workflowTestId, userId, "success", "no issues found");
           
 

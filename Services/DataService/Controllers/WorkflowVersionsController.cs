@@ -196,10 +196,10 @@ namespace DataService.Controllers
             var options = SqlServerDbContextOptionsExtensions.UseSqlServer<DAPDbContext>(new DbContextOptionsBuilder<DAPDbContext>(), connectionString).Options;
             var dbContext = new DAPDbContext(options);
             IRepository repo = new Repository(dbContext, null);
-         //   bool result = await _repository.UpdateWorkflowVersion(workflowVersionId, projectWorkflowId, projectWorkflowId, workflowVersionId);
+            //   bool result = await _repository.UpdateWorkflowVersion(workflowVersionId, projectWorkflowId, projectWorkflowId, workflowVersionId);
 
-            await Task.Delay(1000);
-           // int userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            Thread.Sleep(1000);
+            // int userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             bool pubResult = await repo.SetWorkflowPublished(workflowVersionId, projectWorkflowId, 1);
            /// Console.WriteLine("backgroind");
         }
@@ -213,13 +213,13 @@ namespace DataService.Controllers
             IRepository repo = new Repository(dbContext, null);
             //   bool result = await _repository.UpdateWorkflowVersion(workflowVersionId, projectWorkflowId, projectWorkflowId, workflowVersionId);
 
-            await Task.Delay(1000);
-            
+            Thread.Sleep(1000);
+
             var pubResult = await repo.UpdateWorkflowAttempt(WorkflowSessionAttemptId, projectWorkflowId, userId, workflowVersionId, "processing");
 
-            await Task.Delay(10000);
+            Thread.Sleep(1000);
             pubResult = await repo.UpdateWorkflowAttempt(WorkflowSessionAttemptId, projectWorkflowId, userId, workflowVersionId, "success");
-            await Task.Delay(1000);
+            Thread.Sleep(1000);
             await repo.UpdateWorkflowVersionLastAttemptId(workflowVersionId, projectWorkflowId, WorkflowSessionAttemptId);
             string log = @"{\""result\"": \""had issues\""}";
             var logged = await repo.UpdateWorkflowAttemptLog(WorkflowSessionAttemptId, projectWorkflowId, userId, workflowVersionId, log);
