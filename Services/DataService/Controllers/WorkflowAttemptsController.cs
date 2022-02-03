@@ -17,7 +17,7 @@ using Microsoft.Extensions.Options;
 
 namespace DataService.Controllers
 {
-    public class Detail
+    public class ScheduleDetail
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -25,8 +25,8 @@ namespace DataService.Controllers
     public class Schedule
     {
         public string id { get; set; }
-        public Detail project { get; set; }
-        public Detail workflow { get; set; }
+        public ScheduleDetail project { get; set; }
+        public ScheduleDetail workflow { get; set; }
         public DateTime nextRunTime { get; set; }
         public DateTime nextScheduleTime { get; set; }
         public DateTime disabledAt { get; set; }
@@ -37,6 +37,90 @@ namespace DataService.Controllers
         public Schedule[] schedules { get; set; }
     }
 
+    public class Attempt
+    {
+        public string id { get; set; }
+        [JsonProperty("params")]
+        public object param { get; set; }
+        public bool success { get; set; }
+        public bool done { get; set; }
+        public DateTime createdAt { get; set; }
+        public DateTime finishedAt { get; set; }
+    }
+    public class Detail
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+    }
+    public class Session
+    {
+        public string id { get; set; }
+        public Detail project { get; set; }
+        public Detail workflow { get; set; }
+        public string sessionUuid { get; set; }
+        public DateTime sessionTime { get; set; }
+        public Attempt lastAttempt { get; set; }
+    }
+    public class Sessions
+    {
+        public Session[] sessions { get; set; }
+    }
+    public class Error
+    {
+        public string stackTrace { get; set; }
+        public string message { get; set; }
+    }
+
+    public class Task
+    {
+        public string id { get; set; }
+        public string fullName { get; set; }
+        public string parentId { get; set; }
+        public object config { get; set; }
+        public string[] upstreams { get; set; }
+        public string state { get; set; }
+        public string cancelRequested { get; set; }
+        public object exportParams { get; set; }
+        public object storeParams { get; set; }
+        public object stateParams { get; set; }
+        public string updatedAt { get; set; }
+        public string retryAt { get; set; }
+        public string startedAt { get; set; }
+        public Error error { get; set; }
+        public bool isGroup { get; set; }
+
+    }
+    public class Tasks
+    {
+        public Task[] tasks { get; set; }
+    }
+
+    //public class AttemptResult
+    //{
+    //    public DateTime AttemptTime { get; set; }
+    //    public DateTime UpdatedAt { get; set; }
+    //    public string Result { get; set; }
+    //    public List<SessionResult> AttemptResults { get; set; }
+    //}
+
+    public class SessionResult
+    {
+        public DateTime sessionTime { get; set; }
+        public DateTime AttemptTime { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public string Result { get; set; }
+        public List<NodeResult> NodeResults { get; set; }
+    }
+    public class NodeResult
+    {
+        public int id { get; set; }
+        public string NodeName { get; set; }
+        public DateTime StartedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public string Result { get; set; }
+        public string DetailedMessage { get; set; }
+
+    }
 
     [Route("api/[controller]")]
     [ApiController]
@@ -388,9 +472,102 @@ namespace DataService.Controllers
             return StatusCode(StatusCodes.Status404NotFound);
         }
 
-      
 
-        ///DELETE to be added
+        [AllowAnonymous]
+        [HttpGet("[action]/{externalprojectId}/{externalWorkflowId}/{externalAttemptId}")]//[action]
+        public async Task<IActionResult> GetSessionLog([FromRoute] int externalprojectId, [FromRoute] int externalWorkflowId, [FromRoute] int externalAttemptId)
+        {
+
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                string attempt_id = externalAttemptId.ToString();
+                string urlsession = "http://idapt.duckdns.org:65432/api/projects/{0}/sessions";
+
+                string urlTasks = "http://idapt.duckdns.org:65432/api/attempts/{0}/tasks";
+                var client = new RestClient();
+                var requestRest = new RestRequest(string.Format(urlsession, externalprojectId));
+                IRestResponse response = client.Execute(requestRest);
+
+                //using (System.IO.StreamReader reader = new StreamReader(@"sessions.json"))
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    string json = response.Content;///reader.ReadToEnd();
+                    var s = JsonConvert.DeserializeObject<Sessions>(json);
+
+                    var ourSession = s.sessions.Where(x => x.workflow.id == externalWorkflowId.ToString() && x.lastAttempt.id == attempt_id);
+                    List<SessionResult> sessionResults = new List<SessionResult>();
+                    
+                    foreach (var sess in ourSession)
+                    {
+                        SessionResult sessionResult = new SessionResult();
+                        requestRest = new RestRequest(string.Format(urlTasks, sess.lastAttempt.id));
+                        response = await client.ExecuteAsync(requestRest);
+                        sessionResult.AttemptTime = sess.sessionTime;
+                        sessionResult.UpdatedAt = sess.lastAttempt.finishedAt;
+
+
+
+                        sessionResult.NodeResults = new List<NodeResult>();
+                        //using (System.IO.StreamReader reader = new StreamReader(@"tasks.json"))
+                        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            json = response.Content;//reader.ReadToEnd();
+                            var tasks = JsonConvert.DeserializeObject<Tasks>(json);
+                            int ind = 1;
+                            sessionResult.sessionTime = sess.sessionTime;
+                            foreach (var task in tasks.tasks)
+                            {
+                                if (task.isGroup == true) continue;
+                                NodeResult nodeResult = new NodeResult();
+                                DateTime.TryParse(task.startedAt, out DateTime t1);
+                                nodeResult.StartedAt = t1;
+                                DateTime.TryParse(task.updatedAt, out DateTime t2);
+                                nodeResult.UpdatedAt = t2;
+                                nodeResult.NodeName = task.fullName.Split('.').LastOrDefault();
+                                nodeResult.id = ind++;
+                                if (task.state.Contains("error"))
+                                {
+                                    if (task.error != null)
+                                    {
+                                        nodeResult.Result = "Error";
+                                        sessionResult.Result = "Error";
+                                        nodeResult.DetailedMessage = task.error.message;
+                                    }
+                                }
+                                else if (task.state.Contains("blocked"))
+                                {
+                                    nodeResult.Result = "blocked";
+                                }
+                                else
+                                {
+                                    sessionResult.Result = "Success";
+                                    nodeResult.Result = "Success";
+                                }
+                                sessionResult.NodeResults.Add(nodeResult);
+                            }
+                        }
+                        sessionResults.Add(sessionResult);
+                    }
+                    return Ok(sessionResults.ToArray());
+                }
+
+                return StatusCode(StatusCodes.Status204NoContent);
+
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+
+            ///DELETE to be added
             ///
             /// 
 
