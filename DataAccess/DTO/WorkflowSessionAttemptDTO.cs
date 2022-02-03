@@ -20,6 +20,7 @@ namespace DataAccess.DTO
         public DateTime? EndDate { get; set; }
         public int WorkflowStatusTypeId { get; set; }
         public string Result { get; set; }
+        public int ExternalAttemptId { get; set; }
 
     }
 }
