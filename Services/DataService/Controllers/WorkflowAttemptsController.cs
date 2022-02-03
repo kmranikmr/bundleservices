@@ -545,8 +545,16 @@ namespace DataService.Controllers
                                 }
                                 else
                                 {
-                                    sessionResult.Result = "Success";
-                                    nodeResult.Result = "Success";
+                                    if (task.fullName.Contains("failure-alert"))
+                                    {
+                                        sessionResult.Result = "Failure";
+                                        nodeResult.Result = "Notified";
+                                    }
+                                    else
+                                    {
+                                        sessionResult.Result = "Success";
+                                        nodeResult.Result = "Success";
+                                    }
                                 }
                                 sessionResult.NodeResults.Add(nodeResult);
                             }
