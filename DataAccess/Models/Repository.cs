@@ -147,11 +147,22 @@ namespace DataAccess.Models
                 long fileSize = 0;
                 foreach ( var f in pf)
                 {
-                    string file = Path.Combine(f.FilePath, f.FileName);
-                    if (!File.Exists(file))
-                        continue;
+                    try
+                    {
+                        if (f.FilePath == null || f.FileName == null)
+                            continue;
+
+                        string file = Path.Combine("/mnt/efs/", f.FileName);
+                        if (!File.Exists(file))
+                            continue;
+                    
 
                     fileSize += new System.IO.FileInfo(file).Length;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
                 }
 
                 modelSize += fileSize;
