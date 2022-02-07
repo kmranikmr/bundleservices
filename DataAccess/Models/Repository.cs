@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -139,8 +140,22 @@ namespace DataAccess.Models
             var sm = query.Where(x => x.UserId == userId); 
             if (sm != null)
             {
-                return await sm.SumAsync(x => x.ModelSize.HasValue ? x.ModelSize.Value : 0);
-                
+                long modelSize =  await sm.SumAsync(x => x.ModelSize.HasValue ? x.ModelSize.Value : 0);
+
+                IQueryable<ProjectFile> pf = _context.ProjectFiles.Where(x => x.UserId == userId);
+
+                long fileSize = 0;
+                foreach ( var f in pf)
+                {
+                    string file = Path.Combine(f.FilePath, f.FileName);
+                    if (!File.Exists(file))
+                        continue;
+
+                    fileSize += new System.IO.FileInfo(file).Length;
+                }
+
+                modelSize += fileSize;
+                return modelSize;
             }
             return 0;
         }
