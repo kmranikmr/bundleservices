@@ -151,21 +151,22 @@ namespace DataAccess.Models
                     {
                         if (f.FilePath == null || f.FileName == null)
                             continue;
-                        int p = f.FilePath.IndexOf("/UserData");
+                        int p = f.FilePath.IndexOf("UserData");
                         string file = "";
+                        string FullfilePath = "";
                         if (p > 0)
                         {
                             string path = f.FilePath.Substring(p);
                             file = Path.Combine(path, f.FileName);
-                            file = Path.Combine("/mnt/efs", file);
-                            Console.WriteLine($"Checking Path Model File Name {file}");
-                            if (!File.Exists(file))
+                            FullfilePath = Path.Combine("/mnt/efs", file);
+                            Console.WriteLine($"Checking Path Model File Name {FullfilePath}");
+                            if (!File.Exists(FullfilePath))
                                 continue;
                         }
                         else
                             continue;
-                     Console.WriteLine($"Path Model File Name {file}");
-                    fileSize += new System.IO.FileInfo(file).Length;
+                     Console.WriteLine($"Path Model File Name {FullfilePath}");
+                    fileSize += new System.IO.FileInfo(FullfilePath).Length;
                     Console.WriteLine($"Path Model Size {fileSize}");
                     }
                     catch (Exception ex)
