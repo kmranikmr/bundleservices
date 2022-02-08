@@ -156,7 +156,8 @@ namespace DataAccess.Models
                         if (p > 0)
                         {
                             string path = f.FilePath.Substring(p);
-                            file = Path.Combine("/mnt/efs", path, f.FileName);
+                            file = Path.Combine(path, f.FileName);
+                            file = Path.Combine("/mnt/efs", file);
                             Console.WriteLine($"Checking Path Model File Name {file}");
                             if (!File.Exists(file))
                                 continue;
