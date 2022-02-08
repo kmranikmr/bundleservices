@@ -157,14 +157,15 @@ namespace DataAccess.Models
                         {
                             string path = f.FilePath.Substring(p);
                             file = Path.Combine("/mnt/efs", path, f.FileName);
-
+                            Console.WriteLine($"Checking Path Model File Name {file}");
                             if (!File.Exists(file))
                                 continue;
                         }
                         else
                             continue;
-
+                     Console.WriteLine($"Path Model File Name {file}");
                     fileSize += new System.IO.FileInfo(file).Length;
+                    Console.WriteLine($"Path Model Size {fileSize}");
                     }
                     catch (Exception ex)
                     {
