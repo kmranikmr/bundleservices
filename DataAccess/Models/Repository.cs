@@ -151,11 +151,18 @@ namespace DataAccess.Models
                     {
                         if (f.FilePath == null || f.FileName == null)
                             continue;
+                        int p = f.FilePath.IndexOf("/UserData");
+                        string file = "";
+                        if (p > 0)
+                        {
+                            string path = f.FilePath.Substring(p);
+                            file = Path.Combine("/mnt/efs", path, f.FileName);
 
-                        string file = Path.Combine("/mnt/efs/", f.FileName);
-                        if (!File.Exists(file))
+                            if (!File.Exists(file))
+                                continue;
+                        }
+                        else
                             continue;
-                    
 
                     fileSize += new System.IO.FileInfo(file).Length;
                     }
