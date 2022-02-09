@@ -6,9 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-
+using System.Web;
 namespace DataAccess.Models
 {
     public class Repository : IRepository
@@ -158,7 +159,8 @@ namespace DataAccess.Models
                         {
                             string path = f.FilePath.Substring(p);
                             file = Path.Combine(path, f.FileName);
-                            FullfilePath = Path.Combine("/mnt/efs", file);
+                            FullfilePath = Path.Combine("/app/StaticFiles", file);
+                         
                             Console.WriteLine($"Checking Path Model File Name {FullfilePath}");
                             if (!File.Exists(FullfilePath))
                                 continue;
