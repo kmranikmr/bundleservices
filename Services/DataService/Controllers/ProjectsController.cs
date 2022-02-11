@@ -713,7 +713,7 @@ namespace DataService.Controllers
                 }
                 return this.StatusCode(StatusCodes.Status204NoContent, "Project history not found for selected project and user.");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
             }
@@ -871,6 +871,13 @@ namespace DataService.Controllers
                 Console.WriteLine("update search query done" + searchHistoryId.ToString() + " " + friendlyName);
                 return Ok(ret);
             }
+            else
+            {
+                Console.WriteLine("update workflow search query" + searchHistoryId.ToString() + " " + friendlyName);
+                var ret = await _repository.UpdateWorkflowSearchHistory(searchHistoryId, userId, friendlyName);
+                Console.WriteLine("update search query done" + searchHistoryId.ToString() + " " + friendlyName);
+                return Ok(ret);
+            }
             return this.StatusCode(StatusCodes.Status204NoContent, "No searchHistoryId");
         }
 
@@ -1010,7 +1017,7 @@ namespace DataService.Controllers
             try
             {
                 int userId = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                long totalSize = await _repository.GetTotalModelSize(userId);
+                double totalSize = await _repository.GetTotalModelSize(userId);
                 Console.WriteLine("totalSize" + totalSize);
                 return Ok(totalSize);
             }

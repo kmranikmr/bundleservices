@@ -171,6 +171,10 @@ namespace DataService.Controllers
             var client = new RestClient();
             var url = $"{_queryServiceString}:6004/api/Search";
             var requestRest = new RestRequest(url, Method.POST, DataFormat.Json);
+            if ( isWorkflow)
+            {
+                url += "/true";
+            }
             if (!isWorkflow)
             {
                 var projectSchema = await _repository.GetSchemaAsync(schemaId, true);
@@ -228,7 +232,51 @@ namespace DataService.Controllers
             }
             else
             {
-                return Ok( new List<string> { { "Field1: 123" }, { "Field2: 345" }, { "Field3: 567" }});
+                var outputTable = _repository.GetWorkflowOutputTableName(projectId, schemaId);
+                if ( outputTable != null)
+                {
+                    if ( !string.IsNullOrEmpty(outputTable.Result.TableName) )
+                    {
+                        string query = $"select *,1 as rowid from {outputTable.Result.TableName} limit 10";
+                        var body = new QueryRequest { QueryString = query, AllRecords = false, SearchDestination = DestinationType.RDBMS, PageFilter = "rowid", PageIndex = 0, PageSize = 10, ProjectId = projectId };
+                        requestRest.AddHeader("Authorization", authorization);
+                        requestRest.AddJsonBody(body);
+                        IRestResponse response = await client.ExecuteAsync(requestRest);
+                        List<List<string>> list = new List<List<string>>();
+                        if (response != null)
+                        {
+                            var res = response.Content;
+                            var result = JsonConvert.DeserializeObject<SearchResult>(res);
+                            if (result != null)
+                            {
+                                if (result.Header2 != null && result.Results != null && result.Results.Count <= 10)
+                                {
+                                    if (result.Header2.Count == result.Results[0].Count)
+                                    {
+                                        int index = 0;
+                                        foreach (var iteminList in result.Results)
+                                        {
+                                            var l = new List<string>();
+                                            index = 0;
+                                            foreach (string header in result.Header2)
+                                            {
+                                                l.Add($"{header}:{iteminList[index]}");
+                                                index++;
+                                            }
+                                            list.Add(l);
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                        if (list.Count > 0 )//new List<string>{ { "Field1: 123" }, { "Field2: 345" }, { "Field3: 567" } });
+                            return Ok(list);//new List<string> { { "Field1: 123" }, { "Field2: 345" }, { "Field3: 567" }}
+                        else
+                            return NotFound();
+                    }
+                }
+                return Ok(StatusCodes.Status204NoContent);
             }
         }
         // POST: api/Schemas

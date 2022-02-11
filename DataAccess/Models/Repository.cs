@@ -135,7 +135,7 @@ namespace DataAccess.Models
         #endregion
 
         #region Schema
-        public async Task<long> GetTotalModelSize(int userId)
+        public async Task<double> GetTotalModelSize(int userId)
         {
             IQueryable<SchemaModel> query = _context.SchemaModels;
             var sm = query.Where(x => x.UserId == userId); 
@@ -178,7 +178,7 @@ namespace DataAccess.Models
                 }
 
                 modelSize += fileSize;
-                return modelSize;
+                return modelSize* 0.0000001;
             }
             return 0;
         }
@@ -743,6 +743,8 @@ namespace DataAccess.Models
             return null;
         }
 
+
+
         public async Task<SearchHistory> GetSearchHistoryByMd5(string md5, int userId, int projectId)
         {
             SearchHistory query = _context.SearchHistories.Where(x => x.UserId ==userId && x.Md5 == md5 && x.ProjectId == projectId).FirstOrDefault();
@@ -808,6 +810,21 @@ namespace DataAccess.Models
                 return searchGraph;
             }
 
+            return null;
+        }
+        public async Task<WorkflowSearchHistory> UpdateWorkflowSearchHistory(int searchHistoryId, int userId, string friendlyName)
+        {
+            WorkflowSearchHistory query = _context.WorkflowSearchHistories.FindAsync(searchHistoryId).Result;
+            if (query != null)
+            {
+                query.FriendlyName = friendlyName;
+
+                _context.Entry(query).Property(x => x.FriendlyName).IsModified = true;
+
+                await _context.SaveChangesAsync();
+
+                return query;
+            }
             return null;
         }
         public async Task<WorkflowSearchGraph> UpdateWorkflowSearchGraph(int WorkflowSearchGraphId, string graphDescription)
@@ -1205,6 +1222,12 @@ namespace DataAccess.Models
             IQueryable<WorkflowOutputModel> query = _context.WorkflowOutputModels.Where(x => x.WorkflowProjectId == workflowProjectId && x.WorkflowVersionId == workflowVersionId && x.UserId == userId && DisplayNames.Contains(x.DisplayName));
           
             return await query.ToArrayAsync();
+        }
+        public async Task<WorkflowOutputModel> GetWorkflowOutputTableName(int workflowProjectId, int workflowVersionId)
+        {
+            var query = await _context.WorkflowOutputModels.Where(x => x.WorkflowProjectId == workflowProjectId && x.WorkflowVersionId == workflowVersionId).FirstOrDefaultAsync();
+
+            return query;
         }
         //add workflow version
         public async Task<WorkflowVersion> AddWorkFlowVersion(int userId, int workflowProjectId, WorkflowVersion workflowVersion )//, int workflowVersionId = -1)

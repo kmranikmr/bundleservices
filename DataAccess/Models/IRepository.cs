@@ -74,7 +74,7 @@ namespace DataAccess.Models
         Task<Project> GetProjectByName(string projectName);
         Task<SchemaModel> GetModel(int userId, int projectId, string schemaName, string ModelName);
         Task<SchemaModel> GetModel(int userId, string projectName, string schemaName, string ModelName);
-        Task<long> GetTotalModelSize(int userId);
+        Task<double> GetTotalModelSize(int userId);
         #endregion
 
         #region Search History
@@ -90,6 +90,7 @@ namespace DataAccess.Models
         Task<WorkflowSearchHistory> GetWorkflowSearchHistoryByMd5(string md5, int userId, int projectId);
         Task<SearchHistory> GetSearchHistory(string searchName, int userId);
         Task<SearchHistory> UpdateSearchHistory(int searchHistoryId, int userId, string friendlyName);
+        Task<WorkflowSearchHistory> UpdateWorkflowSearchHistory(int searchHistoryId, int userId, string friendlyName);
         #endregion
 
         #region automation
@@ -125,6 +126,7 @@ namespace DataAccess.Models
         Task<WorkflowSessionLog> UpdateWorkflowAttemptLog(int attemptId, int workflowProjectId, int userId, int workflowId, string Log);
         Task<WorkflowOutputModel> GetWorkflowOutputTable(int workflowProjectId, int workflowVersionId, int workflowModelId, int userId);
         Task<WorkflowOutputModel[]> GetWorkflowOutputTableNames(int workflowProjectId, int workflowVersionId, int userId, string[] DisplayNames);
+        Task<WorkflowOutputModel> GetWorkflowOutputTableName(int workflowProjectId, int workflowVersionId);
         Task<WorkflowSearchHistory[]> GetWorkflowSearchHistories(int userId);
         Task<bool> DeleteWorkflowProjects(int userId, int workflowProjectId);
         Task<bool> DeleteWorkflowVersion(int userId, int workflowProjectId, int workflowVersionId);
