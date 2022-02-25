@@ -67,11 +67,45 @@ namespace DataService.Controllers
                         var processed = jobs.Where(j => j.JobStatusId == 3).Count();
                         var pending = jobs.Where(j => j.JobStatusId == 2 || j.JobStatusId == 1).Count();
                         var failed = jobs.Where(j => j.JobStatusId == 4).Count();
+                        var failedLatestTime = jobs.Where(j => j.JobStatusId == 4);
+                        var pendingatestTime = jobs.Where(j => j.JobStatusId == 2 || j.JobStatusId == 1);
+                        DateTime? FailedTime =  null;
+                        DateTime? PendingTime = null;
+                        DateTime? LastprocessedTime = null;
+                        int pendingwarning = 0;
+                        if (failed > 0 && failedLatestTime != null )
+                        {
+                            var ele = failedLatestTime.Max(x => x.CompletedOn).GetValueOrDefault();
+                            if ( ele != null )
+                            {
+                                FailedTime = ele;
+                            }
+                        }
+                        if (pending > 0 && pendingatestTime != null)
+                        {
+                            var ele = pendingatestTime.Max(x => x.CreatedOn);
+                            if (ele != null)
+                            {
+                                PendingTime = ele;
+                               var days = (DateTime.Now - PendingTime).GetValueOrDefault().TotalDays;
+                                pendingwarning = (int)days;
+                            }
+                            
+                        }
+                        var allTime = jobs.Max(x => x.CompletedOn).GetValueOrDefault();
+                        if ( allTime != null )
+                        {
+                            LastprocessedTime = allTime;
+                        }
                         item.Summary = new List<ProjectStatusSummary>()
                         {
                             new ProjectStatusSummary(){ StatusName= "Processed", Count = processed},
-                            new ProjectStatusSummary(){ StatusName= "Failed", Count = pending},
-                            new ProjectStatusSummary(){ StatusName= "Pending", Count = failed},
+                            new ProjectStatusSummary(){ StatusName= "Failed", Count = failed},
+                            new ProjectStatusSummary(){ StatusName= "Pending", Count = pending},
+                           ( processed + pending + failed ) > 0 &&  LastprocessedTime != null ? new ProjectStatusSummary(){ StatusName= "Last Processed At", Time = LastprocessedTime} : new ProjectStatusSummary(){ StatusName= "Last Processed Time unavailble", Time = null},
+                            pending > 0 && PendingTime != null ? new ProjectStatusSummary(){ StatusName= "Pending Process Started At", Time = PendingTime} : new ProjectStatusSummary(){ StatusName= "No Pending Process", Time = null},
+                            FailedTime != null && failed > 0 ? new ProjectStatusSummary(){ StatusName= "Last Failed At", Time = FailedTime} : new ProjectStatusSummary(){ StatusName= "Last Failed Time unavailable", Time = null},
+                            pendingwarning > 1 ?  new ProjectStatusSummary(){ StatusName= "Attention", Count = pendingwarning} : new ProjectStatusSummary(){ StatusName= "Attention", Count = 0}
                         };
                         item.ConfigSummary = new List<ProjectConfigSummary>();
                        
