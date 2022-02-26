@@ -97,15 +97,19 @@ namespace DataService.Controllers
                         {
                             LastprocessedTime = allTime;
                         }
+                        if (pendingwarning >= 1 && pendingwarning <= 7)
+                        {
+                            item.IsWarningOn = true;
+                        }
                         item.Summary = new List<ProjectStatusSummary>()
                         {
                             new ProjectStatusSummary(){ StatusName= "Processed", Count = processed},
                             new ProjectStatusSummary(){ StatusName= "Failed", Count = failed},
                             new ProjectStatusSummary(){ StatusName= "Pending", Count = pending},
-                           ( processed + pending + failed ) > 0 &&  LastprocessedTime != null ? new ProjectStatusSummary(){ StatusName= "Last Processed At", Time = LastprocessedTime} : new ProjectStatusSummary(){ StatusName= "Last Processed Time unavailble", Time = null},
-                            pending > 0 && PendingTime != null ? new ProjectStatusSummary(){ StatusName= "Pending Process Started At", Time = PendingTime} : new ProjectStatusSummary(){ StatusName= "No Pending Process", Time = null},
-                            FailedTime != null && failed > 0 ? new ProjectStatusSummary(){ StatusName= "Last Failed At", Time = FailedTime} : new ProjectStatusSummary(){ StatusName= "Last Failed Time unavailable", Time = null},
-                            pendingwarning > 1 ?  new ProjectStatusSummary(){ StatusName= "Attention", Count = pendingwarning} : new ProjectStatusSummary(){ StatusName= "Attention", Count = 0}
+                           ( processed + pending + failed ) > 0 &&  LastprocessedTime != null ? new ProjectStatusSummary(){ StatusName= "Last Processed At", Time = LastprocessedTime, Back = true} : new ProjectStatusSummary(){ StatusName= "Last Processed Time unavailble", Time = null, Back = true},
+                            pending > 0 && PendingTime != null ? new ProjectStatusSummary(){ StatusName= "Pending Process Started At", Time = PendingTime,Back = true} : new ProjectStatusSummary(){ StatusName= "No Pending Process", Time = null,Back = true},
+                            FailedTime != null && failed > 0 ? new ProjectStatusSummary(){ StatusName= "Last Failed At", Time = FailedTime,Back= true} : new ProjectStatusSummary(){ StatusName= "Last Failed Time unavailable", Time = null,Back = true}
+                            
                         };
                         item.ConfigSummary = new List<ProjectConfigSummary>();
                        

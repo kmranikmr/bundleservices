@@ -24,6 +24,8 @@ namespace DataAccess.DTO
 
         public List<ProjectConfigSummary> ConfigSummary { get; set; }
 
+        public bool IsWarningOn { get; set; }
+
     }
 
     public class ProjectWriterDTO
@@ -79,6 +81,7 @@ namespace DataAccess.DTO
         public int Count { get; set; }
 
         public DateTime? Time { get; set; }
+        public bool Back { get; set; }
     }
 
     public class ProjectConfigSummary
