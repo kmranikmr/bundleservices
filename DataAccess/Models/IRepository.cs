@@ -118,6 +118,7 @@ namespace DataAccess.Models
         Task<WorkflowOutputModel[]> GetWorkflowOutputTable(int workflowProjectId, int workflowVersionId, int userId, bool inlcude = false);
         Task<bool> DisableWorkflowVersion(int workflowVersionId, int workflowProjectId);
         Task<bool> DisableWorkflowVersionAttempt(int externalWorkflowVersionId, int externalProjectId);
+        Task<WorkflowTest> GetWorkflowTest(int WorkflowTestId);
 
 
         Task<WorkflowSessionAttempt> AddWorkflowAttempt(int workflowProjectId, int userId, int workflowId);

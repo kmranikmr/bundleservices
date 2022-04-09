@@ -474,6 +474,83 @@ namespace DataService.Controllers
 
 
         [AllowAnonymous]
+        [HttpGet("[action]/{workflowTestId}")]//[action]
+        public async Task<IActionResult> GetTestLog([FromRoute] int workflowTestId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                List<SessionResult> sessionResults = new List<SessionResult>();
+                var workflowtest = await _repository.GetWorkflowTest(workflowTestId);
+                if (workflowtest != null && workflowtest.ExternalAttemptId > 0)
+                {
+                    var client = new RestClient();
+                    SessionResult sessionResult = new SessionResult();
+                    sessionResult.AttemptTime = workflowtest.CreatedOn;
+                    sessionResult.UpdatedAt = workflowtest.UpdatedOn;
+                    sessionResult.NodeResults = new List<NodeResult>();
+                    string urlTasks = "http://idapt.duckdns.org:65432/api/attempts/{0}/tasks";
+                    int attemptId = workflowtest.ExternalAttemptId;
+                    var requestRest = new RestRequest(string.Format(urlTasks, attemptId));
+                    var response = await client.ExecuteAsync(requestRest);
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var json = response.Content;//reader.ReadToEnd();
+                        var tasks = JsonConvert.DeserializeObject<Tasks>(json);
+                        int ind = 1;
+                        sessionResult.sessionTime = workflowtest.CreatedOn;
+                        foreach (var task in tasks.tasks)
+                        {
+                            if (task.isGroup == true) continue;
+                            NodeResult nodeResult = new NodeResult();
+                            DateTime.TryParse(task.startedAt, out DateTime t1);
+                            nodeResult.StartedAt = t1;
+                            DateTime.TryParse(task.updatedAt, out DateTime t2);
+                            nodeResult.UpdatedAt = t2;
+                            nodeResult.NodeName = task.fullName.Split('.').LastOrDefault();
+                            nodeResult.id = ind++;
+                            if (task.state.Contains("error"))
+                            {
+                                if (task.error != null)
+                                {
+                                    nodeResult.Result = "Error";
+                                    sessionResult.Result = "Error";
+                                    nodeResult.DetailedMessage = task.error.message;
+                                }
+                            }
+                            else if (task.state.Contains("blocked"))
+                            {
+                                nodeResult.Result = "blocked";
+                            }
+                            else
+                            {
+                                if (task.fullName.Contains("failure-alert"))
+                                {
+                                    sessionResult.Result = "Failure";
+                                    nodeResult.Result = "Notified";
+                                }
+                                else
+                                {
+                                    sessionResult.Result = "Success";
+                                    nodeResult.Result = "Success";
+                                }
+                            }
+                            sessionResult.NodeResults.Add(nodeResult);
+                        }
+                    }
+                    sessionResults.Add(sessionResult);
+                }
+               return Ok(sessionResults.ToArray());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [AllowAnonymous]
         [HttpGet("[action]/{externalprojectId}/{externalWorkflowId}/{externalAttemptId}")]//[action]
         public async Task<IActionResult> GetSessionLog([FromRoute] int externalprojectId, [FromRoute] int externalWorkflowId, [FromRoute] int externalAttemptId)
         {

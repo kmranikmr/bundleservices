@@ -1618,6 +1618,11 @@ namespace DataAccess.Models
             IQueryable<WorkflowTest> query = _context.WorkflowTests.Where(x => x.WorkflowProjectId == workflowProjectId && x.WorkflowVersionId == workflowVersionId && userId == x.UserId);
             return await query.ToArrayAsync();
         }
+        public async Task<WorkflowTest> GetWorkflowTest(int WorkflowTestId)
+        {
+            var Test = await _context.WorkflowTests.FindAsync(WorkflowTestId);
+            return Test;
+        }
         public WorkflowTest AddWorkflowTest(int userId, int workflowProjectId, int workflowVersionId, string WorkflowJson, string WorkflowPropertyJson)
         {
             WorkflowTest wt = new WorkflowTest
