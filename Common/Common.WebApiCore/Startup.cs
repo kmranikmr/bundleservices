@@ -69,10 +69,20 @@ namespace Common.WebApiCore
             //    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
             //    options.HttpsPort = 5001;
             //});
+
+             services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = 
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBaseInitializer dataBaseInitializer)
         {
+              app.UseForwardedHeaders();
             if (dataBaseInitializer != null)
             {
                 dataBaseInitializer.Initialize();
