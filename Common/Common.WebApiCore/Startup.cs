@@ -71,19 +71,22 @@ namespace Common.WebApiCore
             //    options.HttpsPort = 5001;
             //});
 
-             services.Configure<ForwardedHeadersOptions>(options =>
+             /*services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = 
                     ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
                 
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
-            });
+            });*/
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBaseInitializer dataBaseInitializer)
         {
-              app.UseForwardedHeaders();
+             app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedProto
+            });
             if (dataBaseInitializer != null)
             {
                 dataBaseInitializer.Initialize();
@@ -94,7 +97,7 @@ namespace Common.WebApiCore
             }
 
 
-            if (!env.IsDevelopment())
+           // if (!env.IsDevelopment())
             {
                 app.UseHsts();
             }
