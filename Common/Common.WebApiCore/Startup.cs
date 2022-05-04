@@ -83,10 +83,19 @@ namespace Common.WebApiCore
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBaseInitializer dataBaseInitializer)
         {
-             app.UseForwardedHeaders(new ForwardedHeadersOptions
+            /* app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedProto
-            });
+            });*/
+            var forwardingOptions = new ForwardedHeadersOptions()
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            };
+            forwardingOptions.KnownNetworks.Clear(); // Loopback by default, this should be temporary
+            forwardingOptions.KnownProxies.Clear(); // Update to include
+
+            app.UseForwardedHeaders(forwardingOptions);
+
             if (dataBaseInitializer != null)
             {
                 dataBaseInitializer.Initialize();
