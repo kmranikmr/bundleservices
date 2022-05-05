@@ -20,7 +20,7 @@ namespace Common.WebApiCore
             WebHost.CreateDefaultBuilder(args)
 
                .UseStartup<Startup>()
-               .UseUrls("http://0.0.0.0:5000","https://0.0.0.0:5001");
+               .UseUrls("http://0.0.0.0:5000");
 
     }
 }
