@@ -87,14 +87,14 @@ namespace Common.WebApiCore
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedProto
             });*/
-            var forwardingOptions = new ForwardedHeadersOptions()
+            /*var forwardingOptions = new ForwardedHeadersOptions()
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             };
             forwardingOptions.KnownNetworks.Clear(); // Loopback by default, this should be temporary
             forwardingOptions.KnownProxies.Clear(); // Update to include
 
-            app.UseForwardedHeaders(forwardingOptions);
+            app.UseForwardedHeaders(forwardingOptions);*/
 
             if (dataBaseInitializer != null)
             {
@@ -108,10 +108,10 @@ namespace Common.WebApiCore
 
            // if (!env.IsDevelopment())
             {
-                app.UseHsts();
+              //  app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+         //   app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseCors("CorsPolicy");
