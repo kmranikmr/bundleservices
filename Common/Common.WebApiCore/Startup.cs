@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using AutoMapperConfiguration = AutoMapper.Configuration;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Common.WebApiCore
 {
@@ -69,10 +70,32 @@ namespace Common.WebApiCore
             //    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
             //    options.HttpsPort = 5001;
             //});
+
+             /*services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = 
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });*/
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBaseInitializer dataBaseInitializer)
         {
+            /* app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedProto
+            });*/
+            /*var forwardingOptions = new ForwardedHeadersOptions()
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            };
+            forwardingOptions.KnownNetworks.Clear(); // Loopback by default, this should be temporary
+            forwardingOptions.KnownProxies.Clear(); // Update to include
+
+            app.UseForwardedHeaders(forwardingOptions);*/
+
             if (dataBaseInitializer != null)
             {
                 dataBaseInitializer.Initialize();
@@ -83,12 +106,12 @@ namespace Common.WebApiCore
             }
 
 
-            if (!env.IsDevelopment())
+           // if (!env.IsDevelopment())
             {
-                app.UseHsts();
+              //  app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+         //   app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseCors("CorsPolicy");
