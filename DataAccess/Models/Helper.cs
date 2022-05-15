@@ -825,6 +825,10 @@ namespace DataAccess.Models
                    */
                 }
             }
+            if(dec.schedule.scheduleType.ToLower().Contains("immediate"))
+                {
+                    dec.schedule = null;
+                }
           //  dec.schedule = null;
             ModelList = ListOfModels;
             Console.WriteLine($" out");
