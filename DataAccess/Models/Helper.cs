@@ -848,12 +848,25 @@ namespace DataAccess.Models
             query = query.ToLower().Replace("\n", " ");
             string[] toks = query.ToLower().Split(' ');
             bool getTable = false;
+            int current_tb_index = -1;
             for (int i = 0; i < toks.Length; i++)
             {
                 if (getTable)
                 {
                     if (toks[i] != " ")
                     {
+                        if(current_tb_index != -1)
+                        {
+                            if( !toks[i].Contains("where") )
+                            {
+                                toks[current_tb_index] = $"(select * from {toks[current_tb_index]}){toks[i]}";
+                                toks[i] = " ";
+                                current_tb_index = -1;
+                              
+                            }
+                            getTable = false;
+                            continue;
+                        }
                         Console.WriteLine(toks[i]);
                         tableNames.Add(toks[i]);
                         if (nodeNametoTempNode.TryGetValue(toks[i], out string tempName))
@@ -862,9 +875,10 @@ namespace DataAccess.Models
                             string tableChanged = toks[i].Replace(sep, "_");
                             string replacewith = $"(Select * from {tableChanged}_{tempName}){tableChanged}";
                             toks[i] = replacewith;
+                            current_tb_index = i;
                         }
                         
-                        getTable = false;
+                       /// getTable = false;
                     }
                     else
                         continue;
