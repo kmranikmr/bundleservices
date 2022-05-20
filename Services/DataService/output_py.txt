@@ -96,7 +96,7 @@ def insert_data_postgres(df, table_name, schema):
     dbschema = schema
     print(" postgre start ")
     engine = create_engine('postgresql+psycopg2://postgres:dapdata123@idapt.duckdns.org:6789/postgres', connect_args={'options': '-csearch_path={}'.format(dbschema)})
-#   engine = create_engine('postgresql+psycopg2://dev:nwdidb19@127.0.0.1:5433/nwdi_ts', connect_args={'options': '-csearch_path={}'.format(dbschema)})
+    #engine = create_engine('postgresql+psycopg2://dev:nwdidb19@127.0.0.1:5433/nwdi_ts', connect_args={'options': '-csearch_path={}'.format(dbschema)})
     paramvalue = digdag.env.params["workflow_attempt_id"]
     df['session_id'] = paramvalue
     if 'rowid' not in df.columns:
