@@ -40,7 +40,10 @@ def run_id():
        return str
     return ""
 
-
+counter= 0
+def increment(count):
+    global counter
+    counter = count
 
 def remove_temp_db(delete_query):
     con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="172.17.0.1", port="5432")
@@ -99,8 +102,10 @@ def insert_data_postgres(df, table_name, schema):
     #engine = create_engine('postgresql+psycopg2://dev:nwdidb19@127.0.0.1:5433/nwdi_ts', connect_args={'options': '-csearch_path={}'.format(dbschema)})
     paramvalue = digdag.env.params["workflow_attempt_id"]
     df['session_id'] = paramvalue
-    if 'rowid' not in df.columns:
-        df['rowid'] = np.arange(df.shape[0])
+    if 'rowid' not in df:
+        df['rowid'] = np.arange(df.shape[0]) + counter
+        increment(np.arange(df.shape[0]).size + counter)
+
     print(table_name)
     print(df.head())
     df.to_sql(table_name, engine, if_exists= 'append',  method='multi', index=False)

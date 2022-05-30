@@ -28,6 +28,7 @@ namespace DataAccess.Models
         public List<string> Columns { set; get; }
 
         public int ProjectId { get; set; }
+        public bool isPreview { get; set; }
     }
     public class HeaderData
     {

@@ -237,8 +237,8 @@ namespace DataService.Controllers
                 {
                     if ( !string.IsNullOrEmpty(outputTable.Result.TableName) )
                     {
-                        string query = $"select *,1 as rowid from {outputTable.Result.TableName} limit 10";
-                        var body = new QueryRequest { QueryString = query, AllRecords = false, SearchDestination = DestinationType.RDBMS, PageFilter = "rowid", PageIndex = 0, PageSize = 10, ProjectId = projectId };
+                        string query = $"select * from {outputTable.Result.TableName} limit 10";
+                        var body = new QueryRequest { QueryString = query, AllRecords = false, SearchDestination = DestinationType.RDBMS, PageFilter = "rowid", PageIndex = 0, PageSize = 10, ProjectId = projectId, isPreview = true };
                         requestRest.AddHeader("Authorization", authorization);
                         requestRest.AddJsonBody(body);
                         IRestResponse response = await client.ExecuteAsync(requestRest);
