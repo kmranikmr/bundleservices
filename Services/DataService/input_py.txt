@@ -31,7 +31,7 @@ def run_id():
     return ""
 
 def remove_temps(tables):
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="idapt.duckdns.org", port="5432")
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
     print("Database opened successfully for removal")
     cur = con.cursor()
     liststr = tables.split(',')
@@ -54,7 +54,7 @@ def insert_model_data_postgres(model, table_name, schema):
     #params = config()
     # connect to the PostgresQL database
     print("connect")
-    conn = psycopg2.connect(dbname="digdagdb",user="ubuntu",password="password",host="172.17.0.1",port="5432")
+    conn = psycopg2.connect(dbname="digdagdb",user="ubuntu",password="password",host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com",port="5432")
     # create a new cursor object
     print("connected")
     cur = conn.cursor()
@@ -81,7 +81,7 @@ def do_transformation(df):
 
 def insert_data_postgres(df, table_name, schema):
     dbschema = schema
-    engine = create_engine('postgresql+psycopg2://ubuntu:password@172.17.0.1:5432/digdagdb',
+    engine = create_engine('postgresql+psycopg2://ubuntu:password@digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com:5432/digdagdb',
                 connect_args={'options': '-csearch_path={}'.format(dbschema)})
 
    

@@ -1,4 +1,4 @@
-
+﻿
 import digdag
 import os
 import psycopg2
@@ -25,8 +25,7 @@ from io import BytesIO
 import dill,base64,tempfile
 from joblib import load
 from sklearn.svm import LinearSVC, SVC
-import datetime
-import s3fs
+
 
 def run_id():
     if 'sessionIds' in  digdag.env.params:
@@ -41,10 +40,13 @@ def run_id():
        return str
     return ""
 
-
+counter= 0
+def increment(count):
+    global counter
+    counter = count
 
 def remove_temp_db(delete_query):
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="172.17.0.1", port="5432")
     print("Database opened successfully")
     cur = con.cursor()
     cur.execute(delete_query)
@@ -54,17 +56,23 @@ def do_transformation(df, model_df):
     if isinstance(process_df, pd.DataFrame):
        print("regular")
        print(process_df.head())
-       currentTime = datetime.datetime.now()
        if not process_df.empty:
-          s3 = s3fs.S3FileSystem(key="AKIAYC4UH65JRCBE5L6Y",secret="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")
-          with s3.open("{}data_{}.csv".format('[PROJECT_PATH]',currentTime.strftime("%Y%m%d%H%M%S")),'w') as f:
-              process_df.to_csv(f)
-   
+          insert_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')# process_block_{userid}_{digdagprojectid}_{digdagworkflowid}
+    else:
+       print("model")
+       #insert_model_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')
+       typename = type(process_df).__name__
+       if 'Sequential' in typename:
+          print("sequential")
+          insert_model_data_postgres(process_df.to_json(), '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')
+       else:
+          print("other model")
+          insert_model_data_postgres(process_df, '[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]', 'public')
 
 
 def input_postgres(input_table, model_df):
     input_query = "select * from "+input_table
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="172.17.0.1", port="5432")
     print("Database opened successfully")
     with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
         cursor.execute(input_query)
@@ -87,11 +95,47 @@ def input_postgres(input_table, model_df):
 
 
 
+def insert_data_postgres(df, table_name, schema):
+    dbschema = schema
+    print(" postgre start ")
+    engine = create_engine('postgresql+psycopg2://postgres:dapdata123@idapt.duckdns.org:6789/postgres', connect_args={'options': '-csearch_path={}'.format(dbschema)})
+    #engine = create_engine('postgresql+psycopg2://dev:nwdidb19@127.0.0.1:5433/nwdi_ts', connect_args={'options': '-csearch_path={}'.format(dbschema)})
+    paramvalue = digdag.env.params["workflow_attempt_id"]
+    df['session_id'] = paramvalue
+    if 'rowid' not in df:
+        df['rowid'] = np.arange(df.shape[0]) + counter
+        increment(np.arange(df.shape[0]).size + counter)
 
+    print(table_name)
+    print(df.head())
+    df.to_sql(table_name, engine, if_exists= 'append',  method='multi', index=False)
+    print(" postgres done")
+    engine.dispose()
+    return True
+
+def insert_model_data_postgres(model, table_name, schema):
+    dbschema = schema
+    sql_stmt = """create table if not exists {}(model_pickle bytea)""".format( table_name)
+    #params = config()
+    # connect to the PostgresQL database
+    print("connect")
+    conn = psycopg2.connect(dbname="postgres",user="postgres",password="dapdata123",host="idapt.duckdns.org",port="6789")
+    # create a new cursor object
+    print("connected")
+    cur = conn.cursor()
+    cur.execute(sql_stmt)
+    # execute the INSERT statement
+    cur.execute("INSERT INTO " + table_name +" (model_pickle) " +
+                    "VALUES(%s)",
+                    (psycopg2.Binary(pickle.dumps(model)),))
+    # commit the changes to the database
+    conn.commit()
+   # close the communication with the PostgresQL database
+    cur.close()
 
 def input_postgres_complete(input_table):
     input_query = "select * from "+input_table
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="172.17.0.1", port="5432")
     print("Database opened successfully")
     with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
         cursor.execute(input_query)
@@ -123,4 +167,3 @@ def [METHODNAME]():
 
 if __name__ == "__main__":
     [METHODNAME]()
-
