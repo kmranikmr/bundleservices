@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
+FROM mcr.microsoft.com/dotnet/core/runtime:2.2 AS base
 #FROM mcr.microsoft.com/dotnet/core/runtime:3.1.4-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
@@ -8,7 +8,7 @@ EXPOSE 80
 #RUN python3-pip install wfdb
 #RUN python3-pip install heartpy
 
-FROM microsoft/dotnet:2.2-sdk AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
 WORKDIR /src
 COPY Services/FileUpload/FileUploadAPI/FileUploadService/FileUploadService.csproj Services/FileUpload/FileUploadAPI/FileUploadService/
 RUN dotnet restore Services/FileUpload/FileUploadAPI/FileUploadService/FileUploadService.csproj
