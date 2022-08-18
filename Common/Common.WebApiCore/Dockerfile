@@ -3,7 +3,7 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 1433
 
-FROMmcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
 WORKDIR /src
 COPY Common/Common.WebApiCore/Common.WebApiCore.csproj Common/Common.WebApiCore/
 COPY Common/Common.DTO/Common.DTO.csproj Common/Common.DTO/
