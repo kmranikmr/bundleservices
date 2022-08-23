@@ -59,7 +59,7 @@ def do_transformation(df):
 
 def insert_data_postgres(df, table_name, schema):
     dbschema = schema
-    engine = create_engine('postgresql+psycopg2://ubuntu:password@digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com:5432/digdagdb',
+    engine = create_engine('postgresql+psycopg2://ubuntu:dapdata123@digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com:5432/digdagdb',
                 connect_args={'options': '-csearch_path={}'.format(dbschema)})
 
    

@@ -15,11 +15,16 @@ from sklearn.linear_model import LinearRegression
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler, MinMaxScaler, PolynomialFeatures
-from keras.models import model_from_json
-from keras.models import Sequential
-from keras.layers import Dense, Flatten, Dropout
-from keras.layers import Bidirectional, LSTM
-from keras.utils import to_categorical
+#from keras.models import model_from_json
+#from keras.models import Sequential
+#from keras.layers import Dense, Flatten, Dropout
+#from keras.layers import Bidirectional, LSTM
+from tensorflow.keras.models import model_from_json
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten, Dropout
+from tensorflow.keras.layers import Bidirectional, LSTM
+#from keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 import sklearn
 from io import BytesIO
 import dill,base64,tempfile
@@ -46,7 +51,7 @@ def increment(count):
     counter = count
 
 def remove_temp_db(delete_query):
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
     print("Database opened successfully")
     cur = con.cursor()
     cur.execute(delete_query)
@@ -72,7 +77,7 @@ def do_transformation(df, model_df):
 
 def input_postgres(input_table, model_df):
     input_query = "select * from "+input_table
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
     print("Database opened successfully")
     with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
         cursor.execute(input_query)
@@ -135,7 +140,7 @@ def insert_model_data_postgres(model, table_name, schema):
 
 def input_postgres_complete(input_table):
     input_query = "select * from "+input_table
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="password", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
     print("Database opened successfully")
     with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
         cursor.execute(input_query)
