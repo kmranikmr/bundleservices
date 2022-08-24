@@ -15,11 +15,11 @@ from sklearn import preprocessing
 from sklearn import feature_extraction
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.feature_extraction.text import TfidfTransformer
-from keras.models import Sequential
-from keras.layers import Dense, Flatten, Dropout
-from keras.layers import Bidirectional, LSTM
-from keras.utils import to_categorical
-from keras.models import model_from_json
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten, Dropout
+from tensorflow.keras.layers import Bidirectional, LSTM
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.models import model_from_json
 from sklearn.svm import LinearSVC, SVC
 import random
 from sklearn.preprocessing import StandardScaler
