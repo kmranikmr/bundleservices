@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/dotnet/aspnet/runtime:2.2 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:2.2 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 1433
-FROM mcr.microsoft.com/dotnet/aspnet/sdk:2.2  AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2  AS build
 WORKDIR /src
 COPY Services/DataService/DataService.csproj Services/DataService/
 COPY Common/Common.Utils/Common.Utils.csproj Common/Common.Utils/
