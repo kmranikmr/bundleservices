@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:2.2 AS base
+FROM laptevss/dotnet-aspnet AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 1433
