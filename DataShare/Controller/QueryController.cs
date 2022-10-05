@@ -15,7 +15,7 @@ namespace DataShareService.Controller
     public class ConnectionStringsConfig
     {
 
-        public string MilvusServiceConnection { get; set; }
+        public string MilServiceConnection { get; set; }
 
     }
 
@@ -45,7 +45,7 @@ namespace DataShareService.Controller
         /// <param name="apiKey"></param>
         /// <param name="everything"></param>
         /// <returns></returns>
-      //  [ApiKeyAuth]
+        [ApiKeyAuth]
          [HttpGet("[action]/{queryname}/{everything}/{isWorkflow:bool=false}")]
         public async Task<ActionResult<string>>UserData([FromRoute]string queryname,  [FromHeader(Name = "api-key")] string apiKey, string everything)
         {
@@ -110,7 +110,7 @@ namespace DataShareService.Controller
 
         //post 
 
-       // [ApiKeyAuth]
+        [ApiKeyAuth]
         [HttpPost("[action]/{queryname}/{everything}/{isWorkflow:bool=false}")]
         public async Task<ActionResult<string>> PostData([FromRoute] string queryname, [FromHeader(Name = "api-key")] string apiKey, string everything, [FromBody] dynamic bdy)
         {

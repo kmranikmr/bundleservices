@@ -1,5 +1,9 @@
-﻿using Common.Utils;
+﻿using AutoMapper.Configuration;
+using Common.Utils;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -15,8 +19,12 @@ namespace DataShareService.Filters
     public class ApiKeyAuthAttribute : Attribute, IAsyncActionFilter
     {
         public const string ApiKeyHeaderName = "api-key";
-        
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        public string workflowserver = "";
+        //public ApiKeyAuthAttribute(IOptions<DatabaseConfig> doptions)
+        //{
+        //    workflowserver = doptions.Value.workflowServer;
+        //}
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)//, IOptions<DatabaseConfig> doptions)
         {
             //before
             Console.WriteLine("onactionexeution2");
@@ -31,8 +39,13 @@ namespace DataShareService.Filters
             Console.WriteLine("let through");
             string hasheUserKey = Api.GenerateHashedKey(potentialApiKey);
             Console.WriteLine(potentialApiKey);
-           // bool test = Api.MatchHashedKey(hasheUserKey, "$s2$16384$8$1$sQL6ul0n7aJb / aeozbvqzCQUDh55wL1kwYEQsNO81G8 =$0ayJAYu3vbBSXjLtPK8hmw1DFlATV0REStJvqy9mGI0=");
-            var url = $"http://ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com:6002/api/UserApi/Validate";//change this
+            var memoryCache = context.HttpContext.RequestServices.GetService<IMemoryCache>();
+            if(memoryCache.TryGetValue("workflowServer", out string connVal))
+            {
+                workflowserver = connVal;
+            }
+            // bool test = Api.MatchHashedKey(hasheUserKey, "$s2$16384$8$1$sQL6ul0n7aJb / aeozbvqzCQUDh55wL1kwYEQsNO81G8 =$0ayJAYu3vbBSXjLtPK8hmw1DFlATV0REStJvqy9mGI0=");
+            var url = $"http://{workflowserver}:6002/api/UserApi/Validate";//change this
             var restClient = new RestClient(url);
             var requestTable = new RestRequest(Method.POST);
             requestTable.AddHeader("Accept", "application/json");

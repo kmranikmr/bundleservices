@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using DataShareService.Controller;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DataShareService
 {
@@ -63,7 +65,7 @@ namespace DataShareService
             var milvusConnectionString = Configuration.GetConnectionString("milvusServer");
             services.AddMvc(options => {
                     //an instant  
-                    options.Filters.Add(new ApiKeyAttributeFilter());
+                    options .Filters.Add(new ApiKeyAttributeFilter());
                 //    //By the type  
                     options.Filters.Add(typeof(ApiKeyAttributeFilter));
                 });
@@ -71,17 +73,19 @@ namespace DataShareService
            // services.Configure<ConnectionStringsConfig>(option => option.MilvusServiceConnection = milvusConnectionString);
             services.AddScoped<ApiKeyAttributeFilter>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMemoryCache();
         }
         public IConfiguration Configuration { get; }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IMemoryCache cache)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-
+            var entryOptions = new MemoryCacheEntryOptions().SetPriority(CacheItemPriority.Normal);
+            var  workflowConnectionString = Configuration.GetSection("database").GetValue<string>("workflowServer");
+            cache.Set("workflowServer", workflowConnectionString, entryOptions);
             app.UseAuthentication();
            app.UseMvc();
             //app.Run(async (context) =>
