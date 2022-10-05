@@ -58,7 +58,7 @@ namespace DataShareService.Controller
             {
                 //string queryname = "kkk";
                 Console.WriteLine("query controller");
-                var url = $"http://localhost:6002/api/UserApi/CheckSharedData/{queryname}";//change this
+                var url = $"http://{_server}:6002/api/UserApi/CheckSharedData/{queryname}";//change this
                 var restClient = new RestClient(url);
                 var requestTable = new RestRequest(Method.GET);
                 requestTable.AddHeader("Accept", "application/json");
