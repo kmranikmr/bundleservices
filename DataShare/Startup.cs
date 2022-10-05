@@ -13,12 +13,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using DataShareService.Controller;
 
 namespace DataShareService
 {
     public class DatabaseConfig
     {
         public string postgres { get; set; }
+        public string workflowServer { get; set; }
+        public string milvusServer { get; set; }
     }
 
     public class ApiKeyAuthenticationOptions : AuthenticationSchemeOptions
@@ -56,14 +59,17 @@ namespace DataShareService
             //     options.Filters.Add(typeof(MySampleActionFilter));
             // });
             services.Configure<DatabaseConfig>(Configuration.GetSection("database"));
+            var workflowConnectionString = Configuration.GetConnectionString("workflowServer");
+            var milvusConnectionString = Configuration.GetConnectionString("milvusServer");
             services.AddMvc(options => {
                     //an instant  
                     options.Filters.Add(new ApiKeyAttributeFilter());
                 //    //By the type  
                     options.Filters.Add(typeof(ApiKeyAttributeFilter));
                 });
-
-                services.AddScoped<ApiKeyAttributeFilter>();
+            //services.Configure<string>(option => option = workflowConnectionString);
+           // services.Configure<ConnectionStringsConfig>(option => option.MilvusServiceConnection = milvusConnectionString);
+            services.AddScoped<ApiKeyAttributeFilter>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
         public IConfiguration Configuration { get; }
