@@ -6,7 +6,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com",
+          "Host": "deeph-Publi-1F3AAYQRADU0Q-775377662.us-east-1.elb.amazonaws.com",
           "Port": 6005
         }
       ],
@@ -19,7 +19,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com",
+          "Host": "deeph-Publi-1F3AAYQRADU0Q-775377662.us-east-1.elb.amazonaws.com",
           "Port": 6005
         }
       ],
@@ -31,7 +31,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com",
+          "Host": "deeph-Publi-1F3AAYQRADU0Q-775377662.us-east-1.elb.amazonaws.com",
           "Port": 6005
         }
       ],
@@ -43,7 +43,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com",
+          "Host": "deeph-Publi-1F3AAYQRADU0Q-775377662.us-east-1.elb.amazonaws.com",
           "Port": 6005
         }
       ],
@@ -53,7 +53,7 @@
   ],
 
   "GlobalConfiguration": {
-    "BaseUrl": "http://ec2basedservicealb-760561316.us-east-1.elb.amazonaws.com:6010"
+    "BaseUrl": "http:/deeph-Publi-1F3AAYQRADU0Q-775377662.us-east-1.elb.amazonaws.com:6010"
   }
 
 }
