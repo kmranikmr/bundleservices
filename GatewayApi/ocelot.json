@@ -1,5 +1,5 @@
 {
-  "ReRoutes": [
+  "Routes": [
 
     {
       "DownstreamPathTemplate": "/api/query/userdata/{queryname}/{everything}/false",
