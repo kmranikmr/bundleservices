@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Internal;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ocelot.DependencyInjection;
@@ -34,6 +36,7 @@ namespace GatewayApi
         {
             services.AddOcelot();
             services.AddHealthChecks();
+          // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
         public IConfiguration Configuration { get; }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,8 +46,20 @@ namespace GatewayApi
             {
                 app.UseDeveloperExceptionPage();
             }
+           app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/health", async context =>
+                {
+                    await context.Response.WriteAsync("healthy");
+                });
+            });
             app.UseOcelot();
+           // app.UseMvc();
+            //  app.UseMvc();
             app.UseHealthChecks("/health");
+            
             //app.Run(async (context) =>
             //{
             //    await context.Response.WriteAsync("Hello World!");

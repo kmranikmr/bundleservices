@@ -1,4 +1,5 @@
 {
+  
   "ReRoutes": [
 
     {
@@ -25,12 +26,34 @@
       ],
       "UpstreamPathTemplate": "/workflow/{queryname}/{everything}",
       "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/query/userdata/{queryname}/{everything}/true",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "deeph-Publi-1F3AAYQRADU0Q-775377662.us-east-1.elb.amazonaws.com",
+          "Port": 6005
+        }
+      ],
+      "UpstreamPathTemplate": "/workflow/{queryname}/{everything}",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/query/postdata/{queryname}/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "deeph-Publi-1F3AAYQRADU0Q-775377662.us-east-1.elb.amazonaws.com",
+          "Port": 6005
+        }
+      ],
+      "UpstreamPathTemplate": "endpoint/{queryname}/{everything}",
+      "UpstreamHttpMethod": [ "Post" ]
     }
-
   ],
 
   "GlobalConfiguration": {
     "BaseUrl": "http://deeph-Publi-1F3AAYQRADU0Q-775377662.us-east-1.elb.amazonaws.com:6010"
   }
-
 }
