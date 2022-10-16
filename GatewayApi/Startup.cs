@@ -59,7 +59,7 @@ namespace GatewayApi
            // app.UseMvc();
             //  app.UseMvc();
             app.UseHealthChecks("/health");
-            
+              
             //app.Run(async (context) =>
             //{
             //    await context.Response.WriteAsync("Hello World!");
