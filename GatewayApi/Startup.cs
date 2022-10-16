@@ -55,7 +55,7 @@ namespace GatewayApi
                     await context.Response.WriteAsync("healthy");
                 });
             });
-            app.UseOcelot();
+            app.UseOcelot().Wait();
            // app.UseMvc();
             //  app.UseMvc();
             app.UseHealthChecks("/health");
