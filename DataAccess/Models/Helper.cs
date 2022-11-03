@@ -549,7 +549,14 @@ namespace DataAccess.Models
                         //task.template = GetInputCode();
                         if (!task.nodeType.Contains("api"))
                         {
-                            task.template = GetInputCode();
+                            if (task.nodeType.Contains("milvus"))
+                            {
+                                task.template = GetInputCode("milvus");
+                            }
+                            else
+                            {
+                                task.template = GetInputCode();
+                            }
                         }
                         else
                         {
@@ -574,6 +581,44 @@ namespace DataAccess.Models
                     task.template = task.template.Replace("[INPUTDATA]", query);
 
                     task.template = task.template.Replace("[RESET_SESSIONID]", resetSessionId);
+
+                    string tableName = "";
+                    if (task.headerList != null && task.headerList.keyValuesMap != null && task.headerList.keyValuesMap.ContainsKey("TableName"))
+                    {
+                        tableName = task.headerList.keyValuesMap["TableName"];
+                    }
+                    if (!isTest)
+                    {
+                        var outputTableModel = repository.AddWorkflowOutputTable(workflowProjectId, workflowVersionId, userId);
+
+                        Console.WriteLine("AddWorkflowOutputTable" + workflowProjectId + " " + workflowVersionId);
+                        task.template = task.template.Replace("[OUTPUTNAME]", "workflowoutput");
+                        task.template = task.template.Replace("[PROJECTID]", workflowProjectId.ToString());
+                        task.template = task.template.Replace("[VERSIONID]", workflowVersionId.ToString());
+
+                        if (outputTableModel != null)
+                        {
+                            Console.WriteLine("UpdateWorkflowOutputTable" + outputTableModel.Result.WorkflowOutputModelId);
+                            task.template = task.template.Replace("[TABLEINDEX]", outputTableModel.Result.WorkflowOutputModelId.ToString());
+                            var UpdatedModel = repository.UpdateWorkflowOutputTable(outputTableModel.Result.WorkflowOutputModelId, workflowProjectId, workflowVersionId, tableName);
+                        }
+                        else
+                        {
+                            //bad
+                            task.template = task.template.Replace("[TABLEINDEX]", "1");
+                        }
+                    }
+                    else
+                    {
+
+                        var inputidChanged = task.taskId.Replace(sep, "_");
+                        var taskNameChanged = task.taskName.Replace(sep, "_");
+                        string tempTableName = taskNameChanged + "_" + inputidChanged;
+
+                        ///for test we wil dump in a temp 
+
+                        task.template = task.template.Replace("[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]", tempTableName);
+                    }
                 }
 
                 if (task.nodeType.Contains("process"))
@@ -921,6 +966,10 @@ namespace DataAccess.Models
             {
                 return GetInputCodeApi();
             }
+            if(nodeType.Contains("milvus"))
+            {
+                return GetInputCodeMilvus();
+            }
             using (StreamReader reader = new StreamReader("input_py.txt"))
             {
                 var code = reader.ReadToEnd();
@@ -958,6 +1007,14 @@ namespace DataAccess.Models
          public static string GetInputCodeApi()
         {
             using (StreamReader reader = new StreamReader("api_input_py.txt"))
+            {
+                var code = reader.ReadToEnd();
+                return code;
+            }
+        }
+        public static string GetInputCodeMilvus()
+        {
+            using (StreamReader reader = new StreamReader("insert_milvus_py.txt"))
             {
                 var code = reader.ReadToEnd();
                 return code;
