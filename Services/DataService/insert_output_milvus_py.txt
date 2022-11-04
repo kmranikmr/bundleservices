@@ -1,0 +1,279 @@
+﻿
+import digdag
+import os
+import psycopg2
+import pandas as pd
+import numpy as np
+from pandas import DataFrame
+from numpy import repeat
+from psycopg2.extras import RealDictCursor
+from sqlalchemy import MetaData
+from sqlalchemy import create_engine
+from sqlalchemy import event
+import pickle
+from sklearn.linear_model import LinearRegression
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler, MinMaxScaler, PolynomialFeatures
+#from keras.models import model_from_json
+#from keras.models import Sequential
+#from keras.layers import Dense, Flatten, Dropout
+#from keras.layers import Bidirectional, LSTM
+from tensorflow.keras.models import model_from_json
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten, Dropout
+from tensorflow.keras.layers import Bidirectional, LSTM
+#from keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
+import sklearn
+from io import BytesIO
+import dill,base64,tempfile
+from joblib import load
+from sklearn.svm import LinearSVC, SVC
+import nltk
+from nltk.corpus import stopwords
+from sklearn.feature_extraction.text import TfidfVectorizer
+from unidecode import unidecode
+from nltk.stem import WordNetLemmatizer
+import spacy
+import spacy.cli
+from pymilvus import (
+    connections,
+    utility,
+    FieldSchema, CollectionSchema, DataType,
+    Collection,
+)
+num_entities =  2
+dim = 300
+from nltk.tokenize import sent_tokenize, word_tokenize
+lemmatizer = WordNetLemmatizer()
+porter = nltk.PorterStemmer()
+connections.connect("default", host="idapt.duckdns.org", port="19530")#idapt.duckdns.org
+
+has = utility.has_collection("[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]")
+   FieldSchema(name="pk", dtype=DataType.INT64, is_primary=True, auto_id=False),
+    FieldSchema(name="random", dtype=DataType.DOUBLE),
+    FieldSchema(name="embeddings", dtype=DataType.FLOAT_VECTOR, dim=dim)
+]
+
+schema = CollectionSchema(fields, "hello_milvus is the simplest demo to introduce the API")
+hello_milvus = Collection("[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]", schema, consistency_level="Strong")
+embeddings = spacy.load('en_core_web_lg')
+
+def embeddings_similarity(sentences ):
+    allid = []
+    for d in range(len(sentences)):
+        cleaned = clean_text(sentences[d][0])
+        vectorclean = embeddings(cleaned).vector
+        all.append(vectorclean)
+    for d2 in range(len(sentences)):
+        allid.append(sentences[d2][1])
+    allarray = np.array(all)
+    allidarray = np.array(allid)
+    rng = np.random.default_rng(seed=19530)
+    num_entities = allarray.shape[0]
+    entities = [
+        # provide the pk field because `auto_id` is set to False
+        #[i for i in range(num_entities)],
+        allid,
+        rng.random(num_entities).tolist(),  # field random, only supports list
+        allarray,  # field embeddings, supports numpy.ndarray and list
+    ]
+    insert_result = hello_milvus.insert(entities)
+    print(fmt.format("Start Creating index IVF_FLAT"))
+    index = {
+        "index_type": "IVF_FLAT",
+        "metric_type": "L2",
+        "params": {"nlist": 128},
+    }
+    hello_milvus.create_index("embeddings", index)
+
+def stemSentence(sentence):
+    token_words=word_tokenize(sentence)
+    token_words
+    stem_sentence=[]
+    for word in token_words:
+        stem_sentence.append(nltk.porter.stem(word))
+        stem_sentence.append(" ")
+    return "".join(stem_sentence)
+def is_number(n):
+    try:
+        float(n)
+    except:
+        return False
+    return True
+def checkNan(n):
+    return n != n
+def pre_process(corpus):
+    # convert input corpus to lower case.
+    if pd.isnull(corpus):
+        return "";
+    corpus = corpus.lower()
+    # collecting a list of stop words from nltk and punctuation form
+    # string class and create single array.
+    stopset = stopwords.words('english') + list(string.punctuation)
+    # remove stop words and punctuations from string.
+    # word_tokenize is used to tokenize the input corpus in word tokens.
+    corpus = " ".join([i for i in word_tokenize(corpus) if i not in stopset])
+
+    corpus = unidecode(corpus)
+    words = word_tokenize(corpus)
+
+    stem_sentence = []
+    for word in words:
+        stem_sentence.append(porter.stem(word))
+        stem_sentence.append(" ")
+    return "".join(stem_sentence)
+    return corpus
+
+def run_id():
+    if 'sessionIds' in  digdag.env.params:
+        sessiondIdvalue = digdag.env.params["sessionIds"]
+    else:
+        sessiondIdvalue = ""
+
+    if not sessiondIdvalue:
+       return ""
+    else:
+       str = sessiondIdvalue.replace(',','_')
+       return str
+    return ""
+
+counter= 0
+def increment(count):
+    global counter
+    counter = count
+
+def remove_temp_db(delete_query):
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    print("Database opened successfully")
+    cur = con.cursor()
+    cur.execute(delete_query)
+
+def insert_milvus():
+    cc = ""
+    corpus = []
+    thislist  = []
+    valtest = []
+    for i, row in df2.iterrows():
+        cc = ""
+        for name in df2.columns:
+            if checkNan(row[name]) or name == 'rowid':
+                continue
+            if is_number(row[name]):
+                cc += name + str(row[name])
+            else:
+                cc += row[name]
+        thislist.append(pre_process(cc))
+        thislist.append(row['rowid'])
+        corpus.append(thislist)
+        thislist = []
+    embeddings_similarity(corpus)
+
+def do_transformation(df, model_df):
+    process_df = process_custom_code(df, model_df)
+    if isinstance(process_df, pd.DataFrame):
+       print("regular")
+       print(process_df.head())
+       if not process_df.empty:
+          insert_milvus(df)
+  
+
+
+def input_postgres(input_table, model_df):
+    input_query = "select * from "+input_table
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    print("Database opened successfully")
+    with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
+        cursor.execute(input_query)
+        while True:
+            col_names = []
+            records = cursor.fetchmany(size=500000)
+            col_set = False
+            if not col_set:
+                for elt in cursor.description:
+                    col_names.append(elt[0])
+            if not records:
+                break
+            col_set = True
+            df = DataFrame(records)
+            df.columns = col_names
+            do_transformation(df, model_df)
+            #insert_data_postgres(df, 'output11', 'public')
+        cursor.close()  # don't forget to cleanup
+    con.close()
+
+
+
+def insert_data_postgres(df, table_name, schema):
+    dbschema = schema
+    print(" postgre start ")
+    engine = create_engine('postgresql+psycopg2://postgres:dapdata123@idapt.duckdns.org:6789/postgres', connect_args={'options': '-csearch_path={}'.format(dbschema)})
+    #engine = create_engine('postgresql+psycopg2://dev:nwdidb19@127.0.0.1:5433/nwdi_ts', connect_args={'options': '-csearch_path={}'.format(dbschema)})
+    paramvalue = digdag.env.params["workflow_attempt_id"]
+    df['session_id'] = paramvalue
+    if 'rowid' not in df:
+        df['rowid'] = np.arange(df.shape[0]) + counter
+        increment(np.arange(df.shape[0]).size + counter)
+
+    print(table_name)
+    print(df.head())
+    df.to_sql(table_name, engine, if_exists= 'append',  method='multi', index=False)
+    print(" postgres done")
+    engine.dispose()
+    return True
+
+def insert_model_data_postgres(model, table_name, schema):
+    dbschema = schema
+    sql_stmt = """create table if not exists {}(model_pickle bytea)""".format( table_name)
+    #params = config()
+    # connect to the PostgresQL database
+    print("connect")
+    conn = psycopg2.connect(dbname="postgres",user="postgres",password="dapdata123",host="idapt.duckdns.org",port="6789")
+    # create a new cursor object
+    print("connected")
+    cur = conn.cursor()
+    cur.execute(sql_stmt)
+    # execute the INSERT statement
+    cur.execute("INSERT INTO " + table_name +" (model_pickle) " +
+                    "VALUES(%s)",
+                    (psycopg2.Binary(pickle.dumps(model)),))
+    # commit the changes to the database
+    conn.commit()
+   # close the communication with the PostgresQL database
+    cur.close()
+
+def input_postgres_complete(input_table):
+    input_query = "select * from "+input_table
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    print("Database opened successfully")
+    with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
+        cursor.execute(input_query)
+        while True:
+            col_names = []
+            records = cursor.fetchmany(size=1000)
+            col_set = False
+            if not col_set:
+                for elt in cursor.description:
+                    col_names.append(elt[0])
+            if not records:
+                break
+            col_set = True
+            df = DataFrame(records)
+            df.columns = col_names
+            return df
+            #insert_data_postgres(df, 'output11', 'public')
+        cursor.close()  # don't forget to cleanup
+    con.close()
+
+[COMMANDBODY]
+def [METHODNAME]():
+    model_df = {}
+    [POSTGRES_ARTIFACT_READ]
+    outstr = "[INPUTNODENAME]_[INPUTNODEID]{}".format(run_id())
+    input_df = input_postgres(outstr,model_df)
+    [DELETE_TEMP]
+    print("done all")
+
+if __name__ == "__main__":
+    [METHODNAME]()

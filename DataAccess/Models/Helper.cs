@@ -549,11 +549,11 @@ namespace DataAccess.Models
                         //task.template = GetInputCode();
                         if (!task.nodeType.Contains("api"))
                         {
-                            if (task.nodeType.Contains("milvus"))
-                            {
-                                task.template = GetInputCode("milvus");
-                            }
-                            else
+                           // if (task.nodeType.Contains("milvus"))
+                          //  {
+                           //     task.template = GetInputCode("milvus");
+                          //  }
+                         //   else
                             {
                                 task.template = GetInputCode();
                             }
@@ -582,7 +582,7 @@ namespace DataAccess.Models
 
                     task.template = task.template.Replace("[RESET_SESSIONID]", resetSessionId);
 
-                    string tableName = "";
+                    /*string tableName = "";
                     if (task.headerList != null && task.headerList.keyValuesMap != null && task.headerList.keyValuesMap.ContainsKey("TableName"))
                     {
                         tableName = task.headerList.keyValuesMap["TableName"];
@@ -618,7 +618,7 @@ namespace DataAccess.Models
                         ///for test we wil dump in a temp 
 
                         task.template = task.template.Replace("[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]", tempTableName);
-                    }
+                    }*/
                 }
 
                 if (task.nodeType.Contains("process"))
@@ -645,9 +645,16 @@ namespace DataAccess.Models
                     if ( task.oper == Operator.py)
                     {
                         //task.template = GetOutputCode();
-                         if (!task.nodeType.Contains("csv"))
+                        if (!task.nodeType.Contains("csv"))
                         {
-                            task.template = GetOutputCode();
+                            if (task.nodeType.Contains("milvus"))
+                            {
+                                task.template = GetOutputCode("milvus");
+                            }
+                            else
+                            {
+                                task.template = GetOutputCode();
+                            }
                         }
                         else
                         {
@@ -966,10 +973,10 @@ namespace DataAccess.Models
             {
                 return GetInputCodeApi();
             }
-            if(nodeType.Contains("milvus"))
-            {
-                return GetInputCodeMilvus();
-            }
+            //if(nodeType.Contains("milvus"))
+            //{
+            //    return GetInputCodeMilvus();
+            //}
             using (StreamReader reader = new StreamReader("input_py.txt"))
             {
                 var code = reader.ReadToEnd();
@@ -998,6 +1005,10 @@ namespace DataAccess.Models
             {
                 return GetOutputCodeCsv();
             }
+            if (nodeType.Contains("milvus"))
+            {
+                return GetOutputCodeMilvus();
+            }
             using (StreamReader reader = new StreamReader("output_py.txt"))
             {
                 var code = reader.ReadToEnd();
@@ -1012,9 +1023,9 @@ namespace DataAccess.Models
                 return code;
             }
         }
-        public static string GetInputCodeMilvus()
+        public static string GetOutputCodeMilvus()
         {
-            using (StreamReader reader = new StreamReader("insert_milvus_py.txt"))
+            using (StreamReader reader = new StreamReader("insert_output_milvus_py.txt"))
             {
                 var code = reader.ReadToEnd();
                 return code;
