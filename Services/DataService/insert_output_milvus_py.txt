@@ -51,7 +51,9 @@ porter = nltk.PorterStemmer()
 connections.connect("default", host="idapt.duckdns.org", port="19530")#idapt.duckdns.org
 
 has = utility.has_collection("[OUTPUTNAME]_[PROJECTID]_[VERSIONID]_[TABLEINDEX]")
-   FieldSchema(name="pk", dtype=DataType.INT64, is_primary=True, auto_id=False),
+
+fields = [
+    FieldSchema(name="pk", dtype=DataType.INT64, is_primary=True, auto_id=False),
     FieldSchema(name="random", dtype=DataType.DOUBLE),
     FieldSchema(name="embeddings", dtype=DataType.FLOAT_VECTOR, dim=dim)
 ]
