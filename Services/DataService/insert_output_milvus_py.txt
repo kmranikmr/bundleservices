@@ -1,5 +1,4 @@
-﻿
-import digdag
+﻿import digdag
 import os
 import psycopg2
 import pandas as pd
@@ -15,15 +14,11 @@ from sklearn.linear_model import LinearRegression
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler, MinMaxScaler, PolynomialFeatures
-#from keras.models import model_from_json
-#from keras.models import Sequential
-#from keras.layers import Dense, Flatten, Dropout
-#from keras.layers import Bidirectional, LSTM
 from tensorflow.keras.models import model_from_json
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Dropout
 from tensorflow.keras.layers import Bidirectional, LSTM
-#from keras.utils import to_categorical
+
 from tensorflow.keras.utils import to_categorical
 import sklearn
 from io import BytesIO
@@ -269,6 +264,7 @@ def input_postgres_complete(input_table):
     con.close()
 
 [COMMANDBODY]
+
 def [METHODNAME]():
     model_df = {}
     [POSTGRES_ARTIFACT_READ]
