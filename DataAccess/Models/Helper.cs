@@ -855,7 +855,15 @@ namespace DataAccess.Models
                     {
                         if (!task.nodeType.Contains("csv"))
                         {
-                            task.template = GetOutputCode();
+                            if (task.nodeType.Contains("milvus"))
+                            {
+                                task.template = GetOutputCode("milvus");
+                            }
+                            else
+                            {
+                                task.template = GetOutputCode();
+                            }
+                               
                         }
                         else
                         {
@@ -887,6 +895,7 @@ namespace DataAccess.Models
 
            changedjson = JsonConvert.SerializeObject(dec);
             changedjson = changedjson.Replace("oper", "operator");
+                Console.WriteLine($"changed json {changedjson}");
             // Workflow changedWorkflow = JsonConvert.DeserializeObject<Workflow>(changedjson);
             return changedjson;
            }catch(Exception ex)
