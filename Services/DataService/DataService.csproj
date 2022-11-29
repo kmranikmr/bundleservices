@@ -60,6 +60,9 @@
     <None Update="csv_output_py_local.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="input_base_py.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="insert_output_milvus_py.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

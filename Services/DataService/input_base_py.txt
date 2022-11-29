@@ -1,0 +1,138 @@
+﻿import digdag
+import os
+from datetime import time, datetime
+import psycopg2
+from objectpath.utils.timeutils import now
+from pandas import DataFrame
+from psycopg2.extras import RealDictCursor
+from sqlalchemy import MetaData
+from sqlalchemy import create_engine
+from sqlalchemy import event
+from io import BytesIO
+import dill,base64,tempfile
+from joblib import load
+import pickle
+#from tensorflow.keras.models import model_from_json
+import pandas as pd
+#from get_all_tickers import get_tickers as gt
+#import yfinance
+
+def run_id():
+    if 'sessionIds' in  digdag.env.params:
+        sessiondIdvalue = digdag.env.params["sessionIds"]
+    else:
+        sessiondIdvalue = ""
+
+    if not sessiondIdvalue:
+       return ""
+    else:
+       str = sessiondIdvalue.replace(',','_')
+       return str
+    return ""
+
+def remove_temps(tables):
+    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    print("Database opened successfully for removal")
+    cur = con.cursor()
+    liststr = tables.split(',')
+    for tabl in liststr:
+        outstr = tabl + "{}".format(run_id())
+        drop_sql = """drop table if exists public.%s;"""%outstr
+        print(drop_sql)
+        cur.execute(drop_sql)
+        print("droped " + drop_sql)
+    con.commit()
+    cur.close()
+    con.close()
+    print("droped " + tables)
+
+
+def insert_model_data_postgres(model, table_name, schema):
+    print(table_name)
+    dbschema = schema
+    sql_stmt = """create table if not exists {}(model_pickle bytea)""".format( table_name)
+    #params = config()
+    # connect to the PostgresQL database
+    print("connect")
+    conn = psycopg2.connect(dbname="digdagdb",user="ubuntu",password="dapdata123",host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com",port="5432")
+    # create a new cursor object
+    print("connected")
+    cur = conn.cursor()
+    cur.execute(sql_stmt)
+    # execute the INSERT statement
+    cur.execute("INSERT INTO " + table_name +" (model_pickle) " +
+                    "VALUES(%s)",
+                    (psycopg2.Binary(pickle.dumps(model)),))
+    # commit the changes to the database
+    conn.commit()
+   # close the communication with the PostgresQL database
+    cur.close()
+
+def do_transformation(df):
+    df = process_custom_code(df)
+    outstr = "[NODENAME]{}_[NODEID]".format(run_id())
+    print("process custom code done")
+    print(outstr)
+    if isinstance(df, pd.DataFrame):
+       insert_data_postgres(df,outstr , 'public')
+    else:
+       insert_model_data_postgres(df, outstr, 'public')
+
+
+def insert_data_postgres(df, table_name, schema):
+    dbschema = schema
+    engine = create_engine('postgresql+psycopg2://ubuntu:dapdata123@digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com:5432/digdagdb',
+                connect_args={'options': '-csearch_path={}'.format(dbschema)})
+
+   
+    df.to_sql(table_name, engine, if_exists='append', index=False)
+    print("*", end = '')
+    engine.dispose()
+    return True
+#input from saved query
+def input_postgres(input_query):
+    con = psycopg2.connect(database="postgres", user="postgres", password="dapdata123", host="idapt.duckdns.org", port="6789")
+#   con = psycopg2.connect(database="nwdi_ts", user="dev", password="nwdidb19", host="127.0.0.1", port="5433")
+    print("Database opened successfully")
+    with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
+        cursor.execute(input_query)
+
+        while True:
+            col_names = []
+            records = cursor.fetchmany(size=100)
+            col_set = False
+            if not col_set:
+                for elt in cursor.description:
+                    col_names.append(elt[0])
+            if not records:
+                break
+            col_set = True
+            df = DataFrame(records)
+            df.columns = col_names
+            do_transformation(df)
+        cursor.close()  # don't forget to cleanup
+    con.close()
+
+
+[COMMANDBODY]
+
+def [METHODNAME]():
+    [REMOVEALL_TEMP]
+    if 'sessionIds' in  digdag.env.params:
+       sessiondIdvalue = digdag.env.params["sessionIds"]
+    else:
+       sessiondIdvalue = ""
+    
+    print("sessiondIdvalue " + sessiondIdvalue)
+    input_query = ""
+    if not sessiondIdvalue:
+       input_query = """[INPUTDATA]"""
+    else:
+       input_query = """Select * from ([INPUTDATA])a where a.real_session_id in ({})""".format(sessiondIdvalue)
+    print("input_query" + input_query)
+    #we will add the saved query in the nnniput query...
+    input_postgres(input_query)
+
+
+if __name__ == "__main__":
+    [METHODNAME]()
