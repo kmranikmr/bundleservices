@@ -14,18 +14,20 @@ from sklearn.linear_model import LinearRegression
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler, MinMaxScaler, PolynomialFeatures
-from tensorflow.keras.models import model_from_json
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten, Dropout
-from tensorflow.keras.layers import Bidirectional, LSTM
-
-from tensorflow.keras.utils import to_categorical
+#from tensorflow.keras.models import model_from_json
+#from tensorflow.keras.models import Sequential
+#from tensorflow.keras.layers import Dense, Flatten, Dropout
+#from tensorflow.keras.layers import Bidirectional, LSTM
+import time
+import requests
+#from tensorflow.keras.utils import to_categorical
 import sklearn
 from io import BytesIO
 import dill,base64,tempfile
 from joblib import load
 from sklearn.svm import LinearSVC, SVC
 import nltk
+import string
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
 from unidecode import unidecode

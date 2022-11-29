@@ -549,11 +549,11 @@ namespace DataAccess.Models
                         //task.template = GetInputCode();
                         if (!task.nodeType.Contains("api"))
                         {
-                           // if (task.nodeType.Contains("milvus"))
-                          //  {
-                           //     task.template = GetInputCode("milvus");
-                          //  }
-                         //   else
+                            if (task.nodeType.Contains("base"))
+                            {
+                                task.template = GetInputCode("base");
+                            }
+                            else
                             {
                                 task.template = GetInputCode();
                             }
@@ -840,7 +840,14 @@ namespace DataAccess.Models
                     {
                         if (!task.nodeType.Contains("api"))
                         {
-                            task.template = GetInputCode();
+                                if (task.nodeType.Contains("base"))
+                                {
+                                    task.template = GetInputCode("base");
+                                }
+                                else
+                                {
+                                    task.template = GetInputCode();
+                                }
                         }
                         else
                         {
@@ -982,10 +989,10 @@ namespace DataAccess.Models
             {
                 return GetInputCodeApi();
             }
-            //if(nodeType.Contains("milvus"))
-            //{
-            //    return GetInputCodeMilvus();
-            //}
+            if(nodeType.Contains("base"))
+            {
+                return GetInputCodeBase();
+            }
             using (StreamReader reader = new StreamReader("input_py.txt"))
             {
                 var code = reader.ReadToEnd();
@@ -1019,6 +1026,14 @@ namespace DataAccess.Models
                 return GetOutputCodeMilvus();
             }
             using (StreamReader reader = new StreamReader("output_py.txt"))
+            {
+                var code = reader.ReadToEnd();
+                return code;
+            }
+        }
+        public static string GetInputCodeBase()
+        {
+            using (StreamReader reader = new StreamReader("input_base_py.txt"))
             {
                 var code = reader.ReadToEnd();
                 return code;
