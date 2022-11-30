@@ -153,7 +153,7 @@ def remove_temp_db(delete_query):
     cur = con.cursor()
     cur.execute(delete_query)
 
-def insert_milvus():
+def insert_milvus(df2):
     cc = ""
     corpus = []
     thislist  = []
