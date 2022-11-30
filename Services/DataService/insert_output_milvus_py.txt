@@ -42,6 +42,7 @@ from pymilvus import (
 )
 num_entities =  2
 dim = 300
+fmt = "\n=== {:30} ===\n"
 from nltk.tokenize import sent_tokenize, word_tokenize
 lemmatizer = WordNetLemmatizer()
 porter = nltk.PorterStemmer()
