@@ -62,7 +62,7 @@ def clean_text(sentence):
     clean_sentence = "".join(l for l in sentence if l not in string.punctuation)
 
     return clean_sentence
-
+all = []
 def embeddings_similarity(sentences ):
     allid = []
     for d in range(len(sentences)):
