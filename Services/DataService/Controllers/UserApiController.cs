@@ -18,9 +18,6 @@ using Newtonsoft.Json.Linq;
 
 namespace DataService.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
     public class PredictDTO
     {
         public string urlModel;
@@ -32,6 +29,10 @@ namespace DataService.Controllers
         public int searchHistoryId;
         public string collection;
     }
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    
     public class UserApiController : ControllerBase
     {
         private readonly IRepository _repository;
