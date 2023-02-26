@@ -162,5 +162,6 @@ namespace DataAccess.Models
         Task<UserSharedUrl[]> GetSharedUrl(int userId, bool isWorkflow = false);
         Task<UserApiKey> GetKeyDetailsfromApiKey(string incomingKey);
         Task<bool> CheckSharedUrl(int userId, string queryName);
+        Task<UserSharedUrl> GetSharedUrl(int userId, int searchHistoryId, bool isWorkflow = false);
     }
 }

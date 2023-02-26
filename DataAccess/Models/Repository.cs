@@ -1920,6 +1920,29 @@ namespace DataAccess.Models
 
             return false;
         }
+
+        public async Task<UserSharedUrl> GetSharedUrl(int userId, int searchHistoryId, bool isWorkflow = false)
+        {
+            IQueryable<UserSharedUrl> query = null;//
+                                       //set is deleted
+            if (isWorkflow)
+            {
+                query = _context.UserSharedUrls.Where(x => x.SearchHistoryId == searchHistoryId);
+            }
+            else
+            {
+                query = _context.UserSharedUrls.Where(x => x.WorkflowSearchHistoryId == searchHistoryId);
+            }
+            if (query != null)
+            {
+                
+                return await query.FirstOrDefaultAsync();
+            }
+            //var sharedUrl = new UserSharedUrl();
+            //IQueryable<UserApiKey> userdata = _context.UserSharedUrls;
+
+            return null;
+        }
         #endregion
 
     }
