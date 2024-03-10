@@ -133,12 +133,16 @@ namespace DataService.Controllers
 
         private readonly ILogger<WorkflowAttemptsController> _logger;
         private string _queryServiceString = null;
-        public WorkflowAttemptsController(IRepository repo, IMapper mapper, ILogger<WorkflowAttemptsController> logger, IOptions<ConnectionStringsConfig> optionsAccessor)
+
+        private string _workflowConnectionString = null;
+
+        public WorkflowAttemptsController(IRepository repo, IMapper mapper, ILogger<WorkflowAttemptsController> logger, IOptions<ConnectionStringsConfig> optionsAccessor )
         {
             _repository = repo;
             _mapper = mapper;
             _logger = logger;
             _queryServiceString = optionsAccessor?.Value.QueryServiceConnection;
+            _workflowConnectionString = optionsAccessor.Value.WorkflowConnection;
         }
 
         //// GET: api/WorkflowVersion
@@ -492,7 +496,7 @@ namespace DataService.Controllers
                     sessionResult.AttemptTime = workflowtest.CreatedOn;
                     sessionResult.UpdatedAt = workflowtest.UpdatedOn;
                     sessionResult.NodeResults = new List<NodeResult>();
-                    string urlTasks = "http://idapt.duckdns.org:65432/api/attempts/{0}/tasks";
+                    string urlTasks = _workflowConnectionString+":65432/api/attempts/{0}/tasks";// http://idapt.duckdns.org:65432/api/attempts/{0}/tasks";
                     int attemptId = workflowtest.ExternalAttemptId;
                     var requestRest = new RestRequest(string.Format(urlTasks, attemptId));
                     var response = await client.ExecuteAsync(requestRest);
@@ -563,9 +567,9 @@ namespace DataService.Controllers
             try
             {
                 string attempt_id = externalAttemptId.ToString();
-                string urlsession = "http://idapt.duckdns.org:65432/api/projects/{0}/sessions";
+                string urlsession = _workflowConnectionString + ":65432/api/projects/{0}/sessions";//"http://idapt.duckdns.org:65432/api/projects/{0}/sessions";
 
-                string urlTasks = "http://idapt.duckdns.org:65432/api/attempts/{0}/tasks";
+                string urlTasks = _workflowConnectionString + ":65432/api/attempts/{0}/tasks";// "http://idapt.duckdns.org:65432/api/attempts/{0}/tasks";
                 var client = new RestClient();
                 var requestRest = new RestRequest(string.Format(urlsession, externalprojectId));
                 IRestResponse response = client.Execute(requestRest);
