@@ -497,15 +497,18 @@ namespace DataService.Controllers
                     sessionResult.UpdatedAt = workflowtest.UpdatedOn;
                     sessionResult.NodeResults = new List<NodeResult>();
                     string urlTasks = _workflowConnectionString+":65432/api/attempts/{0}/tasks";// http://idapt.duckdns.org:65432/api/attempts/{0}/tasks";
+                    Console.WriteLine($"Url to get the details for attempt  {workflowtest.ExternalAttemptId} is {urlTasks}");
                     int attemptId = workflowtest.ExternalAttemptId;
                     var requestRest = new RestRequest(string.Format(urlTasks, attemptId));
                     var response = await client.ExecuteAsync(requestRest);
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
+                        Console.WriteLine(" Status OK");
                         var json = response.Content;//reader.ReadToEnd();
                         var tasks = JsonConvert.DeserializeObject<Tasks>(json);
                         int ind = 1;
                         sessionResult.sessionTime = workflowtest.CreatedOn;
+                        Console.WriteLine($"Task count {tasks.tasks.Length}");
                         foreach (var task in tasks.tasks)
                         {
                             if (task.isGroup == true) continue;
