@@ -174,14 +174,14 @@ def insert_milvus():
     for i, row in df2.iterrows():
         cc = ""
         for name in df2.columns:
-            if checkNan(row[name]) or name == 'rowyid':
+            if checkNan(row[name]) or name == 'rowid':
                 continue
             if is_number(row[name]):
                 cc += name + str(row[name])
             else:
                 cc += row[name]
         thislist.append(pre_process(cc))
-        thislist.append(row['rowyid'])
+        thislist.append(row['rowid'])
         corpus.append(thislist)
         thislist = []
     embeddings_similarity(corpus)

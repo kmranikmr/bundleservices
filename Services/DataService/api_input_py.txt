@@ -17,6 +17,13 @@ import pandas as pd
 import datetime
 import yfinance as yf
 
+DATABASE_NAME = os.getenv('DATABASE_NAME')
+DATABASE_USER = os.getenv('DATABASE_USER')
+DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
+DATABASE_HOST = os.getenv('DATABASE_HOST')
+DATABASE_PORT = os.getenv('DATABASE_PORT')
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 
 def run_id():
     if 'sessionIds' in  digdag.env.params:
@@ -32,7 +39,7 @@ def run_id():
     return ""
 
 def remove_temps(tables):
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    con = psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USER, password=DATABASE_PASSWORD, host=DATABASE_HOST, port=DATABASE_PORT)
     print("Database opened successfully for removal")
     cur = con.cursor()
     liststr = tables.split(',')

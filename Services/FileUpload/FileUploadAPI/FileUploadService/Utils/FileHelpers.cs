@@ -27,8 +27,8 @@ namespace FileUploadService.Utils
     {
         //private const string bucketName = "autoingestion";
         //private const string keyName = " my secret key";
-        private const string accessid = "AKIAYC4UH65JRCBE5L6Y";
-        private const string secretkey = "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";
+      //  private const string accessid = "AKIAYC4UH65JRCBE5L6Y";
+       // private const string secretkey = "3jzjHKitBiTKld1Gufe7hOeAc9Izq+3vl3Em8+J2";
         // Specify your bucket region (an example region is shown).
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USEast1;
     
@@ -36,6 +36,9 @@ namespace FileUploadService.Utils
         {
             try
             {
+                string accessKeyId = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
+                string secretAccessKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+
                 Console.WriteLine($"path{path} bucketname{bucketname} key{key} s3path {s3path}");
 
                 var credentials = new BasicAWSCredentials(accessid, secretkey);
