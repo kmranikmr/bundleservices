@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Http;
 using NLog.Extensions.Logging;
 using NLog.Web;
 //using DataAccess.Models;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace DataService
 {
@@ -106,16 +107,17 @@ namespace DataService
         {
 
             app.UseAuthentication();
-           // loggerFactory.AddNLog();
-          //  app.AddNLogWeb();
+            // loggerFactory.AddNLog();
+            //  app.AddNLogWeb();
             //add NLog.Web
-      
+            app.UseHttpsRedirection();
             app.UseConfiguredSwagger();
             //app.UseSwaggerUI(c =>
             //{
             //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             //});
-            app.UseCors(builder => { builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials(); });
+            // app.UseCors(builder => { builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials(); });
+            app.UseCors("CorsPolicy");
 
             if (env.IsDevelopment())
             {
@@ -125,7 +127,7 @@ namespace DataService
             {
                 app.UseHsts();
             }            
-            app.UseHttpsRedirection();
+           
             app.UseMvc(routes =>
             {
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");

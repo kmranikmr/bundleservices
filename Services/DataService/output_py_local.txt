@@ -26,6 +26,13 @@ import dill,base64,tempfile
 from joblib import load
 from sklearn.svm import LinearSVC, SVC
 
+DATABASE_NAME = os.getenv('DATABASE_NAME')
+DATABASE_USER = os.getenv('DATABASE_USER')
+DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
+DATABASE_HOST = os.getenv('DATABASE_HOST')
+DATABASE_PORT = os.getenv('DATABASE_PORT')
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 
 def run_id():
     if 'sessionIds' in  digdag.env.params:
@@ -119,7 +126,7 @@ def insert_model_data_postgres(model, table_name, schema):
     #params = config()
     # connect to the PostgresQL database
     print("connect")
-    conn = psycopg2.connect(dbname="postgres",user="postgres",password="dapdata123",host="idapt.duckdns.org",port="6789")
+    conn = psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USER, password=DATABASE_PASSWORD, host=DATABASE_HOST, port=DATABASE_PORT)
     # create a new cursor object
     print("connected")
     cur = conn.cursor()

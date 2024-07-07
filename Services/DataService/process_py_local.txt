@@ -31,6 +31,15 @@ import heartpy as hp
 from get_all_tickers import get_tickers as gt
 import yfinance
 
+
+DATABASE_NAME = os.getenv('DATABASE_NAME')
+DATABASE_USER = os.getenv('DATABASE_USER')
+DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
+DATABASE_HOST = os.getenv('DATABASE_HOST')
+DATABASE_PORT = os.getenv('DATABASE_PORT')
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+
 def run_id():
     if 'sessionIds' in  digdag.env.params:
         sessiondIdvalue = digdag.env.params["sessionIds"]

@@ -31,6 +31,14 @@ import heartpy as hp
 from get_all_tickers import get_tickers as gt
 import yfinance
 
+DATABASE_NAME = os.getenv('DATABASE_NAME')
+DATABASE_USER = os.getenv('DATABASE_USER')
+DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
+DATABASE_HOST = os.getenv('DATABASE_HOST')
+DATABASE_PORT = os.getenv('DATABASE_PORT')
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+
 def run_id():
     if 'sessionIds' in  digdag.env.params:
         sessiondIdvalue = digdag.env.params["sessionIds"]
@@ -46,7 +54,7 @@ def run_id():
 
 
 def remove_temp_db(delete_query):
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    con = psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USER, password=DATABASE_PASSWORD, host=DATABASE_HOST, port=DATABASE_PORT)
     print("Database opened successfully for removal")
     cur = con.cursor()
     cur.execute(delete_query)
@@ -74,7 +82,7 @@ def do_transformation(df):
 def input_postgres(input_table):
     print("input postgres")
     input_query = "select * from "+input_table
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    con = psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USER, password=DATABASE_PASSWORD, host=DATABASE_HOST, port=DATABASE_PORT)
     print("Database opened successfully")
     with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
         cursor.execute(input_query)
@@ -102,7 +110,7 @@ def insert_model_data_postgres(model, table_name, schema):
     #params = config()
     # connect to the PostgresQL database
     print("connect")
-    conn = psycopg2.connect(dbname="digdagdb",user="ubuntu",password="dapdata123",host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com")
+    con = psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USER, password=DATABASE_PASSWORD, host=DATABASE_HOST, port=DATABASE_PORT)
     # create a new cursor object
     print("connected")
     cur = conn.cursor()
@@ -119,7 +127,7 @@ def insert_model_data_postgres(model, table_name, schema):
 
 def insert_data_postgres(df, table_name, schema):
     dbschema = schema
-    engine = create_engine('postgresql+psycopg2://ubuntu:dapdata123@digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com:5432/digdagdb',
+    engine = create_engine(f'postgresql+psycopg2://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}',
                 connect_args={'options': '-csearch_path={}'.format(dbschema)})
 
     df.to_sql(table_name, engine, if_exists='append', index=False)

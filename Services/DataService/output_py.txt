@@ -32,6 +32,14 @@ from joblib import load
 from sklearn.svm import LinearSVC, SVC
 
 
+DATABASE_NAME = os.getenv('DATABASE_NAME')
+DATABASE_USER = os.getenv('DATABASE_USER')
+DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
+DATABASE_HOST = os.getenv('DATABASE_HOST')
+DATABASE_PORT = os.getenv('DATABASE_PORT')
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+
 def run_id():
     if 'sessionIds' in  digdag.env.params:
         sessiondIdvalue = digdag.env.params["sessionIds"]
@@ -51,7 +59,7 @@ def increment(count):
     counter = count
 
 def remove_temp_db(delete_query):
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    con = psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USER, password=DATABASE_PASSWORD, host=DATABASE_HOST, port=DATABASE_PORT)
     print("Database opened successfully")
     cur = con.cursor()
     cur.execute(delete_query)
@@ -77,7 +85,7 @@ def do_transformation(df, model_df):
 
 def input_postgres(input_table, model_df):
     input_query = "select * from "+input_table
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    con = psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USER, password=DATABASE_PASSWORD, host=DATABASE_HOST, port=DATABASE_PORT)
     print("Database opened successfully")
     with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
         cursor.execute(input_query)
@@ -103,8 +111,8 @@ def input_postgres(input_table, model_df):
 def insert_data_postgres(df, table_name, schema):
     dbschema = schema
     print(" postgre start ")
-    engine = create_engine('postgresql+psycopg2://postgres:dapdata123@idapt.duckdns.org:6789/postgres', connect_args={'options': '-csearch_path={}'.format(dbschema)})
-    #engine = create_engine('postgresql+psycopg2://dev:nwdidb19@127.0.0.1:5433/nwdi_ts', connect_args={'options': '-csearch_path={}'.format(dbschema)})
+    engine = create_engine(f'postgresql+psycopg2://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}',
+                connect_args={'options': '-csearch_path={}'.format(dbschema)})   
     paramvalue = digdag.env.params["workflow_attempt_id"]
     df['session_id'] = paramvalue
     if 'rowid' not in df:
@@ -124,7 +132,7 @@ def insert_model_data_postgres(model, table_name, schema):
     #params = config()
     # connect to the PostgresQL database
     print("connect")
-    conn = psycopg2.connect(dbname="postgres",user="postgres",password="dapdata123",host="idapt.duckdns.org",port="6789")
+    con = psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USER, password=DATABASE_PASSWORD, host=DATABASE_HOST, port=DATABASE_PORT)
     # create a new cursor object
     print("connected")
     cur = conn.cursor()
@@ -140,7 +148,7 @@ def insert_model_data_postgres(model, table_name, schema):
 
 def input_postgres_complete(input_table):
     input_query = "select * from "+input_table
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    con = psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USER, password=DATABASE_PASSWORD, host=DATABASE_HOST, port=DATABASE_PORT)
     print("Database opened successfully")
     with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
         cursor.execute(input_query)

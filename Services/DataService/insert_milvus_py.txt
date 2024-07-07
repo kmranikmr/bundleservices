@@ -24,6 +24,16 @@ from unidecode import unidecode
 from nltk.stem import WordNetLemmatizer
 import spacy
 import spacy.cli
+
+
+DATABASE_NAME = os.getenv('DATABASE_NAME')
+DATABASE_USER = os.getenv('DATABASE_USER')
+DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
+DATABASE_HOST = os.getenv('DATABASE_HOST')
+DATABASE_PORT = os.getenv('DATABASE_PORT')
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+
 from pymilvus import (
     connections,
     utility,
@@ -129,7 +139,7 @@ def run_id():
     return ""
 
 def remove_temps(tables):
-    con = psycopg2.connect(database="digdagdb", user="ubuntu", password="dapdata123", host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com", port="5432")
+    con = psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USER, password=DATABASE_PASSWORD, host=DATABASE_HOST, port=DATABASE_PORT)
     print("Database opened successfully for removal")
     cur = con.cursor()
     liststr = tables.split(',')
@@ -152,7 +162,7 @@ def insert_model_data_postgres(model, table_name, schema):
     #params = config()
     # connect to the PostgresQL database
     print("connect")
-    conn = psycopg2.connect(dbname="digdagdb",user="ubuntu",password="dapdata123",host="digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com",port="5432")
+    con = psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USER, password=DATABASE_PASSWORD, host=DATABASE_HOST, port=DATABASE_PORT)
     # create a new cursor object
     print("connected")
     cur = conn.cursor()
@@ -200,7 +210,7 @@ def do_transformation(df):
 
 def insert_data_postgres(df, table_name, schema):
     dbschema = schema
-    engine = create_engine('postgresql+psycopg2://ubuntu:dapdata123@digdagdb.cv1llisahmax.us-east-1.rds.amazonaws.com:5432/digdagdb',
+    engine = create_engine(f'postgresql+psycopg2://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}',
                 connect_args={'options': '-csearch_path={}'.format(dbschema)})
 
    
@@ -210,8 +220,8 @@ def insert_data_postgres(df, table_name, schema):
     return True
 #input from saved query
 def input_postgres(input_query):
-    con = psycopg2.connect(database="postgres", user="postgres", password="dapdata123", host="idapt.duckdns.org", port="6789")
-#   con = psycopg2.connect(database="nwdi_ts", user="dev", password="nwdidb19", host="127.0.0.1", port="5433")
+    con = psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USER, password=DATABASE_PASSWORD, host=DATABASE_HOST, port=DATABASE_PORT) 
+    
     print("Database opened successfully")
     with con.cursor(name='custom_cursor', cursor_factory=RealDictCursor) as cursor:
         cursor.execute(input_query)
